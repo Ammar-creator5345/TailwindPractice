@@ -190,11 +190,8 @@ export default function ResumeSideDrawer({ open, setOpen }) {
         present: false,
       },
     ],
-    skills: [
-      // {
-      //   skill: "",
-      // },
-    ],
+    skills: [],
+    languages: [],
   };
 
   const validationSchema = Yup.object({
@@ -264,6 +261,12 @@ export default function ResumeSideDrawer({ open, setOpen }) {
                 )
                 .max(new Date(), "end Date cannot be in future"),
           }),
+      })
+    ),
+    languages: Yup.array().of(
+      Yup.object().shape({
+        language: Yup.string().required("Language is required"),
+        proficiency: Yup.string().required("Proficiency is required"),
       })
     ),
   });
@@ -941,8 +944,156 @@ export default function ResumeSideDrawer({ open, setOpen }) {
                 )}
               </Formik>
             </CustomAccordion>
+            {/* -----------------------------Languages Portion------------------------------------- */}
             <CustomAccordion title="Languages">
-
+              <Formik
+                initialValues={initialValues}
+                validationSchema={validationSchema}
+                onSubmit={() => console.log("clicked")}
+              >
+                {({
+                  values,
+                  setFieldValue,
+                  setFieldTouched,
+                  touched,
+                  errors,
+                }) => (
+                  <Form>
+                    <FieldArray name="languages">
+                      {({ push, remove }) => (
+                        <>
+                          {values.languages.map((value, index) => (
+                            <div>
+                              <div className="flex items-center gap-1">
+                                <span>{index + 1}.</span>
+                                <MdDeleteForever
+                                  onClick={() => remove(index)}
+                                  size={20}
+                                  color="grey"
+                                />
+                              </div>
+                              <div className="flex items-center gap-3 my-2">
+                                <TextField
+                                  select
+                                  name={`languages[${index}].language`}
+                                  label="Language*"
+                                  slotProps={{
+                                    select: {
+                                      MenuProps: {
+                                        PaperProps: {
+                                          sx: {
+                                            maxHeight: 200,
+                                          },
+                                        },
+                                      },
+                                    },
+                                  }}
+                                  value={values.languages[index].language}
+                                  onChange={(e) =>
+                                    setFieldValue(
+                                      `languages[${index}].language`,
+                                      e.target.value
+                                    )
+                                  }
+                                  onBlur={() => {
+                                    setFieldTouched(
+                                      `languages[${index}].language]`,
+                                      true
+                                    );
+                                  }}
+                                  error={
+                                    touched.languages?.[index]?.language &&
+                                    Boolean(errors.languages?.[index]?.language)
+                                  }
+                                  helperText={
+                                    touched.languages?.[index]?.language &&
+                                    errors.languages?.[index]?.language
+                                  }
+                                  sx={{
+                                    width: "50%",
+                                    ...textField_style,
+                                  }}
+                                >
+                                  {_skills.map((option) => (
+                                    <MenuItem key={option} value={option}>
+                                      {option}
+                                    </MenuItem>
+                                  ))}
+                                </TextField>
+                                <TextField
+                                  select
+                                  name={`languages[${index}].proficiency`}
+                                  label="Proficiency*"
+                                  slotProps={{
+                                    select: {
+                                      MenuProps: {
+                                        PaperProps: {
+                                          sx: {
+                                            maxHeight: 200,
+                                          },
+                                        },
+                                      },
+                                    },
+                                  }}
+                                  value={values.languages[index].proficiency}
+                                  onChange={(e) =>
+                                    setFieldValue(
+                                      `languages[${index}].proficiency`,
+                                      e.target.value
+                                    )
+                                  }
+                                  onBlur={() => {
+                                    setFieldTouched(
+                                      `languages[${index}].proficiency]`,
+                                      true
+                                    );
+                                  }}
+                                  error={
+                                    touched.languages?.[index]?.proficiency &&
+                                    Boolean(
+                                      errors.languages?.[index]?.proficiency
+                                    )
+                                  }
+                                  helperText={
+                                    touched.languages?.[index]?.proficiency &&
+                                    errors.languages?.[index]?.proficiency
+                                  }
+                                  sx={{
+                                    width: "50%",
+                                    ...textField_style,
+                                  }}
+                                >
+                                  {_skills.map((option) => (
+                                    <MenuItem key={option} value={option}>
+                                      {option}
+                                    </MenuItem>
+                                  ))}
+                                </TextField>
+                              </div>
+                            </div>
+                          ))}
+                          <button
+                            type="button"
+                            onClick={() =>
+                              push({
+                                language: "",
+                                proficiency: "",
+                              })
+                            }
+                            className="flex items-center gap-2 my-4"
+                          >
+                            <span className="bg-green-400 px-3 pb-[7px] rounded-xl text-3xl">
+                              +
+                            </span>
+                            <span>Add One More Language</span>
+                          </button>
+                        </>
+                      )}
+                    </FieldArray>
+                    <InputButtonForSubmit />
+                  </Form>
+                )}
+              </Formik>
             </CustomAccordion>
           </div>
           <div className="w-[40%] bg-slate-200"></div>
