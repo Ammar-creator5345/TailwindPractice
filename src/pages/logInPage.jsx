@@ -3,7 +3,7 @@ import axios from "axios";
 import { useNavigate } from "react-router-dom";
 import { NavLink } from "react-router-dom";
 
-const LogIn = () => {
+const LogIn = ({ setToken }) => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const dataForSubmit = { email, password };
@@ -28,6 +28,7 @@ const LogIn = () => {
       .then((res) => {
         console.log("login succefull", res.data);
         localStorage.setItem("token", res.data.tokens.access);
+        setToken(res.data.tokens.access)
         navigate("/home");
       })
       .catch((err) => {

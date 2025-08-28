@@ -3,7 +3,7 @@ import React from "react";
 import { useNavigate } from "react-router-dom";
 import { Formik, Form, Field, ErrorMessage, FieldArray } from "formik";
 
-export default function Testing() {
+export default function Testing({setToken}) {
   const token = localStorage.getItem("token");
   const navigate = useNavigate();
   const logOut = () => {
@@ -20,6 +20,7 @@ export default function Testing() {
       })
       .then(() => {
         localStorage.removeItem("token");
+        setToken(null);
         navigate("/login");
       });
   };
