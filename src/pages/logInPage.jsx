@@ -29,7 +29,7 @@ const LogIn = ({ setToken }) => {
         console.log("login succefull", res.data);
         localStorage.setItem("token", res.data.tokens.access);
         setToken(res.data.tokens.access)
-        navigate("/home");
+        navigate("/");
       })
       .catch((err) => {
         console.log("cannot be login", err);

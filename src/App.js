@@ -17,16 +17,16 @@ function App() {
         <Route
           path="/login"
           element={
-            token ? <Navigate to="/home" /> : <LogIn setToken={setToken} />
+            token ? <Navigate to="/" /> : <LogIn setToken={setToken} />
           }
         />
         <Route
           path="/signUp"
-          element={token ? <Navigate to="/home" /> : <SignUp />}
+          element={token ? <Navigate to="/" /> : <SignUp />}
         />
         {token ? (
           <>
-            <Route path="/home" element={<Testing setToken={setToken} />} />
+            <Route path="/" element={<Testing setToken={setToken} />} />
             <Route path="/verify" element={<EmailVerification />} />
             <Route path="/resumes" element={<Resumes />} />
             <Route path="/loading" element={<LoadingTesting />} />

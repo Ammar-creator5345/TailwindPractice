@@ -1,14 +1,12 @@
 import axios from "axios";
 import React from "react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, NavLink } from "react-router-dom";
 import { Formik, Form, Field, ErrorMessage, FieldArray } from "formik";
 
-export default function Testing({setToken}) {
+export default function Testing({ setToken }) {
   const token = localStorage.getItem("token");
   const navigate = useNavigate();
   const logOut = () => {
-    // localStorage.removeItem("token")
-    // navigate("/login")
     console.log(token);
     axios
       .get("https://api.ziphire.hr/v2/logout", {
@@ -28,18 +26,12 @@ export default function Testing({setToken}) {
     <>
       <div className="bg-red-400 flex flex-col md:flex-row justify-between items-center p-4">
         <div className="flex flex-wrap justify-center md:justify-start">
-          <a href="#" className="p-4 m-1 bg-slate-100">
+          <NavLink to="/" className="p-4 m-1 bg-slate-100">
             Home
-          </a>
-          <a href="#" className="p-4 m-1 bg-slate-100">
-            Products
-          </a>
-          <a href="#" className="p-4 m-1 bg-slate-100">
-            News
-          </a>
-          <a href="#" className="p-4 m-1 bg-slate-100">
-            About
-          </a>
+          </NavLink>
+          <NavLink to="/resumes" className="p-4 m-1 bg-slate-100">
+            Resumes
+          </NavLink>
         </div>
         <div className="w-full md:w-auto mt-2 md:mt-0">
           <input
