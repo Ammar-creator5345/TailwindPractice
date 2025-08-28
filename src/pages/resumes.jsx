@@ -23,6 +23,7 @@ const Resumes = () => {
   const [editedResumeTitle, setEditedResumeTitle] = useState("");
   const [openDeleteModal, setOpenDeleteModal] = useState(false);
   const [openAddResume, setOpenAddResume] = useState(false);
+  const [uploadedResume, setUploadedResume] = useState(null);
   const handleOpenAddResume = () => setOpenAddResume(true);
   const handleCloseAddResume = () => setOpenAddResume(false);
   const handleDeleteOpenModal = () => setOpenDeleteModal(true);
@@ -50,7 +51,7 @@ const Resumes = () => {
 
   useEffect(() => {
     resumeRequest().then((res) => {
-      console.log(res.data.data);
+      // console.log(res.data.data);
       setResumes(res.data.data);
     });
   }, []);
@@ -181,7 +182,8 @@ const Resumes = () => {
         },
       })
       .then((res) => {
-        console.log(res);
+        // console.log(res.data.data);
+        setUploadedResume(res.data.data);
         setOpenDrawer(true);
         handleCloseAddResume();
         setSubmitting(false);
@@ -192,9 +194,46 @@ const Resumes = () => {
         console.log("Error", err);
       });
   };
+
+  const handleAddNewResume = () => {
+    setSubmitting(true);
+    axios
+      .post(
+        "https://api.ziphire.hr/v2/developer/resumes",
+        {
+          resume_type: "build_resume",
+          name: newResumeName,
+          target_job_title: newResumeTitle,
+        },
+        {
+          headers: {
+            authorization: `Token ${tokens}`,
+            "x-api-key":
+              "unLP5l.HUEPcrsrCMzAwVUb36pWhvUikOcxnZiq8OcJQqK9fns9S1",
+            accept: "application/json; version=1.0",
+          },
+        }
+      )
+      .then((res) => {
+        setSubmitting(false);
+        setOpenDrawer(true);
+        console.log(res.data.data);
+        setUploadedResume(res.data.data);
+        handleCloseAddResume();
+        setNewResumeName("");
+        setNewResumeTitle("")
+        resumeRequest().then((res) => {
+          setResumes(res.data.data)
+        })
+      });
+  };
   return (
     <div>
-      <ResumeSideDrawer open={openDrawer} setOpen={setOpenDrawer} />
+      <ResumeSideDrawer
+        uploadedResume={uploadedResume}
+        open={openDrawer}
+        setOpen={setOpenDrawer}
+      />
       <h1 className="text-3xl font-bold my-6 mx-10">My Resumes</h1>
       <button
         onClick={handleOpenAddResume}
@@ -207,8 +246,12 @@ const Resumes = () => {
       </button>
       {resumes?.map((resume) => (
         <div
-          className="m-10 p-4 rounded-md shadow-[0_1px_4px_#0000001a] border"
+          className="m-10 p-4 rounded-md shadow-[0_1px_4px_#0000001a] border cursor-pointer"
           key={resume.id}
+          onClick={() => {
+            setUploadedResume(resume);
+            setOpenDrawer(true);
+          }}
         >
           <div className="flex justify-between items-center">
             <div>
@@ -228,13 +271,15 @@ const Resumes = () => {
               </div>
             </div>
             <div className="flex gap-2">
-              <div>
+              <div onClick={(e) => e.stopPropagation()}>
                 <Button
                   id="basic-button"
                   aria-controls={open ? "basic-menu" : undefined}
                   aria-haspopup="true"
                   aria-expanded={open ? "true" : undefined}
-                  onClick={(e) => handleClick(e, resume)}
+                  onClick={(e) => {
+                    handleClick(e, resume);
+                  }}
                   sx={{
                     border: "1px solid #e1d4d4 ",
                     borderRadius: "10px",
@@ -285,10 +330,11 @@ const Resumes = () => {
                       </div>
                       <div className="flex justify-center mt-6 gap-2">
                         <button
+                          disabled={submitting}
                           onClick={handleEditResume}
                           className="border bg-green-300 p-3 rounded-lg font-[500] hover:bg-green-400 hover:border-green-700"
                         >
-                          Update
+                          {submitting ? "updatting" : "Update"}
                         </button>
                         <button
                           onClick={handleCloseModal}
@@ -455,7 +501,9 @@ const Resumes = () => {
                           <div className="flex justify-center gap-4">
                             <button
                               onClick={handleUploadResume}
-                              className="border bg-green-300 p-3 rounded-2xl font-[500] hover:bg-green-400 hover:border-green-700"
+                              disabled={submitting}
+                              className="border bg-green-300 p-3 rounded-2xl font-[500] hover:bg-green-400 hover:border-green-700
+                              disabled:opacity-[0.9] disabled:cursor-not-allowed disabled:hover:bg-green-300 disabled:border-none"
                             >
                               {submitting ? "submitting" : "Yes, Proceed"}
                             </button>
@@ -502,7 +550,7 @@ const Resumes = () => {
                           </div>
                           <div className="flex justify-center mt-6 gap-2">
                             <button
-                              // onClick={handleAddNewResume}
+                              onClick={handleAddNewResume}
                               className="border bg-green-300 p-3 rounded-lg font-[500] hover:bg-green-400 hover:border-green-700"
                             >
                               Update
@@ -529,16 +577,16 @@ const Resumes = () => {
                               type="text"
                               required
                               placeholder="Enter your LinkedIn profile URL"
-                              value={newResumeTitle}
-                              onChange={(e) =>
-                                setNewResumeTitle(e.target.value)
-                              }
+                              // value={newResumeTitle}
+                              // onChange={(e) =>
+                              //   setNewResumeTitle(e.target.value)
+                              // }
                               className="border w-full bg-pink-50 rounded-xl p-2 focus:border-[#e3c7c7] outline-none"
                             />
                           </div>
                           <div className="flex justify-center mt-6 gap-2">
                             <button
-                              // onClick={handleAddNewResume}
+                              // onClick={handleResumeLinkDin}
                               className="border bg-green-300 p-3 rounded-lg font-[500] hover:bg-green-400 hover:border-green-700"
                             >
                               Continue
@@ -615,7 +663,7 @@ const Resumes = () => {
                   )}
                 </Menu>
               </div>
-              <button className="border border-[#a4c579] p-2 rounded-xl bg-[#c6e999] font-[500] hover:bg-[#aad86f]">
+              <button type="button" onClick={(e) => e.stopPropagation()} className="border border-[#a4c579] p-2 rounded-xl bg-[#c6e999] font-[500] hover:bg-[#aad86f]">
                 Find Jobs
               </button>
             </div>

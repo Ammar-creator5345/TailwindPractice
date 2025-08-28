@@ -36,3 +36,7 @@
     padding: 10px 45px 10px 10px;
     font-size: 15px;
 }
+
+.shadowColor{
+    box-shadow: 1px 1px 10px rgb(192, 184, 184);
+}

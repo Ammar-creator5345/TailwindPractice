@@ -14,7 +14,7 @@ export default function useCountries() {
         }
       })
       .then((res) => {
-        console.log(res.data.data);
+        // console.log(res.data.data);
         setCountries(res.data.data)
         const formatted = res?.data?.data.map((country) => (
           {
@@ -29,6 +29,7 @@ export default function useCountries() {
       .catch((err) => {
         console.log("error is coming", err);
       });
+      // console.log(countries)
   }, []);
   return {countries} ;
 }
