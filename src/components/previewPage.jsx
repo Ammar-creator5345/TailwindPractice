@@ -147,7 +147,7 @@ const PreviewPage = () => {
           )}
         </div>
         <h1 className="text-[15px] text-center mt-10">Social</h1>
-        <div className="flex flex-col gap-1 items-center">
+        <div className="flex flex-col gap-1 items-center overflow-hidden overflow-ellipsis">
           <span className="text-[10px]">
             {values.linkedinLink ? values.linkedinLink : "[LinkedIn URL]"}
           </span>

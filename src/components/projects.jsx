@@ -2,13 +2,27 @@ import { FieldArray } from "formik";
 import { MdDeleteForever } from "react-icons/md";
 import { TextField } from "@mui/material";
 
-const Projects = ({ FieldItem, textField_style, ZakiAiPortion }) => {
+const Projects = ({
+  FieldItem,
+  textField_style,
+  ZakiAiPortion,
+  handleSectionSave,
+  isSaving,
+}) => {
   return (
     <FieldArray name="projects">
       {({
         push,
         remove,
-        form: { values, touched, setFieldTouched, setFieldValue, errors },
+        form: {
+          values,
+          touched,
+          setFieldTouched,
+          setFieldValue,
+          errors,
+          setErrors,
+          dirty,
+        },
       }) => (
         <>
           {values?.projects.map((value, index) => (
@@ -26,7 +40,7 @@ const Projects = ({ FieldItem, textField_style, ZakiAiPortion }) => {
                 placeholder="Project Name"
                 name={`projects[${index}].projectName`}
               />{" "}
-              <div className="w-full flex gap-4 items-center flex-1">
+              <div className="w-full flex gap-2 items-center flex-1 sm:gap-3 md:gap-4">
                 <TextField
                   type="date"
                   placeholder="Start Date"
@@ -83,6 +97,7 @@ const Projects = ({ FieldItem, textField_style, ZakiAiPortion }) => {
               type="button"
               onClick={() =>
                 push({
+                  id: "",
                   projectName: "",
                   startDate: "",
                   endDate: "",
@@ -101,10 +116,19 @@ const Projects = ({ FieldItem, textField_style, ZakiAiPortion }) => {
             <hr className="my-4" />
             <div className="flex justify-end">
               <button
-                type="submit"
+                type="button"
+                onClick={() =>
+                  handleSectionSave(
+                    "projects",
+                    values,
+                    setErrors,
+                    setFieldTouched,
+                    dirty
+                  )
+                }
                 className="bg-green-300 px-4 py-2 rounded-2xl hover:bg-green-400"
               >
-                Save
+                {!isSaving ? "Save" : "Saving..."}
               </button>
             </div>
           </div>
