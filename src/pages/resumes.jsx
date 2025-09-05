@@ -11,6 +11,7 @@ import FormControlLabel from "@mui/material/FormControlLabel";
 import Radio from "@mui/material/Radio";
 import RadioGroup from "@mui/material/RadioGroup";
 import ResumeSideDrawer from "../components/ResumeSideDrawer";
+import { Navigate } from "react-router-dom";
 
 const Resumes = () => {
   const [resumes, setResumes] = useState();
@@ -104,7 +105,11 @@ const Resumes = () => {
     top: "50%",
     left: "50%",
     transform: "translate(-50%, -50%)",
-    width: "50%",
+    width: {
+      xs: "90%",
+      sm: "70%",
+      md: "50%",
+    },
     background: "#ffffff",
     border: "1px solid #997a73",
     borderRadius: "20px",
@@ -221,10 +226,10 @@ const Resumes = () => {
         setUploadedResume(res.data.data);
         handleCloseAddResume();
         setNewResumeName("");
-        setNewResumeTitle("")
+        setNewResumeTitle("");
         resumeRequest().then((res) => {
-          setResumes(res.data.data)
-        })
+          setResumes(res.data.data);
+        });
       });
   };
   return (
@@ -246,31 +251,33 @@ const Resumes = () => {
       </button>
       {resumes?.map((resume) => (
         <div
-          className="m-10 p-4 rounded-md shadow-[0_1px_4px_#0000001a] border cursor-pointer"
+          className="m-5 p-4 rounded-md shadow-[0_1px_4px_#0000001a] border cursor-pointer sm:m-10"
           key={resume.id}
           onClick={() => {
             setUploadedResume(resume);
             setOpenDrawer(true);
           }}
         >
-          <div className="flex justify-between items-center">
+          <div className="flex justify-between items-center flex-col min-[470px]:flex-row">
             <div>
-              <h1 className="text-2xl font-bold">
+              <h1 className="text-xl font-bold md:text-2xl text-center min-[470px]:text-start">
                 {resume.resume_name}
                 {resume?.is_primary ? (
-                  <span className="text-sm font-semibold bg-green-200 rounded-full px-2 py-1 ml-2">
+                  <span className="text-[12px] font-[500] bg-green-200 rounded-full px-2 py-1 ml-2 sm:text-sm sm:font-semibold">
                     Primary
                   </span>
                 ) : null}
               </h1>
-              <div className="flex items-center gap-1 my-3">
-                <span className="font-semibold text-stone-600">
+              <div className="flex items-center gap-1 my-2 md:my-3">
+                <span className="font-semibold text-[15px] text-stone-600 md:text-[18px]">
                   Target Job:{" "}
                 </span>
-                <span>{resume.target_job_title}</span>
+                <span className="text-[16px] md:text-[18px]">
+                  {resume.target_job_title}
+                </span>
               </div>
             </div>
-            <div className="flex gap-2">
+            <div className="flex gap-2 items-center flex-col-reverse min-[590px]:flex-row max-[470px]:flex-row">
               <div onClick={(e) => e.stopPropagation()}>
                 <Button
                   id="basic-button"
@@ -283,7 +290,11 @@ const Resumes = () => {
                   sx={{
                     border: "1px solid #e1d4d4 ",
                     borderRadius: "10px",
-                    padding: "10px",
+                    padding: {
+                      xs: "7px",
+                      sm: "10px",
+                      md: "10px",
+                    },
                     background: "#f7f0f0",
                   }}
                 >
@@ -305,7 +316,9 @@ const Resumes = () => {
                     }}
                   >
                     <Box sx={styleModal}>
-                      <h1 className="text-2xl font-bold">Edit Resume Info</h1>
+                      <h1 className="text-xl font-bold sm:text-2xl">
+                        Edit Resume Info
+                      </h1>
                       <div>
                         <h3 className="font-semibold text-gray-800 mb-3">
                           Resume Name
@@ -358,19 +371,19 @@ const Resumes = () => {
                     }}
                   >
                     <Box sx={styleModal}>
-                      <h3 className="text-[23px] font-semibold text-center">
+                      <h3 className="text-[18px] font-semibold text-center sm:text-[23px]">
                         Are you sure you want to delete this resume?
                       </h3>
                       <div className="flex justify-center gap-4 mt-4">
                         <button
                           onClick={handleDeleteResume}
-                          className="border bg-green-300 p-3 rounded-2xl font-[500] hover:bg-green-400 hover:border-green-700"
+                          className="border bg-green-300 p-2 rounded-xl text-sm font-[500] hover:bg-green-400 hover:border-green-700 sm:p-3 sm:text-[18px] sm:rounded-2xl"
                         >
                           Yes,Proceed
                         </button>
                         <button
                           onClick={handleDeleteCloseModal}
-                          className="border p-3 rounded-lg font-[500] hover:bg-gray-50"
+                          className="border p-2 text-sm rounded-lg font-[500] hover:bg-gray-50 sm:p-2 sm:text-[18px]"
                         >
                           Cancel
                         </button>
@@ -490,7 +503,7 @@ const Resumes = () => {
                                   <div className="text-black text-md text-center mb-2 font-semibold">
                                     File Selected
                                   </div>
-                                  <div className="text-sm text-gray-700">
+                                  <div className="text-sm text-gray-700 flex flex-col justify-center items-center">
                                     <span>{selectedFile?.name}</span>
                                     <span> - {selectedFile?.size} kbs</span>
                                   </div>
@@ -663,19 +676,31 @@ const Resumes = () => {
                   )}
                 </Menu>
               </div>
-              <button type="button" onClick={(e) => e.stopPropagation()} className="border border-[#a4c579] p-2 rounded-xl bg-[#c6e999] font-[500] hover:bg-[#aad86f]">
+              <button
+                type="button"
+                onClick={(e) => e.stopPropagation()}
+                className="whitespace-nowrap border border-[#a4c579] p-2 text-xs rounded-lg bg-[#c6e999] font-[500] hover:bg-[#aad86f] md:text-sm"
+              >
                 Find Jobs
               </button>
             </div>
           </div>
-          <div className="flex gap-1 mt-1">
+          <div className="flex gap-1 mt-1 flex-wrap justify-center min-[420px]:justify-start">
             <div className="flex items-center gap-1">
-              <span className="text-sm">Created</span>
-              <span className="text-sm">{modified(resume.created_at)}</span>
+              <span className="text-[12px] md:text-sm whitespace-nowrap">
+                Created
+              </span>
+              <span className="text-[12px] md:text-sm whitespace-nowrap">
+                {modified(resume.created_at)}
+              </span>
             </div>
             <div className="flex items-center gap-1">
-              <span className="text-sm">Modified</span>
-              <span className="text-sm">{modified(resume.updated_at)}</span>
+              <span className="text-[12px] md:text-sm  whitespace-nowrap">
+                Modified
+              </span>
+              <span className="text-[12px] md:text-sm whitespace-nowrap">
+                {modified(resume.updated_at)}
+              </span>
             </div>
           </div>
         </div>

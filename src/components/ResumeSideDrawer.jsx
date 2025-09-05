@@ -1,4 +1,5 @@
 import Drawer from "@mui/material/Drawer";
+import Button from "@mui/material/Button";
 import { IoIosArrowBack } from "react-icons/io";
 import { CircularProgressbar, buildStyles } from "react-circular-progressbar";
 import "react-circular-progressbar/dist/styles.css";
@@ -25,10 +26,32 @@ import PreviewPage from "./previewPage";
 import Modal from "@mui/material/Modal";
 import CircularProgress from "@mui/material/CircularProgress";
 import Skeleton from "@mui/material/Skeleton";
-import { validationSchema } from "./validationSchema";
+import {
+  validationSchema,
+  workValidation,
+  personalInfoValidation,
+  educationValidation,
+  aboutMeValidation,
+  skillsValidation,
+  languagesValidation,
+  hobbiesValidation,
+  projectsValidation,
+  certificatesValidation,
+  internshipsValidation,
+  coursesValidation,
+} from "./validationSchema";
+import CheckCircleOutlineIcon from "@mui/icons-material/CheckCircleOutline";
+import CloseIcon from "@mui/icons-material/Close";
+import useRecommendedSkills from "../rawData/recommendedSkills";
 
 export default function ResumeSideDrawer({ open, setOpen, uploadedResume }) {
-  const { countries } = useCountries();
+  const {
+    countries,
+    skills: allSkills,
+    setSkills: setAllSkills,
+    languages: allLanguages,
+    setLanguages: setAllLanguages,
+  } = useCountries(uploadedResume);
   const token = localStorage.getItem("token");
   const [myAccordion, setMyAccordion] = useState([]);
   const [resumeQuality, setResumeQuality] = useState({});
@@ -48,13 +71,53 @@ export default function ResumeSideDrawer({ open, setOpen, uploadedResume }) {
   const handleOpenResumeExitModal = () => setOpenResumeExit(true);
   const handleCloseResumeExitModal = () => setOpenResumeExit(false);
   const [resumeQualityLoading, setResumeQualityLoading] = useState(false);
-
+  const [isSaving, setIsSaving] = useState(false);
+  const [savedOpenDrawer, setSavedOpenDrawer] = useState(false);
+  const [alertMessage, setAlertMessage] = useState({
+    heading: "",
+    message: "",
+  });
+  const {
+    skills: recommendedSkills,
+    loading,
+    setExcludedIds,
+    excludedIds,
+  } = useRecommendedSkills(uploadedResume);
+  const toggleSavedOpenDrawer = (newOpen) => () => {
+    setSavedOpenDrawer(newOpen);
+  };
+  const showAlertDrawer = (section) => {
+    const message = {
+      personalInfo: "personal info updated",
+      aboutMe: "About Me updated",
+      education: "Education is Updated",
+      work: "Work History is Updated",
+      skills: "Skills is Updated",
+      languages: "Languages is Updated",
+      hobbies: "Hobbies is Updated",
+      projects: "Projects is Updated",
+      certificates: "Certificates is Updated",
+      internships: "Internships is Updated",
+      hobbies: "Hobbies is Updated",
+      courses: "Courses is Updated",
+      profilePhoto: "Profile Photo is Updated",
+    };
+    setAlertMessage({ heading: "Success", message: message[section] });
+    setSavedOpenDrawer(true);
+    setTimeout(() => {
+      setSavedOpenDrawer(false);
+    }, 55000);
+  };
   const styleForResumeExitModal = {
     position: "absolute",
     top: "50%",
     left: "50%",
     transform: "translate(-50%, -50%)",
-    width: "50%",
+    width: {
+      xs: "80%",
+      sm: "70%",
+      md: "50%",
+    },
     bgcolor: "background.paper",
     borderRadius: "20px",
     boxShadow: 24,
@@ -71,6 +134,8 @@ export default function ResumeSideDrawer({ open, setOpen, uploadedResume }) {
     console.log(uploadedResume);
     setResumeQualityLoading(true);
     if (!open && !uploadedResume?.id) return;
+    console.log(recommendedSkills);
+    console.log(allSkills);
     axios
       .get(
         `https://api.ziphire.hr/v2/developer/resume-quality/${uploadedResume?.id}`,
@@ -127,6 +192,7 @@ export default function ResumeSideDrawer({ open, setOpen, uploadedResume }) {
       .then((res) => {
         // console.log(res.data.data);
         const FormattedEducation = res.data.data.map((edu) => ({
+          id: edu?.id ? edu.id : null,
           schoolName: edu.school ? edu.school : "",
           degreeName: edu.field_of_study ? edu.field_of_study : "",
           degreeType: edu.degree_type ? edu.degree_type : "",
@@ -147,6 +213,7 @@ export default function ResumeSideDrawer({ open, setOpen, uploadedResume }) {
       .then((res) => {
         // console.log(res.data.data);
         const formattedWorkHistory = res.data.data.map((work) => ({
+          id: work.id ? work.id : null,
           jobTitle: work.role ? work.role : "",
           companyName: work.company_name ? work.company_name : "",
           startDate: work.start_date ? work.start_date : "",
@@ -162,9 +229,11 @@ export default function ResumeSideDrawer({ open, setOpen, uploadedResume }) {
         `https://api.ziphire.hr/v2/developer/resumes/${uploadedResume?.id}/skills`,
         { headers }
       )
+
       .then((res) => {
         // console.log(res.data.data);
         const formattedSkills = res.data.data.map((skill) => ({
+          id: skill?.id ? skill.id : "",
           skill: skill?.label ? skill.label : "",
         }));
         setSkills(formattedSkills);
@@ -178,12 +247,18 @@ export default function ResumeSideDrawer({ open, setOpen, uploadedResume }) {
       )
       .then((res) => {
         // console.log(res.data.data);
+        const languageSystem = {
+          "fluent/native": "Fluent/Native",
+          intermediate: "Intermediate",
+          beginner: "Beginner",
+        };
         const formattedLanguages = res.data.data.map((lan) => ({
-          language: lan?.language_details?.name
-            ? lan?.language_details?.name
-            : "",
-          proficiency: lan?.proficiency ? lan?.proficiency : "",
+          id: lan?.id || null,
+          languageId: lan?.language_details?.id || "",
+          language: lan?.language_details?.name || "",
+          proficiency: languageSystem[lan?.proficiency] || "",
         }));
+
         setLanguages(formattedLanguages);
       });
     axios
@@ -195,6 +270,7 @@ export default function ResumeSideDrawer({ open, setOpen, uploadedResume }) {
       .then((res) => {
         // console.log(res.data.data);
         const formattedProjects = res.data.data.map((project) => ({
+          id: project?.id ? project.id : "",
           projectName: project?.label ? project.label : "",
           startDate: project?.start_date ? project.start_date : "",
           endDate: project?.end_date ? project.end_date : "",
@@ -212,6 +288,7 @@ export default function ResumeSideDrawer({ open, setOpen, uploadedResume }) {
       .then((res) => {
         // console.log(res.data.data);
         const formattedCourses = res.data.data.map((course) => ({
+          id: course?.id ? course.id : "",
           courseName: course?.title ? course.title : "",
           dateAwarded: course?.date_awarded ? course.date_awarded : "",
           organizationName: course?.organization ? course.organization : "",
@@ -229,6 +306,7 @@ export default function ResumeSideDrawer({ open, setOpen, uploadedResume }) {
       .then((res) => {
         // console.log(res.data.data);
         const formattedCertificates = res.data.data.map((certificate) => ({
+          id: certificate?.id ? certificate.id : "",
           certificateTitle: certificate?.title ? certificate.title : "",
           dateAwarded: certificate?.date_awarded
             ? certificate.date_awarded
@@ -250,6 +328,7 @@ export default function ResumeSideDrawer({ open, setOpen, uploadedResume }) {
       .then((res) => {
         // console.log(res.data.data);
         const formattedInternships = res.data.data.map((internship) => ({
+          id: internship?.id ? internship.id : "",
           companyName: internship?.label ? internship.label : "",
           startDate: internship?.start_date ? internship.start_date : "",
           endDate: internship?.end_date ? internship.end_date : "",
@@ -267,6 +346,7 @@ export default function ResumeSideDrawer({ open, setOpen, uploadedResume }) {
       .then((res) => {
         // console.log(res.data.data);
         const formattedHobbies = res.data.data.map((hobby) => ({
+          id: hobby?.id ? hobby.id : "",
           hobby: hobby?.title ? hobby.title : "",
         }));
         setHobbies(formattedHobbies);
@@ -295,16 +375,25 @@ export default function ResumeSideDrawer({ open, setOpen, uploadedResume }) {
         console.log("could not fetch api", err);
       });
   };
-  const InputButtonForSubmit = ({ onClick }) => (
+  const InputButtonForSubmit = ({
+    onClick,
+    section,
+    values,
+    setErrors,
+    setFieldTouched,
+    dirty,
+  }) => (
     <>
       <hr className="my-4" />
       <div className="flex justify-end">
         <button
-          type="submit"
-          onClick={onClick}
+          type="button"
+          onClick={() =>
+            onClick(section, values, setErrors, setFieldTouched, dirty)
+          }
           className="bg-green-300 px-4 py-2 rounded-2xl hover:bg-green-400"
         >
-          Save
+          {!isSaving ? "Save" : "Saving..."}
         </button>
       </div>
     </>
@@ -366,40 +455,6 @@ export default function ResumeSideDrawer({ open, setOpen, uploadedResume }) {
     );
   };
 
-  const accordionContent = {
-    Profile_Photo: (
-      <ProfilePhoto InputButtonForSubmit={<InputButtonForSubmit />} />
-    ),
-    Certificates: (
-      <Certificates
-        ZakiAiPortion={ZakiAiPortion}
-        FieldItem={FieldItem}
-        textField_style={textField_style}
-      />
-    ),
-    Projects: (
-      <Projects
-        ZakiAiPortion={ZakiAiPortion}
-        FieldItem={FieldItem}
-        textField_style={textField_style}
-      />
-    ),
-    Internships: (
-      <Internships
-        ZakiAiPortion={ZakiAiPortion}
-        FieldItem={FieldItem}
-        textField_style={textField_style}
-      />
-    ),
-    Courses: (
-      <Courses
-        ZakiAiPortion={ZakiAiPortion}
-        FieldItem={FieldItem}
-        textField_style={textField_style}
-      />
-    ),
-    Hobbies: <Hobbies FieldItem={FieldItem} />,
-  };
   const AddButton = ({ title, text }) => (
     <button
       type="button"
@@ -420,39 +475,16 @@ export default function ResumeSideDrawer({ open, setOpen, uploadedResume }) {
     }
   };
 
-  const _skills = [
-    "Communication",
-    "Teamwork",
-    "Problem Solving",
-    "Leadership",
-    "Time Management",
-    "Critical Thinking",
-    "Adaptability",
-    "Creativity",
-    "Project Management",
-    "Negotiation",
-    "Customer Service",
-    "Data Analysis",
-    "Public Speaking",
-    "Writing",
-    "Conflict Resolution",
-    "Strategic Planning",
-    "Decision Making",
-    "Collaboration",
-    "Research",
-    "Emotional Intelligence",
-  ];
-
   const ResumeMenuItem = ({ title, items }) => {
     return (
       <div className="border my-3 rounded-lg overflow-hidden">
         <div className="text-md font-semibold bg-[#fafafa] p-[6px]">
           {title}
         </div>
-        <div className="flex text-sm divide-x justify-between p-4">
+        <div className="flex overflow-x-auto text-sm divide-x justify-between p-4">
           {items?.map((item, i) => (
             <div key={i} className="flex items-center px-3 gap-2">
-              <div className="w-[50px] h-[50px]">
+              <div className="w-[35px] h-[35px] sm:w-[40px] sm:h-[40px] md:w-[50px] md:h-[50px]">
                 {resumeQualityLoading ? (
                   <CircularProgress color="success" />
                 ) : (
@@ -483,6 +515,7 @@ export default function ResumeSideDrawer({ open, setOpen, uploadedResume }) {
     linkedinLink: personalInfo?.linkedin_url ? personalInfo?.linkedin_url : "",
     githubLink: personalInfo?.github_url ? personalInfo?.github_url : "",
     profilePhoto: profileImage?.profile_img ? profileImage?.profile_img : null,
+    profilePhotoApi: null,
     description: aboutMe?.about_me_note ? aboutMe?.about_me_note : "",
     education: education.length
       ? education
@@ -518,6 +551,7 @@ export default function ResumeSideDrawer({ open, setOpen, uploadedResume }) {
       ? hobbies
       : [
           {
+            id: "",
             hobby: "",
           },
         ],
@@ -525,6 +559,7 @@ export default function ResumeSideDrawer({ open, setOpen, uploadedResume }) {
       ? internships
       : [
           {
+            id: "",
             companyName: "",
             startDate: "",
             endDate: "",
@@ -535,6 +570,7 @@ export default function ResumeSideDrawer({ open, setOpen, uploadedResume }) {
       ? courses
       : [
           {
+            id: "",
             courseName: "",
             dateAwarded: "",
             organizationName: "",
@@ -545,6 +581,7 @@ export default function ResumeSideDrawer({ open, setOpen, uploadedResume }) {
       ? projects
       : [
           {
+            id: "",
             projectName: "",
             startDate: "",
             endDate: "",
@@ -562,8 +599,7 @@ export default function ResumeSideDrawer({ open, setOpen, uploadedResume }) {
           },
         ],
   };
-  const updatePersonalInfo = (values, errors) => {
-    if (errors) return;
+  const updatePersonalInfo = (values) => {
     axios
       .post(
         `https://api.ziphire.hr/v2/developer/resumes/${uploadedResume?.id}/personal_info`,
@@ -577,15 +613,686 @@ export default function ResumeSideDrawer({ open, setOpen, uploadedResume }) {
           last_name: values?.lastName,
           linkedin_url: values?.linkedinLink,
           mobile: values?.mobileNumber,
+          location: values.location,
         },
         { headers }
       )
       .then((res) => {
         console.log(res);
-        alert("successfull posted");
+        // alert("successfull posted");
       });
   };
+  const updateAboutMe = (values) => {
+    axios
+      .post(
+        `https://api.ziphire.hr/v2/developer/resumes/${uploadedResume?.id}/about_me`,
+        {
+          about_me_note: values.description,
+        },
+        { headers }
+      )
+      .then((res) => {
+        console.log(res);
+        // alert("successfull posted");
+      });
+  };
+  const updateEducation = async (values) => {
+    const allRequests = [];
+    const previousEducation = await axios.get(
+      `https://api.ziphire.hr/v2/developer/resumes/${uploadedResume?.id}/education`,
+      { headers }
+    );
+    const previousEducationIds = previousEducation.data.data.map(
+      (edu) => edu.id
+    );
+    const currentEducationIds = values.education
+      .map((edu) => edu.id)
+      .filter(Boolean);
+    const eduIdsForDeletions = previousEducationIds.filter(
+      (id) => !currentEducationIds.includes(id)
+    );
+    eduIdsForDeletions.forEach((id) => {
+      allRequests.push(
+        axios.delete(
+          `https://api.ziphire.hr/v2/developer/resumes/${uploadedResume?.id}/education/${id}`,
+          { headers }
+        )
+      );
+    });
+    const cgpaSystemMap = {
+      "CGPA out of 4": "cgpa_4",
+      "CGPA out of 5": "cgpa_5",
+      "CGPA out of 10": "cgpa_10",
+      Percentage: "percentage",
+    };
+    const degreeSystem = {
+      "Doctorate(or equivalent)": 1,
+      "Masters(or equivalent)": 2,
+      "MBA(or equivalent)": 3,
+      "Bachelors(or equivalent)": 4,
+    };
+    const ForSubmittingEdu = values?.education?.map((edu) => {
+      const eduData = {
+        completed_year: edu.completionYear,
+        degree: degreeSystem[edu.degreeType] || null,
+        field_of_study: edu.degreeName,
+        description: edu.description,
+        location: edu.educationLocation,
+        resume: uploadedResume.id,
+        school: edu.schoolName,
+        score: edu.score,
+        score_type: cgpaSystemMap[edu.scoreType] || null,
+        started_year: edu.startYear,
+        completed_year: edu.completionYear,
+      };
+      if (edu.id) {
+        allRequests.push(
+          axios.put(
+            `https://api.ziphire.hr/v2/developer/resumes/${uploadedResume?.id}/education/${edu.id}`,
+            eduData,
+            { headers }
+          )
+        );
+      } else {
+        allRequests.push(
+          axios.post(
+            `https://api.ziphire.hr/v2/developer/resumes/${uploadedResume?.id}/education`,
+            eduData,
+            { headers }
+          )
+        );
+      }
+    });
+    const responses = await Promise.all(allRequests);
+    console.log(responses);
+  };
+  const updateWorkHistory = async (values) => {
+    const allRequests = [];
+    const previousWorksRequest = await axios.get(
+      `https://api.ziphire.hr/v2/developer/resumes/${uploadedResume?.id}/work_history`,
+      { headers }
+    );
+    const previousWorkIds = previousWorksRequest.data.data.map((w) => w.id);
+    const currentWorkIds = values.work.map((w) => w.id).filter(Boolean);
+    const idsForDeletion = previousWorkIds.filter(
+      (id) => !currentWorkIds.includes(id)
+    );
+    idsForDeletion.forEach((id) => {
+      allRequests.push(
+        axios.delete(
+          `https://api.ziphire.hr/v2/developer/resumes/${uploadedResume?.id}/work_history/${id}`,
+          { headers }
+        )
+      );
+    });
+    const ForSubmittingWork = values?.work.map((work) => {
+      const workData = {
+        company_name: work.companyName,
+        role: work.jobTitle,
+        start_date: work.startDate || null,
+        end_date: work.endDate,
+        is_running: work.present,
+        description: work.description,
+        location: work.workLocation,
+      };
+      if (work.id) {
+        allRequests.push(
+          axios.put(
+            `https://api.ziphire.hr/v2/developer/resumes/${uploadedResume?.id}/work_history/${work.id}`,
+            workData,
+            { headers }
+          )
+        );
+      } else {
+        allRequests.push(
+          axios.post(
+            `https://api.ziphire.hr/v2/developer/resumes/${uploadedResume?.id}/work_history`,
+            workData,
+            { headers }
+          )
+        );
+      }
+    });
+    const responses = await Promise.all(allRequests);
+    console.log(responses);
+  };
+  const updateSkills = async (values) => {
+    await axios
+      .post(
+        `https://api.ziphire.hr/v2/developer/resumes/${uploadedResume?.id}/skills`,
+        { skills: values?.skills.map((s) => s.id) },
+        { headers }
+      )
+      .then((res) => {
+        console.log(res);
+      });
+  };
+  const updateLanguages = async (values) => {
+    const allRequests = [];
+    const getPreviosLanguages = await axios.get(
+      `https://api.ziphire.hr/v2/developer/resumes/${uploadedResume?.id}/language`,
+      { headers }
+    );
+    const PreviosLanguagesIds = getPreviosLanguages.data.data.map(
+      (lan) => lan.id
+    );
+    const currentLanguagesIds = values.languages
+      .map((lan) => lan.id)
+      .filter(Boolean);
+    const idsForDeletion = PreviosLanguagesIds.filter(
+      (id) => !currentLanguagesIds.includes(id)
+    );
+    idsForDeletion.forEach((id) => {
+      allRequests.push(
+        axios.delete(
+          `https://api.ziphire.hr/v2/developer/resumes/${uploadedResume?.id}/language/${id}`,
+          { headers }
+        )
+      );
+    });
+    values?.languages.map((language) => {
+      const uploadedData = {
+        id: language.id,
+        language: language.languageId,
+        proficiency: language.proficiency.toLowerCase(),
+      };
+      if (language.id) {
+        allRequests.push(
+          axios.put(
+            `https://api.ziphire.hr/v2/developer/resumes/${uploadedResume?.id}/language/${language.id}`,
+            uploadedData,
+            { headers }
+          )
+        );
+      } else {
+        allRequests.push(
+          axios.post(
+            `https://api.ziphire.hr/v2/developer/resumes/${uploadedResume?.id}/language`,
+            uploadedData,
+            { headers }
+          )
+        );
+      }
+    });
+    const response = await Promise.all(allRequests);
+    console.log(response);
+  };
+  const updateProfilePhoto = async (values) => {
+    console.log("clicked profile photo button save");
+    const formData = new FormData();
+    formData.append("profile_img", values.profilePhotoApi);
+    axios
+      .post(
+        `https://api.ziphire.hr/v2/developer/resumes/${uploadedResume?.id}/profile_image`,
+        formData,
+        { headers }
+      )
+      .then((res) => {
+        console.log(res);
+      });
+  };
+  const updateProjects = async (values) => {
+    console.log("project sectuion is clicked");
+    const allRequests = [];
+    const previosProjects = await axios.get(
+      `https://api.ziphire.hr/v2/developer/resumes/${uploadedResume?.id}/past_projects`,
+      { headers }
+    );
+    const previosProjectsIds = previosProjects?.data?.data.map(
+      (project) => project.id
+    );
+    const currentProjectsIds = values.projects
+      .map((project) => project.id)
+      .filter(Boolean);
+    const idsForDeletion = previosProjectsIds.filter(
+      (id) => !currentProjectsIds.includes(id)
+    );
+    idsForDeletion.forEach((id) => {
+      allRequests.push(
+        axios.delete(
+          `https://api.ziphire.hr/v2/developer/resumes/${uploadedResume?.id}/past_projects/${id}`,
+          { headers }
+        )
+      );
+    });
+    values?.projects.map((project) => {
+      const dataForSubmit = {
+        label: project.projectName,
+        description: project.description,
+        start_date: project.startDate,
+        end_date: project.endDate,
+      };
+      if (project.id) {
+        allRequests.push(
+          axios.put(
+            `https://api.ziphire.hr/v2/developer/resumes/${uploadedResume?.id}/past_projects/${project.id}`,
+            dataForSubmit,
+            { headers }
+          )
+        );
+      } else {
+        allRequests.push(
+          axios.post(
+            `https://api.ziphire.hr/v2/developer/resumes/${uploadedResume?.id}/past_projects`,
+            dataForSubmit,
+            { headers }
+          )
+        );
+      }
+    });
+    const responses = await Promise.all(allRequests);
+    console.log(responses);
+  };
+  const updateCertificates = async (values) => {
+    console.log("clicked update certifictae");
 
+    const allRequests = [];
+    const previosCertificates = await axios.get(
+      `https://api.ziphire.hr/v2/developer/resumes/${uploadedResume.id}/certificates`,
+      { headers }
+    );
+    const previosCertificatesIds = previosCertificates?.data?.data.map(
+      (certificate) => certificate.id
+    );
+    const currentCertificatesIds = values.certificates
+      .map((certificate) => certificate.id)
+      .filter(Boolean);
+    const idsForDeletion = previosCertificatesIds.filter(
+      (id) => !currentCertificatesIds.includes(id)
+    );
+    idsForDeletion.forEach((id) => {
+      allRequests.push(
+        axios.delete(
+          `https://api.ziphire.hr/v2/developer/resumes/${uploadedResume.id}/certificates/${id}`,
+          { headers }
+        )
+      );
+    });
+    values?.certificates.map((certificate) => {
+      const dataForSubmit = {
+        title: certificate.certificateTitle,
+        description: certificate.description,
+        date_awarded: certificate.dateAwarded,
+        organization: certificate.organizationName,
+      };
+      if (certificate.id) {
+        allRequests.push(
+          axios.put(
+            `https://api.ziphire.hr/v2/developer/resumes/${uploadedResume.id}/certificates/${certificate.id}`,
+            dataForSubmit,
+            { headers }
+          )
+        );
+      } else {
+        allRequests.push(
+          axios.post(
+            `https://api.ziphire.hr/v2/developer/resumes/${uploadedResume?.id}/certificates`,
+            dataForSubmit,
+            { headers }
+          )
+        );
+      }
+    });
+    const responses = await Promise.all(allRequests);
+    console.log(responses);
+  };
+  const updateInternships = async (values) => {
+    console.log("internShip sectuion is clicked");
+    const allRequests = [];
+    const previosInternShips = await axios.get(
+      `https://api.ziphire.hr/v2/developer/resumes/${uploadedResume?.id}/internships`,
+      { headers }
+    );
+    const previosInternShipsIds = previosInternShips?.data?.data.map(
+      (internship) => internship.id
+    );
+    const currentInternShipsIds = values.internships
+      .map((internship) => internship.id)
+      .filter(Boolean);
+    const idsForDeletion = previosInternShipsIds.filter(
+      (id) => !currentInternShipsIds.includes(id)
+    );
+    idsForDeletion.forEach((id) => {
+      allRequests.push(
+        axios.delete(
+          `https://api.ziphire.hr/v2/developer/resumes/${uploadedResume?.id}/internships/${id}`,
+          { headers }
+        )
+      );
+    });
+    values?.internships.map((internship) => {
+      const dataForSubmit = {
+        label: internship.companyName,
+        description: internship.description,
+        start_date: internship.startDate,
+        end_date: internship.endDate,
+      };
+      if (internship.id) {
+        allRequests.push(
+          axios.put(
+            `https://api.ziphire.hr/v2/developer/resumes/${uploadedResume?.id}/internships/${internship.id}`,
+            dataForSubmit,
+            { headers }
+          )
+        );
+      } else {
+        allRequests.push(
+          axios.post(
+            `https://api.ziphire.hr/v2/developer/resumes/${uploadedResume?.id}/internships`,
+            dataForSubmit,
+            { headers }
+          )
+        );
+      }
+    });
+    const responses = await Promise.all(allRequests);
+    console.log(responses);
+  };
+  const updateCourses = async (values) => {
+    console.log("clicked update course");
+
+    const allRequests = [];
+    const previosCourses = await axios.get(
+      `https://api.ziphire.hr/v2/developer/resumes/${uploadedResume.id}/courses`,
+      { headers }
+    );
+    const previosCoursesIds = previosCourses?.data?.data.map(
+      (course) => course.id
+    );
+    const currentCoursesIds = values.courses
+      .map((course) => course.id)
+      .filter(Boolean);
+    const idsForDeletion = previosCoursesIds.filter(
+      (id) => !currentCoursesIds.includes(id)
+    );
+    idsForDeletion.forEach((id) => {
+      allRequests.push(
+        axios.delete(
+          `https://api.ziphire.hr/v2/developer/resumes/${uploadedResume.id}/courses/${id}`,
+          { headers }
+        )
+      );
+    });
+    values?.courses.map((course) => {
+      const dataForSubmit = {
+        id: course.id,
+        title: course.courseName,
+        description: course.description,
+        date_awarded: course.dateAwarded,
+        organization: course.organizationName,
+      };
+      if (course.id) {
+        allRequests.push(
+          axios.put(
+            `https://api.ziphire.hr/v2/developer/resumes/${uploadedResume.id}/courses/${course.id}`,
+            dataForSubmit,
+            { headers }
+          )
+        );
+      } else {
+        allRequests.push(
+          axios.post(
+            `https://api.ziphire.hr/v2/developer/resumes/${uploadedResume?.id}/courses`,
+            dataForSubmit,
+            { headers }
+          )
+        );
+      }
+    });
+    const responses = await Promise.all(allRequests);
+    console.log(responses);
+  };
+
+  const updateHobbies = async (values) => {
+    console.log("clicked hobbies section");
+    const allRequests = [];
+    const previousHobbies = await axios.get(
+      `https://api.ziphire.hr/v2/developer/resumes/${uploadedResume?.id}/hobbies`,
+      { headers }
+    );
+    const previousHobbiesIds = previousHobbies.data.data.map(
+      (hobby) => hobby.id
+    );
+    const currentHobbiesIds = values.hobbies
+      .map((hobby) => hobby.id)
+      .filter(Boolean);
+    const idsForDeletion = previousHobbiesIds.filter(
+      (id) => !currentHobbiesIds.includes(id)
+    );
+    idsForDeletion.forEach((id) => {
+      allRequests.push(
+        axios.delete(
+          `https://api.ziphire.hr/v2/developer/resumes/${uploadedResume?.id}/hobbies/${id}`,
+          { headers }
+        )
+      );
+    });
+    values?.hobbies.map((hobby) => {
+      const dataForSubmit = {
+        title: hobby.hobby,
+      };
+      if (hobby.id) {
+        allRequests.push(
+          axios.put(
+            `https://api.ziphire.hr/v2/developer/resumes/${uploadedResume?.id}/hobbies/${hobby.id}`,
+            dataForSubmit,
+            { headers }
+          )
+        );
+      } else {
+        allRequests.push(
+          axios.post(
+            `https://api.ziphire.hr/v2/developer/resumes/${uploadedResume?.id}/hobbies`,
+            dataForSubmit,
+            { headers }
+          )
+        );
+      }
+    });
+    const res = await Promise.all(allRequests);
+    console.log(res);
+  };
+  const validateSection = async (
+    section,
+    values,
+    setErrors,
+    setFieldTouched
+  ) => {
+    let sectionSchema;
+    let sectionValues;
+
+    switch (section) {
+      case "personalInfo":
+        sectionSchema = personalInfoValidation;
+        sectionValues = {
+          jobTitle: values.jobTitle,
+          firstName: values.firstName,
+          lastName: values.lastName,
+          country: values.country,
+          location: values.location,
+          email: values.email,
+          mobileNumber: values.mobileNumber,
+          linkedinLink: values.linkedinLink,
+          githubLink: values.githubLink,
+        };
+        break;
+      case "aboutMe":
+        sectionSchema = aboutMeValidation;
+        sectionValues = { description: values.description };
+        break;
+      case "education":
+        sectionSchema = educationValidation;
+        sectionValues = { education: values.education };
+        break;
+      case "work":
+        sectionSchema = workValidation;
+        sectionValues = { work: values.work };
+        break;
+      case "skills":
+        sectionSchema = skillsValidation;
+        sectionValues = { skills: values.skills };
+        break;
+      case "languages":
+        sectionSchema = languagesValidation;
+        sectionValues = { languages: values.languages };
+        break;
+      case "hobbies":
+        sectionSchema = hobbiesValidation;
+        sectionValues = { hobbies: values.hobbies };
+        break;
+      case "projects":
+        sectionSchema = projectsValidation;
+        sectionValues = { projects: values.projects };
+        break;
+      case "certificates":
+        sectionSchema = certificatesValidation;
+        sectionValues = { certificates: values.certificates };
+        break;
+      case "internships":
+        sectionSchema = internshipsValidation;
+        sectionValues = { internships: values.internships };
+        break;
+      case "courses":
+        sectionSchema = coursesValidation;
+        sectionValues = { courses: values.courses };
+        break;
+      case "profilePhoto":
+        return true;
+      default:
+        return false;
+    }
+
+    try {
+      await sectionSchema.validate(sectionValues, { abortEarly: false });
+      return true;
+    } catch (err) {
+      if (err.inner) {
+        const newErrors = {};
+        err.inner.forEach((e) => {
+          setFieldTouched(e.path, true);
+          newErrors[e.path] = e.message;
+        });
+        setErrors(newErrors);
+      }
+    }
+  };
+  const handleSectionSave = async (
+    section,
+    values,
+    setErrors,
+    setFieldTouched,
+    dirty
+  ) => {
+    if (!dirty) return;
+    console.log("handleSectionSave called for", section, "dirty:", dirty);
+    setIsSaving(true);
+    try {
+      const isValid = await validateSection(
+        section,
+        values,
+        setErrors,
+        setFieldTouched
+      );
+
+      if (!isValid) {
+        return;
+      }
+
+      switch (section) {
+        case "personalInfo":
+          await updatePersonalInfo(values);
+          break;
+        case "aboutMe":
+          await updateAboutMe(values);
+          break;
+        case "education":
+          await updateEducation(values);
+          break;
+        case "work":
+          await updateWorkHistory(values);
+          break;
+        case "skills":
+          await updateSkills(values);
+          break;
+        case "languages":
+          await updateLanguages(values);
+          break;
+        case "profilePhoto":
+          await updateProfilePhoto(values);
+          break;
+        case "hobbies":
+          await updateHobbies(values);
+          break;
+        case "certificates":
+          await updateCertificates(values);
+          break;
+        case "courses":
+          await updateCourses(values);
+          break;
+        case "internships":
+          await updateInternships(values);
+          break;
+        case "projects":
+          await updateProjects(values);
+          break;
+      }
+      showAlertDrawer(section);
+    } catch (err) {
+      console.error(err);
+      showAlertDrawer("could not saved");
+      setAlertMessage({ heading: "Error", message: "could not save Data" });
+    } finally {
+      setIsSaving(false);
+    }
+  };
+  const accordionContent = {
+    Profile_Photo: (
+      <ProfilePhoto handleSectionSave={handleSectionSave} isSaving={isSaving} />
+    ),
+    Certificates: (
+      <Certificates
+        ZakiAiPortion={ZakiAiPortion}
+        FieldItem={FieldItem}
+        textField_style={textField_style}
+        handleSectionSave={handleSectionSave}
+        isSaving={isSaving}
+      />
+    ),
+    Projects: (
+      <Projects
+        ZakiAiPortion={ZakiAiPortion}
+        FieldItem={FieldItem}
+        textField_style={textField_style}
+        handleSectionSave={handleSectionSave}
+        isSaving={isSaving}
+      />
+    ),
+    Internships: (
+      <Internships
+        ZakiAiPortion={ZakiAiPortion}
+        FieldItem={FieldItem}
+        textField_style={textField_style}
+        handleSectionSave={handleSectionSave}
+        isSaving={isSaving}
+      />
+    ),
+    Courses: (
+      <Courses
+        ZakiAiPortion={ZakiAiPortion}
+        FieldItem={FieldItem}
+        textField_style={textField_style}
+        handleSectionSave={handleSectionSave}
+        isSaving={isSaving}
+      />
+    ),
+    Hobbies: (
+      <Hobbies
+        FieldItem={FieldItem}
+        handleSectionSave={handleSectionSave}
+        isSaving={isSaving}
+      />
+    ),
+  };
   return (
     <>
       <Modal
@@ -595,7 +1302,7 @@ export default function ResumeSideDrawer({ open, setOpen, uploadedResume }) {
         aria-describedby="modal-modal-description"
       >
         <Box sx={styleForResumeExitModal}>
-          <h1 className="text-2xl font-semibold text-center">
+          <h1 className="text-xl font-[500] text-center md:text-2xl md:font-semibold">
             Required information is missing. Are you sure you want to exit?
           </h1>
           <div className="flex justify-center my-2">
@@ -625,6 +1332,59 @@ export default function ResumeSideDrawer({ open, setOpen, uploadedResume }) {
           </div>
         </Box>
       </Modal>
+
+      <Drawer
+        anchor="right"
+        open={savedOpenDrawer}
+        onClose={toggleSavedOpenDrawer(false)}
+        slotProps={{
+          paper: {
+            sx: {
+              width: {
+                xs: "300px",
+                sm: "350px",
+                md: "400px",
+              },
+              height: "fit-content",
+              maxHeight: "120px",
+              top: 20,
+              right: 10,
+              borderRadius: "10px",
+            },
+          },
+        }}
+      >
+        <div className="flex h-[110px] w-full gap-4 relative">
+          <div className="w-[10px] h-full bg-green-500"></div>
+          <div className="flex gap-2 mt-5">
+            <div className="mt-2">
+              <CheckCircleOutlineIcon
+                sx={{
+                  background: "green",
+                  color: "white",
+                  borderRadius: "50px",
+                  width: 40,
+                  height: 40,
+                  display: "flex",
+                  alignItems: "center",
+                  justifyContent: "center",
+                }}
+              />
+            </div>
+            <div className="flex flex-col">
+              <h1 className="text-lg font-semibold">{alertMessage.heading}</h1>
+              <h3 className="text-[16px] ">{alertMessage.message}</h3>
+            </div>
+          </div>
+          <button
+            type="button"
+            onClick={toggleSavedOpenDrawer(false)}
+            className="fixed top-8 right-10"
+          >
+            <CloseIcon />
+          </button>
+        </div>
+      </Drawer>
       <Drawer
         anchor="right"
         open={open}
@@ -634,7 +1394,12 @@ export default function ResumeSideDrawer({ open, setOpen, uploadedResume }) {
             sx: { background: "rgba(0,0,0,0.1)" },
           },
           paper: {
-            sx: { width: "88%" },
+            sx: {
+              width: {
+                xs: "100%",
+                sm: "88%",
+              },
+            },
           },
         }}
       >
@@ -650,11 +1415,12 @@ export default function ResumeSideDrawer({ open, setOpen, uploadedResume }) {
             touched,
             errors,
             setErrors,
+            dirty,
           }) => {
             return (
               <Form>
-                <div className="flex gap-5">
-                  <div className="px-5 py-10 w-[57%] shadowColor">
+                <div className="flex px-[5px] flex-col gap-0 md:gap-5 md:flex-row md:p-0">
+                  <div className="px-5 py-10 w-[100%] shadowColor md:w-[57%]">
                     <button
                       type="button"
                       onClick={handleOpenResumeExitModal}
@@ -670,23 +1436,29 @@ export default function ResumeSideDrawer({ open, setOpen, uploadedResume }) {
                     <h1 className="text-2xl font-semibold pt-4">
                       Your Resume Analysis
                     </h1>
-                    <ResumeMenuItem
-                      title="Resume Score"
-                      items={[
-                        {
-                          text: !resumeQualityLoading
-                            ? resumeQuality?.resume_score?.description
-                            : "A higher score increases your chances of getting noticed—review and refine your resume for an even better fit!",
-                          progressCircle: (
+                    <div className="border my-3 rounded-lg overflow-hidden">
+                      <div className="font-semibold bg-[#fafafa] p-[6px]">
+                        Resume Score
+                      </div>
+                      <div className="flex items-center px-3 py-2 gap-2">
+                        <div className="min-w-[35px] min-h-[35px] w-[35px] h-[35px] sm:min-w-[40px] sm:min-h-[40px] sm:w-[40px] sm:h-[40px] md:min-w-[50px] md:min-h-[50px] md:w-[50px] md:h-[50px]">
+                          {resumeQualityLoading ? (
+                            <CircularProgress color="success" />
+                          ) : (
                             <CircularProgressbar
                               styles={buildStyles(styleForDrawer)}
                               value={resumeQuality?.resume_score?.overall_score}
                               text={`${resumeQuality?.resume_score?.overall_score}%`}
                             />
-                          ),
-                        },
-                      ]}
-                    />
+                          )}
+                        </div>
+                        <div className="text-[14px] md:text-[15px]">
+                          {!resumeQualityLoading
+                            ? resumeQuality?.resume_score?.description
+                            : "A higher score increases your chances of getting noticed—review and refine your resume for an even better fit!"}
+                        </div>
+                      </div>
+                    </div>
                     <ResumeMenuItem
                       title="Resume Quality Breakdown"
                       items={[
@@ -743,7 +1515,7 @@ export default function ResumeSideDrawer({ open, setOpen, uploadedResume }) {
                       ]}
                     />
                     <div className="border my-3 rounded-lg overflow-hidden">
-                      <div className="text-md font-semibold bg-[#fafafa] p-[6px]">
+                      <div className="font-semibold bg-[#fafafa] p-[6px]">
                         <span>Areas for Improvement</span>
                       </div>
 
@@ -754,7 +1526,7 @@ export default function ResumeSideDrawer({ open, setOpen, uploadedResume }) {
                           <div className="py-6 flex overflow-x-auto whitespace-nowrap gap-2 hide-scrollbar">
                             {resumeQuality?.areas_for_improvement?.map(
                               (item) => (
-                                <span className="border font-semibold text-[15px] rounded-xl p-2">
+                                <span className="border font-semibold text-[13px] rounded-xl p-2 md:text-[15px]">
                                   {item}
                                 </span>
                               )
@@ -764,7 +1536,7 @@ export default function ResumeSideDrawer({ open, setOpen, uploadedResume }) {
                       )}
                     </div>
                     <div>
-                      <h1 className="text-2xl font-semibold">
+                      <h1 className="text-[23px] font-semibold md:text-2xl">
                         Resume Sections
                       </h1>
                       <span className="text-[14px]">
@@ -782,7 +1554,7 @@ export default function ResumeSideDrawer({ open, setOpen, uploadedResume }) {
                           type="text"
                           placeholder="job Title"
                         />
-                        <div className="w-full flex gap-4">
+                        <div className="w-full flex gap-2 md:gap-4">
                           <FieldItem
                             name="firstName"
                             type="text"
@@ -794,13 +1566,13 @@ export default function ResumeSideDrawer({ open, setOpen, uploadedResume }) {
                             placeholder="Last Name"
                           />
                         </div>
-                        <div className="w-full flex gap-4 items-center">
-                          <fieldset>
+                        <div className="w-full flex gap-2 items-center md:gap-4">
+                          <fieldset className="w-full">
                             <Autocomplete
                               id="country-select-demo"
                               onBlur={() => setFieldTouched("country", true)}
-                              sx={{ width: 310 }}
                               options={countries}
+                              sx={{ width: "100%" }}
                               autoHighlight
                               value={values.country || null}
                               onChange={(e, newValue) => {
@@ -838,7 +1610,7 @@ export default function ResumeSideDrawer({ open, setOpen, uploadedResume }) {
                             placeholder="Location"
                           />
                         </div>
-                        <div className="w-full flex gap-4">
+                        <div className="w-full flex gap-2 md:gap-4">
                           <FieldItem
                             name="email"
                             type="text"
@@ -861,7 +1633,12 @@ export default function ResumeSideDrawer({ open, setOpen, uploadedResume }) {
                           placeholder="GitHub URL"
                         />
                         <InputButtonForSubmit
-                          onClick={() => updatePersonalInfo(values, errors)}
+                          onClick={handleSectionSave}
+                          section="personalInfo"
+                          values={values}
+                          setFieldTouched={setFieldTouched}
+                          setErrors={setErrors}
+                          dirty={dirty}
                         />
                       </div>
                     </CustomAccordion>
@@ -870,7 +1647,12 @@ export default function ResumeSideDrawer({ open, setOpen, uploadedResume }) {
                       <div>
                         <ZakiAiPortion title="description" />
                         <InputButtonForSubmit
-                          onClick={() => console.log("sd")}
+                          onClick={handleSectionSave}
+                          section="aboutMe"
+                          values={values}
+                          setFieldTouched={setFieldTouched}
+                          setErrors={setErrors}
+                          dirty={dirty}
                         />
                       </div>
                     </CustomAccordion>
@@ -889,7 +1671,7 @@ export default function ResumeSideDrawer({ open, setOpen, uploadedResume }) {
                                     color="grey"
                                   />
                                 </div>
-                                <div className="w-full flex gap-4">
+                                <div className="w-full flex gap-2 md:gap-4">
                                   <FieldItem
                                     name={`education[${index}].schoolName`}
                                     type="text"
@@ -901,7 +1683,7 @@ export default function ResumeSideDrawer({ open, setOpen, uploadedResume }) {
                                     placeholder="Degree Name"
                                   />
                                 </div>
-                                <div className="w-full flex gap-4 items-center">
+                                <div className="w-full flex gap-1 items-center sm:gap-2 md:gap-4">
                                   <TextField
                                     select
                                     name={`education[${index}].degreeType`}
@@ -935,10 +1717,10 @@ export default function ResumeSideDrawer({ open, setOpen, uploadedResume }) {
                                     }}
                                   >
                                     {[
-                                      "Bachelor",
-                                      "Master",
-                                      "PhD",
-                                      "Diploma",
+                                      "Doctorate(or equivalent)",
+                                      "Masters(or equivalent)",
+                                      "MBA(or equivalent)",
+                                      "Bachelors(or equivalent)",
                                     ].map((option) => (
                                       <MenuItem key={option} value={option}>
                                         {option}
@@ -994,7 +1776,7 @@ export default function ResumeSideDrawer({ open, setOpen, uploadedResume }) {
                                     ))}
                                   </TextField>
                                 </div>
-                                <div className="w-full flex gap-4 items-center mb-6">
+                                <div className="w-full flex gap-2 items-center mb-6 md:gap-4">
                                   <FieldItem
                                     name={`education[${index}].startYear`}
                                     type="text"
@@ -1037,7 +1819,14 @@ export default function ResumeSideDrawer({ open, setOpen, uploadedResume }) {
                               </span>
                               <span>Add One More Education</span>
                             </button>
-                            <InputButtonForSubmit />
+                            <InputButtonForSubmit
+                              onClick={handleSectionSave}
+                              section="education"
+                              values={values}
+                              setFieldTouched={setFieldTouched}
+                              setErrors={setErrors}
+                              dirty={dirty}
+                            />
                           </>
                         )}
                       </FieldArray>
@@ -1057,7 +1846,7 @@ export default function ResumeSideDrawer({ open, setOpen, uploadedResume }) {
                                     color="grey"
                                   />
                                 </div>
-                                <div className="w-full flex gap-4 items-center">
+                                <div className="w-full flex gap-2 items-center md:gap-4">
                                   <FieldItem
                                     type="text"
                                     name={`work[${index}].jobTitle`}
@@ -1069,7 +1858,7 @@ export default function ResumeSideDrawer({ open, setOpen, uploadedResume }) {
                                     placeholder="Company Name"
                                   />
                                 </div>
-                                <div className="w-full flex gap-4 items-center flex-1">
+                                <div className="w-full flex gap-1 items-center flex-1 sm:gap-2 md:gap-4">
                                   <TextField
                                     type="date"
                                     placeholder="Start Date"
@@ -1175,7 +1964,14 @@ export default function ResumeSideDrawer({ open, setOpen, uploadedResume }) {
                               </span>
                               <span>Add One More Employment</span>
                             </button>
-                            <InputButtonForSubmit />
+                            <InputButtonForSubmit
+                              onClick={handleSectionSave}
+                              section="work"
+                              values={values}
+                              setFieldTouched={setFieldTouched}
+                              setErrors={setErrors}
+                              dirty={dirty}
+                            />
                           </>
                         )}
                       </FieldArray>
@@ -1185,7 +1981,7 @@ export default function ResumeSideDrawer({ open, setOpen, uploadedResume }) {
                       <FieldArray name="skills">
                         {({ push, remove }) => (
                           <>
-                            <div className="flex items-center gap-1 gap-y-4 flex-wrap">
+                            <div className="flex items-center gap-y-4 flex-wrap">
                               {values?.skills.map((value, index) => (
                                 <div
                                   key={index}
@@ -1207,20 +2003,30 @@ export default function ResumeSideDrawer({ open, setOpen, uploadedResume }) {
                                       },
                                     }}
                                     value={values.skills[index].skill}
-                                    onChange={(e) =>
+                                    onChange={(e) => {
+                                      const selectedOption = allSkills.find(
+                                        (opt) => opt.label === e.target.value
+                                      );
                                       setFieldValue(
                                         `skills[${index}].skill`,
-                                        e.target.value
-                                      )
-                                    }
+                                        selectedOption.label
+                                      );
+                                      setFieldValue(
+                                        `skills[${index}].id`,
+                                        selectedOption.id
+                                      );
+                                    }}
                                     sx={{
                                       width: "90%",
                                       ...textField_style,
                                     }}
                                   >
-                                    {_skills.map((option) => (
-                                      <MenuItem key={option} value={option}>
-                                        {option}
+                                    {allSkills.map((option) => (
+                                      <MenuItem
+                                        key={option.id}
+                                        value={option.label}
+                                      >
+                                        {option.label}
                                       </MenuItem>
                                     ))}
                                   </TextField>
@@ -1237,6 +2043,7 @@ export default function ResumeSideDrawer({ open, setOpen, uploadedResume }) {
                               onClick={() =>
                                 push({
                                   skill: "",
+                                  id: "",
                                 })
                               }
                               className="flex items-center gap-2 my-4"
@@ -1246,32 +2053,33 @@ export default function ResumeSideDrawer({ open, setOpen, uploadedResume }) {
                               </span>
                               <span>Add One More Skill</span>
                             </button>
-                            <InputButtonForSubmit />
-                            <h1>Recommended Skills</h1>
-                            <div className="flex gap-2 items-center">
-                              {[
-                                "Leadership",
-                                "Teamwork",
-                                "Negotiation",
-                                "Writing",
-                                "Research",
-                              ]
-                                .filter(
-                                  (skill) =>
-                                    !values.skills.some(
-                                      (s) => s.skill === skill
-                                    )
-                                )
-                                .map((skill, index) => (
-                                  <button
-                                    type="button"
-                                    key={index}
-                                    className="py-1 px-3 text-sm rounded-2xl bg-green-200"
-                                    onClick={() => push({ skill: skill })}
-                                  >
-                                    {skill}
-                                  </button>
-                                ))}
+                            <InputButtonForSubmit
+                              onClick={handleSectionSave}
+                              section="skills"
+                              values={values}
+                              setFieldTouched={setFieldTouched}
+                              setErrors={setErrors}
+                              dirty={dirty}
+                            />
+                            <h1 className="mb-3">Recommended Skills</h1>
+                            <div className="flex gap-2 items-center flex-wrap w-full justify-start">
+                              {loading ? <CircularProgress size={25} /> : ""}
+                              {recommendedSkills?.map((skill, index) => (
+                                <button
+                                  type="button"
+                                  key={index}
+                                  className="py-1 px-3 text-[12px] whitespace-nowrap rounded-2xl bg-green-200"
+                                  onClick={() => {
+                                    push({ id: skill.id, skill: skill.label });
+                                    setExcludedIds((prev) => [
+                                      ...prev,
+                                      skill.id,
+                                    ]);
+                                  }}
+                                >
+                                  {skill.label}
+                                </button>
+                              ))}
                             </div>
                           </>
                         )}
@@ -1292,7 +2100,7 @@ export default function ResumeSideDrawer({ open, setOpen, uploadedResume }) {
                                     color="grey"
                                   />
                                 </div>
-                                <div className="flex items-center gap-3 my-2">
+                                <div className="flex items-center gap-2 my-2 md:gap-4">
                                   <TextField
                                     select
                                     name={`languages[${index}].language`}
@@ -1309,12 +2117,21 @@ export default function ResumeSideDrawer({ open, setOpen, uploadedResume }) {
                                       },
                                     }}
                                     value={values.languages[index].language}
-                                    onChange={(e) =>
+                                    onChange={(e) => {
+                                      const selectedField = allLanguages.find(
+                                        (lan) => {
+                                          return lan.name === e.target.value;
+                                        }
+                                      );
                                       setFieldValue(
                                         `languages[${index}].language`,
-                                        e.target.value
-                                      )
-                                    }
+                                        selectedField.name
+                                      );
+                                      setFieldValue(
+                                        `languages[${index}].languageId`,
+                                        selectedField.id
+                                      );
+                                    }}
                                     onBlur={() => {
                                       setFieldTouched(
                                         `languages[${index}].language`,
@@ -1336,9 +2153,12 @@ export default function ResumeSideDrawer({ open, setOpen, uploadedResume }) {
                                       ...textField_style,
                                     }}
                                   >
-                                    {_skills.map((option) => (
-                                      <MenuItem key={option} value={option}>
-                                        {option}
+                                    {allLanguages.map((option) => (
+                                      <MenuItem
+                                        key={option.id}
+                                        value={option.name}
+                                      >
+                                        {option.name}
                                       </MenuItem>
                                     ))}
                                   </TextField>
@@ -1385,8 +2205,12 @@ export default function ResumeSideDrawer({ open, setOpen, uploadedResume }) {
                                       ...textField_style,
                                     }}
                                   >
-                                    {_skills.map((option) => (
-                                      <MenuItem key={option} value={option}>
+                                    {[
+                                      "Fluent/Native",
+                                      "Intermediate",
+                                      "Beginner",
+                                    ].map((option, index) => (
+                                      <MenuItem key={index} value={option}>
                                         {option}
                                       </MenuItem>
                                     ))}
@@ -1398,7 +2222,9 @@ export default function ResumeSideDrawer({ open, setOpen, uploadedResume }) {
                               type="button"
                               onClick={() =>
                                 push({
+                                  id: "",
                                   language: "",
+                                  languageId: "",
                                   proficiency: "",
                                 })
                               }
@@ -1413,7 +2239,11 @@ export default function ResumeSideDrawer({ open, setOpen, uploadedResume }) {
                         )}
                       </FieldArray>
                       <InputButtonForSubmit
-                        onClick={() => console.log("clicked")}
+                        onClick={handleSectionSave}
+                        section="languages"
+                        values={values}
+                        setFieldTouched={setFieldTouched}
+                        dirty={dirty}
                       />
                     </CustomAccordion>
                     {myAccordion.map((accor) => (
@@ -1429,7 +2259,7 @@ export default function ResumeSideDrawer({ open, setOpen, uploadedResume }) {
                       </CustomAccordion>
                     ))}
                     <hr className="mt-10 mb-5" />
-                    {myAccordion.length < 5 && (
+                    {myAccordion.length < 6 && (
                       <h1 className="text-2xl font-semibold text-gray-900 mb-5">
                         Add Section
                       </h1>
@@ -1458,7 +2288,7 @@ export default function ResumeSideDrawer({ open, setOpen, uploadedResume }) {
                       )}
                     </div>
                   </div>
-                  <div className="w-[43%] flex flex-col">
+                  <div className="w-[100%] flex flex-col md:w-[43%]">
                     <div className="flex justify-end mt-10 mb-4 mx-1">
                       <button
                         type="button"

@@ -28,7 +28,7 @@ const LogIn = ({ setToken }) => {
       .then((res) => {
         console.log("login succefull", res.data);
         localStorage.setItem("token", res.data.tokens.access);
-        setToken(res.data.tokens.access)
+        setToken(res.data.tokens.access);
         navigate("/");
       })
       .catch((err) => {
@@ -37,12 +37,12 @@ const LogIn = ({ setToken }) => {
   };
   return (
     <div className="flex justify-center mt-10">
-      <div className="bg-rose-50 w-[40%] border-2 border-black rounded-lg py-20 px-10">
+      <div className="bg-rose-50 w-[70%] border-2 border-black rounded-lg py-5 md:w-[40%] md:py-10">
         <h1 className="text-4xl font-bold my-4 text-center">Login In</h1>
         <form onSubmit={handleSubmit}>
           <div className="flex flex-wrap justify-center">
             <input
-              className="border-2 w-full border-black p-2 rounded-lg m-4 "
+              className="border-2 text-sm w-full border-black px-2 py-1 rounded-lg mx-2 my-1 md:p-2 md:m-3 md:w-[80%]"
               type="email"
               name="email"
               placeholder="Email"
@@ -50,7 +50,7 @@ const LogIn = ({ setToken }) => {
               onChange={(e) => setEmail(e.target.value)}
             />
             <input
-              className="border-2 w-full border-black p-2 rounded-lg m-4 "
+              className="border-2 text-sm w-full border-black px-2 py-1 rounded-lg mx-2 my-1 md:p-2 md:m-3 md:w-[80%]"
               type="password"
               name="password"
               placeholder="password"
@@ -60,12 +60,12 @@ const LogIn = ({ setToken }) => {
           </div>
           <button
             type="submit"
-            className="border-2 border-green-950 block m-auto mb-1 py-2 px-2 rounded-lg hover:bg-slate-600 hover:text-white transition"
+            className="border-2 text-sm border-green-950 block m-auto my-2 py-1 px-1 rounded-lg hover:bg-slate-600 hover:text-white transition md:p-2 md:text-[18px]"
           >
             Submit
           </button>
-          <div className="flex justify-center mt-3">
-            <span>
+          <div className="flex justify-center px-2 mt-3">
+            <span className="text-[13px] text-center md:text-[18px]">
               Don't have an Account?{" "}
               <NavLink to="/signUp" className="text-blue-950 hover:underline">
                 Sign Up

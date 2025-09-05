@@ -2,13 +2,27 @@ import { FieldArray } from "formik";
 import { MdDeleteForever } from "react-icons/md";
 import { TextField } from "@mui/material";
 
-const Internships = ({ FieldItem, textField_style, ZakiAiPortion }) => {
+const Internships = ({
+  FieldItem,
+  textField_style,
+  ZakiAiPortion,
+  handleSectionSave,
+  isSaving
+}) => {
   return (
     <FieldArray name="internships">
       {({
         push,
         remove,
-        form: { values, setFieldTouched, setFieldValue, touched, errors },
+        form: {
+          values,
+          setFieldTouched,
+          setFieldValue,
+          touched,
+          errors,
+          setErrors,
+          dirty,
+        },
       }) => (
         <>
           {values?.internships?.map((value, index) => (
@@ -26,7 +40,7 @@ const Internships = ({ FieldItem, textField_style, ZakiAiPortion }) => {
                 placeholder="Company Name"
                 name={`internships[${index}].companyName`}
               />{" "}
-              <div className="w-full flex gap-4 items-center flex-1">
+              <div className="w-full flex gap-2 items-center flex-1 sm:gap-3 md:gap-4">
                 <TextField
                   type="date"
                   placeholder="Start Date"
@@ -86,6 +100,7 @@ const Internships = ({ FieldItem, textField_style, ZakiAiPortion }) => {
               type="button"
               onClick={() =>
                 push({
+                  id: "",
                   companyName: "",
                   startDate: "",
                   endDate: "",
@@ -104,10 +119,19 @@ const Internships = ({ FieldItem, textField_style, ZakiAiPortion }) => {
             <hr className="my-4" />
             <div className="flex justify-end">
               <button
-                type="submit"
+                type="button"
                 className="bg-green-300 px-4 py-2 rounded-2xl hover:bg-green-400"
+                onClick={() =>
+                  handleSectionSave(
+                    "internships",
+                    values,
+                    setErrors,
+                    setFieldTouched,
+                    dirty
+                  )
+                }
               >
-                Save
+                {!isSaving ?  "Save" : "Saving..."}
               </button>
             </div>
           </div>
