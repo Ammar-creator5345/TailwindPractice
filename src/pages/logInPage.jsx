@@ -27,7 +27,7 @@ const LogIn = ({ setToken }) => {
       )
       .then((res) => {
         console.log("login succefull", res.data);
-        localStorage.setItem("token", res.data.tokens.access);
+        localStorage.setItem("tokessn", res.data.tokens.access);
         setToken(res.data.tokens.access);
         navigate("/");
       })

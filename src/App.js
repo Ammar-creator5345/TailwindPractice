@@ -8,16 +8,18 @@ import ResumeSideDrawer from "./components/ResumeSideDrawer";
 import { Navigate } from "react-router-dom";
 import { useEffect, useState } from "react";
 import axios from "axios";
+import AlertDrawer from "./components/alertDrawer";
 
 function App() {
   const [token, setToken] = useState(localStorage.getItem("token"));
+  const [showAlert, setShowAlert] = useState(false);
   const navigate = useNavigate();
   useEffect(() => {
     axios.interceptors.response.use(
       (response) => response,
       (error) => {
         if (error?.response?.status === 401) {
-          alert("token Expired");
+          setShowAlert(true);
           localStorage.removeItem("token");
           setToken(null);
           navigate("/login");
@@ -28,6 +30,7 @@ function App() {
   }, []);
   return (
     <div className="App">
+      {showAlert && <AlertDrawer />}
       <Routes>
         <Route
           path="/login"

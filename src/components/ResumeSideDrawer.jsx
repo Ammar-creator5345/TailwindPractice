@@ -106,7 +106,7 @@ export default function ResumeSideDrawer({ open, setOpen, uploadedResume }) {
     setSavedOpenDrawer(true);
     setTimeout(() => {
       setSavedOpenDrawer(false);
-    }, 55000);
+    }, 5000);
   };
   const styleForResumeExitModal = {
     position: "absolute",
