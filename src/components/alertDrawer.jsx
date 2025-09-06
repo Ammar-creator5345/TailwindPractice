@@ -1,5 +1,5 @@
 import Drawer from "@mui/material/Drawer";
-import CheckCircleOutlineIcon from "@mui/icons-material/CheckCircleOutline";
+import PriorityHighIcon from "@mui/icons-material/PriorityHigh";
 import CloseIcon from "@mui/icons-material/Close";
 import { useState } from "react";
 
@@ -37,7 +37,7 @@ const AlertDrawer = () => {
         <div className="w-[10px] h-full bg-green-500"></div>
         <div className="flex gap-2 mt-5">
           <div className="mt-2">
-            <CheckCircleOutlineIcon
+            <PriorityHighIcon
               sx={{
                 background: "green",
                 color: "white",
