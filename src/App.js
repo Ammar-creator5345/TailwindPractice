@@ -6,10 +6,23 @@ import EmailVerification from "./pages/email_verification";
 import Resumes from "./pages/resumes";
 import ResumeSideDrawer from "./components/ResumeSideDrawer";
 import { Navigate } from "react-router-dom";
-import { useState } from "react";
+import { useEffect, useState } from "react";
+import axios from "axios";
 
 function App() {
   const [token, setToken] = useState(localStorage.getItem("token"));
+  useEffect(() => {
+    axios.interceptors.response.use(
+      (response) => response,
+      (error) => {
+        if (error?.response?.status === 401) {
+          alert("token Expired");
+          localStorage.removeItem("token");
+        }
+        return Promise.reject(error);
+      }
+    );
+  }, []);
   return (
     <div className="App">
       <Routes>
