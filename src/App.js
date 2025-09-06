@@ -19,6 +19,7 @@ function App() {
         if (error?.response?.status === 401) {
           alert("token Expired");
           localStorage.removeItem("token");
+          setToken(null);
           navigate("/login");
         }
         return Promise.reject(error);
