@@ -1,6 +1,6 @@
 import Testing from "./pages/testing";
 import LogIn from "./pages/logInPage";
-import { Route, Routes } from "react-router-dom";
+import { Route, Routes, useNavigate } from "react-router-dom";
 import SignUp from "./pages/signUp";
 import EmailVerification from "./pages/email_verification";
 import Resumes from "./pages/resumes";
@@ -11,6 +11,7 @@ import axios from "axios";
 
 function App() {
   const [token, setToken] = useState(localStorage.getItem("token"));
+  const navigate = useNavigate();
   useEffect(() => {
     axios.interceptors.response.use(
       (response) => response,
@@ -18,6 +19,7 @@ function App() {
         if (error?.response?.status === 401) {
           alert("token Expired");
           localStorage.removeItem("token");
+          navigate("/login");
         }
         return Promise.reject(error);
       }
