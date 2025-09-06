@@ -59,10 +59,10 @@ const Resumes = () => {
 
   const resumeRequest = () => {
     return axios.get("https://api.ziphire.hr/v2/developer/resumes", {
-      headers: {
-        accept: "application/json; version=1.0",
-        authorization: `Token ${tokens}`,
-      },
+      // headers: {
+      //   accept: "application/json; version=1.0",
+      //   authorization: `Token ${tokens}`,
+      // },
     });
   };
   const handleOpenModal = () => {
