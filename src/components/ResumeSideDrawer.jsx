@@ -155,6 +155,7 @@ export default function ResumeSideDrawer({ open, setOpen, uploadedResume }) {
   useEffect(() => {
     console.log(uploadedResume);
     if (!open && !uploadedResume?.id) return;
+    setSelected(1);
     resumeQualityApi();
     axios
       .get(
