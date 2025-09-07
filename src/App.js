@@ -1,4 +1,4 @@
-import Testing from "./pages/testing";
+import HomePage from "./pages/home";
 import LogIn from "./pages/logInPage";
 import { Route, Routes, useNavigate } from "react-router-dom";
 import SignUp from "./pages/signUp";
@@ -9,6 +9,7 @@ import { Navigate } from "react-router-dom";
 import { useEffect, useState } from "react";
 import axios from "axios";
 import AlertDrawer from "./components/alertDrawer";
+import ErrorPage from "./pages/errorPage";
 
 function App() {
   const [token, setToken] = useState(localStorage.getItem("token"));
@@ -42,14 +43,15 @@ function App() {
         />
         {token ? (
           <>
-            <Route path="/" element={<Testing setToken={setToken} />} />
+            <Route path="/" element={<HomePage setToken={setToken} />} />
             <Route path="/verify" element={<EmailVerification />} />
             <Route path="/resumes" element={<Resumes />} />
             <Route path="/some" element={<ResumeSideDrawer />} />
           </>
         ) : (
-          <Route path="*" element={<Navigate to="/login" />} />
+          <Route path="/" element={<Navigate to="/login" />} />
         )}
+        <Route path="*" element={<ErrorPage />} />
       </Routes>
     </div>
   );
