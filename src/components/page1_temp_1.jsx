@@ -1,6 +1,6 @@
 import { useFormikContext } from "formik";
 
-const PreviewPage = () => {
+const Page1_temp_1 = () => {
   const dateFix = (date) => {
     return new Date(date).toLocaleDateString("en-US", {
       month: "short",
@@ -9,7 +9,7 @@ const PreviewPage = () => {
   };
   const { values } = useFormikContext();
   return (
-    <div className="flex gap-5 p-4 shadowColor sticky top-0">
+    <div className="flex gap-5 p-4 shadowColor">
       <div className="w-[60%]">
         <div className="flex flex-wrap items-center gap-2">
           <h3 className="text-[21px] font-semibold">
@@ -138,16 +138,22 @@ const PreviewPage = () => {
           ) : (
             values?.languages.map((value, index) => (
               <div key={index} className="flex flex-col items-center my-[2px]">
-                <div className="flex">
-                  <span className="text-[10px]">[{value.language}]</span>
-                  <span className="text-[10px]">({value.proficiency})</span>
+                <div className="flex gap-1">
+                  <span className="text-[10px]">
+                    {value.language ? value.language : "[Language]"}
+                  </span>
+                  <span className="text-[10px]">
+                    {value.proficiency
+                      ? `(${value.proficiency})`
+                      : "([Proficiency])"}
+                  </span>
                 </div>
               </div>
             ))
           )}
         </div>
         <h1 className="text-[15px] text-center mt-10">Social</h1>
-        <div className="flex flex-col gap-1 items-center overflow-hidden overflow-ellipsis">
+        <div className="flex flex-col gap-1 break-words">
           <span className="text-[10px]">
             {values.linkedinLink ? values.linkedinLink : "[LinkedIn URL]"}
           </span>
@@ -160,4 +166,4 @@ const PreviewPage = () => {
   );
 };
 
-export default PreviewPage;
+export default Page1_temp_1;
