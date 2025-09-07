@@ -3,7 +3,7 @@ import React from "react";
 import { useNavigate, NavLink } from "react-router-dom";
 import { Formik, Form, Field, ErrorMessage, FieldArray } from "formik";
 
-export default function Testing({ setToken }) {
+export default function HomePage({ setToken }) {
   const token = localStorage.getItem("token");
   const navigate = useNavigate();
   const logOut = () => {
