@@ -22,7 +22,8 @@ import Courses from "./courses";
 import Hobbies from "./hobbies";
 import { MdKeyboardArrowDown } from "react-icons/md";
 import { CustomAccordion } from "./customAccordion";
-import PreviewPage from "./previewPage";
+import Template_1 from "./template_1";
+import Template_2 from "./template_2";
 import Modal from "@mui/material/Modal";
 import CircularProgress from "@mui/material/CircularProgress";
 import Skeleton from "@mui/material/Skeleton";
@@ -73,6 +74,12 @@ export default function ResumeSideDrawer({ open, setOpen, uploadedResume }) {
   const [resumeQualityLoading, setResumeQualityLoading] = useState(false);
   const [isSaving, setIsSaving] = useState(false);
   const [savedOpenDrawer, setSavedOpenDrawer] = useState(false);
+  const [selected, setSelected] = useState(1);
+  const templates = [1, 2];
+  const [myTemplates, setMyTemplates] = useState({
+    1: <Template_1 />,
+    2: <Template_2 />,
+  });
   const [alertMessage, setAlertMessage] = useState({
     heading: "",
     message: "",
@@ -129,14 +136,9 @@ export default function ResumeSideDrawer({ open, setOpen, uploadedResume }) {
     "x-api-key": "unLP5l.HUEPcrsrCMzAwVUb36pWhvUikOcxnZiq8OcJQqK9fns9S1",
     authorization: `Token ${token}`,
   };
-
-  useEffect(() => {
-    console.log(uploadedResume);
+  const resumeQualityApi = () => {
     setResumeQualityLoading(true);
-    if (!open && !uploadedResume?.id) return;
-    console.log(recommendedSkills);
-    console.log(allSkills);
-    axios
+    return axios
       .get(
         `https://api.ziphire.hr/v2/developer/resume-quality/${uploadedResume?.id}`,
         { headers }
@@ -144,11 +146,16 @@ export default function ResumeSideDrawer({ open, setOpen, uploadedResume }) {
       .then((res) => {
         setResumeQuality(res.data);
         setResumeQualityLoading(false);
-        // console.log(res.data);
       })
       .catch((err) => {
         console.log("error", err);
       });
+  };
+
+  useEffect(() => {
+    console.log(uploadedResume);
+    if (!open && !uploadedResume?.id) return;
+    resumeQualityApi();
     axios
       .get(
         `https://api.ziphire.hr/v2/developer/resumes/${uploadedResume?.id}/personal_info`,
@@ -183,6 +190,9 @@ export default function ResumeSideDrawer({ open, setOpen, uploadedResume }) {
       .then((res) => {
         // console.log(res.data.data);
         setProfileImage(res.data.data);
+        if (res.data.data && !myAccordion.includes("Profile_Photo")) {
+          setMyAccordion((prev) => [...prev, "Profile_Photo"]);
+        }
       });
     axios
       .get(
@@ -191,13 +201,25 @@ export default function ResumeSideDrawer({ open, setOpen, uploadedResume }) {
       )
       .then((res) => {
         // console.log(res.data.data);
+        const cgpaSystemMap = {
+          cgpa_4: "CGPA(out of 4)",
+          cgpa_5: "CGPA(out of 5)",
+          cgpa_10: "CGPA(out of 10)",
+          percentage: "Percentage",
+        };
+        const degreeSystem = {
+          1: "Doctorate(or equivalent)",
+          2: "Masters(or equivalent)",
+          3: "MBA(or equivalent)",
+          4: "Bachelors(or equivalent)",
+        };
         const FormattedEducation = res.data.data.map((edu) => ({
           id: edu?.id ? edu.id : null,
           schoolName: edu.school ? edu.school : "",
           degreeName: edu.field_of_study ? edu.field_of_study : "",
-          degreeType: edu.degree_type ? edu.degree_type : "",
+          degreeType: edu.degree ? degreeSystem[edu.degree] : "",
           score: edu.score ? edu.score : "",
-          scoreType: edu.score_type ? edu.score_type : "",
+          scoreType: edu.score_type ? cgpaSystemMap[edu.score_type] : "",
           startYear: edu.started_year ? edu.started_year : "",
           completionYear: edu.completed_year ? edu.completed_year : "",
           educationLocation: edu.location ? edu.location : "",
@@ -263,8 +285,7 @@ export default function ResumeSideDrawer({ open, setOpen, uploadedResume }) {
       });
     axios
       .get(
-        `
-    https://api.ziphire.hr/v2/developer/resumes/${uploadedResume.id}/past_projects`,
+        `https://api.ziphire.hr/v2/developer/resumes/${uploadedResume.id}/past_projects`,
         { headers }
       )
       .then((res) => {
@@ -277,6 +298,9 @@ export default function ResumeSideDrawer({ open, setOpen, uploadedResume }) {
           description: project?.description ? project.description : "",
         }));
         setProjects(formattedProjects);
+        if (formattedProjects.length && !myAccordion.includes("Projects")) {
+          setMyAccordion((prev) => [...prev, "Projects"]);
+        }
       });
     axios
       .get(
@@ -295,6 +319,9 @@ export default function ResumeSideDrawer({ open, setOpen, uploadedResume }) {
           description: course?.description ? course.description : "",
         }));
         setCourses(formattedCourses);
+        if (formattedCourses.length && !myAccordion.includes("Courses")) {
+          setMyAccordion((prev) => [...prev, "Courses"]);
+        }
       });
     axios
       .get(
@@ -317,6 +344,12 @@ export default function ResumeSideDrawer({ open, setOpen, uploadedResume }) {
           description: certificate?.description ? certificate.description : "",
         }));
         setCertificates(formattedCertificates);
+        if (
+          formattedCertificates.length &&
+          !myAccordion.includes("Certificates")
+        ) {
+          setMyAccordion((prev) => [...prev, "Certificates"]);
+        }
       });
     axios
       .get(
@@ -335,6 +368,12 @@ export default function ResumeSideDrawer({ open, setOpen, uploadedResume }) {
           description: internship?.description ? internship.description : "",
         }));
         setInternShips(formattedInternships);
+        if (
+          formattedInternships.length &&
+          !myAccordion.includes("Internships")
+        ) {
+          setMyAccordion((prev) => [...prev, "Internships"]);
+        }
       });
     axios
       .get(
@@ -350,6 +389,9 @@ export default function ResumeSideDrawer({ open, setOpen, uploadedResume }) {
           hobby: hobby?.title ? hobby.title : "",
         }));
         setHobbies(formattedHobbies);
+        if (formattedHobbies.length && !myAccordion.includes("Hobbies")) {
+          setMyAccordion((prev) => [...prev, "Hobbies"]);
+        }
       });
   }, [open, uploadedResume?.id]);
 
@@ -483,10 +525,14 @@ export default function ResumeSideDrawer({ open, setOpen, uploadedResume }) {
         </div>
         <div className="flex overflow-x-auto text-sm divide-x justify-between p-4">
           {items?.map((item, i) => (
-            <div key={i} className="flex items-center px-3 gap-2">
+            <div key={i} className="flex justify-start items-center px-3 gap-2">
               <div className="w-[35px] h-[35px] sm:w-[40px] sm:h-[40px] md:w-[50px] md:h-[50px]">
                 {resumeQualityLoading ? (
-                  <CircularProgress color="success" />
+                  <CircularProgress
+                    sx={{ margin: "10px 0 0 10px" }}
+                    size={25}
+                    color="success"
+                  />
                 ) : (
                   item.progressCircle
                 )}
@@ -509,7 +555,7 @@ export default function ResumeSideDrawer({ open, setOpen, uploadedResume }) {
     firstName: personalInfo?.first_name ? personalInfo?.first_name : "",
     lastName: personalInfo?.last_name ? personalInfo?.last_name : "",
     country: personalInfo?.country ? personalInfo?.country : "",
-    location: "",
+    location: personalInfo?.city ? personalInfo?.city : "",
     email: personalInfo?.email ? personalInfo?.email : "",
     mobileNumber: personalInfo?.mobile ? personalInfo?.mobile : "",
     linkedinLink: personalInfo?.linkedin_url ? personalInfo?.linkedin_url : "",
@@ -521,6 +567,7 @@ export default function ResumeSideDrawer({ open, setOpen, uploadedResume }) {
       ? education
       : [
           {
+            id: "",
             schoolName: "",
             degreeName: "",
             degreeType: "",
@@ -604,7 +651,6 @@ export default function ResumeSideDrawer({ open, setOpen, uploadedResume }) {
       .post(
         `https://api.ziphire.hr/v2/developer/resumes/${uploadedResume?.id}/personal_info`,
         {
-          city: values?.city,
           country: values?.country?.id,
           dev_title: values?.jobTitle,
           email: values?.email,
@@ -613,7 +659,7 @@ export default function ResumeSideDrawer({ open, setOpen, uploadedResume }) {
           last_name: values?.lastName,
           linkedin_url: values?.linkedinLink,
           mobile: values?.mobileNumber,
-          location: values.location,
+          city: values?.location,
         },
         { headers }
       )
@@ -660,9 +706,9 @@ export default function ResumeSideDrawer({ open, setOpen, uploadedResume }) {
       );
     });
     const cgpaSystemMap = {
-      "CGPA out of 4": "cgpa_4",
-      "CGPA out of 5": "cgpa_5",
-      "CGPA out of 10": "cgpa_10",
+      "CGPA(out of 4)": "cgpa_4",
+      "CGPA(out of 5)": "cgpa_5",
+      "CGPA(out of 10)": "cgpa_10",
       Percentage: "percentage",
     };
     const degreeSystem = {
@@ -1237,6 +1283,9 @@ export default function ResumeSideDrawer({ open, setOpen, uploadedResume }) {
           break;
       }
       showAlertDrawer(section);
+      if (uploadedResume?.id) {
+        resumeQualityApi();
+      }
     } catch (err) {
       console.error(err);
       showAlertDrawer("could not saved");
@@ -1443,7 +1492,11 @@ export default function ResumeSideDrawer({ open, setOpen, uploadedResume }) {
                       <div className="flex items-center px-3 py-2 gap-2">
                         <div className="min-w-[35px] min-h-[35px] w-[35px] h-[35px] sm:min-w-[40px] sm:min-h-[40px] sm:w-[40px] sm:h-[40px] md:min-w-[50px] md:min-h-[50px] md:w-[50px] md:h-[50px]">
                           {resumeQualityLoading ? (
-                            <CircularProgress color="success" />
+                            <CircularProgress
+                              sx={{ margin: "10px 0 0 10px" }}
+                              size={25}
+                              color="success"
+                            />
                           ) : (
                             <CircularProgressbar
                               styles={buildStyles(styleForDrawer)}
@@ -1535,6 +1588,33 @@ export default function ResumeSideDrawer({ open, setOpen, uploadedResume }) {
                         </div>
                       )}
                     </div>
+                    <div className="border my-3 rounded-lg overflow-hidden">
+                      <div className="font-semibold bg-[#fafafa] p-[6px]">
+                        Resume Templates
+                      </div>
+                      <div className="flex items-center px-3 py-2 gap-2">
+                        {templates.map((num) => (
+                          <div
+                            key={num}
+                            onClick={() => setSelected(num)}
+                            className={`w-[100px] h-[130px] border rounded-lg flex justify-center items-center cursor-pointer 
+                                 ${
+                                   selected === num
+                                     ? "border-[#3C76D2] border-2 bg-[#F1F6FF] text-[#3D76DB]"
+                                     : "hover:border-[#3C76D2] transition-all duration-300"
+                                 }`}
+                          >
+                            <div className="flex flex-col gap-1 items-center">
+                              <h4 className="text-[14px] font-[500]">
+                                Template
+                              </h4>
+                              <h4 className="text-[14px] font-[500]">{num}</h4>
+                            </div>
+                          </div>
+                        ))}
+                      </div>
+                    </div>
+
                     <div>
                       <h1 className="text-[23px] font-semibold md:text-2xl">
                         Resume Sections
@@ -1767,7 +1847,7 @@ export default function ResumeSideDrawer({ open, setOpen, uploadedResume }) {
                                     {[
                                       "CGPA(out of 4)",
                                       "CGPA(out of 5)",
-                                      "CGPA(out of 6)",
+                                      "CGPA(out of 10)",
                                       "Percentage",
                                     ].map((option) => (
                                       <MenuItem key={option} value={option}>
@@ -1802,6 +1882,7 @@ export default function ResumeSideDrawer({ open, setOpen, uploadedResume }) {
                               type="button"
                               onClick={() =>
                                 push({
+                                  id: "",
                                   schoolName: "",
                                   degreeName: "",
                                   degreeType: "",
@@ -2300,7 +2381,7 @@ export default function ResumeSideDrawer({ open, setOpen, uploadedResume }) {
                         <MdKeyboardArrowDown size={30} />
                       </button>
                     </div>
-                    <PreviewPage />
+                    {myTemplates[selected]}
                   </div>
                 </div>
               </Form>
