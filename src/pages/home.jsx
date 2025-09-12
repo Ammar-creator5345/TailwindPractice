@@ -1,10 +1,13 @@
 import axios from "axios";
-import React from "react";
+import React, { useState } from "react";
 import { useNavigate, NavLink } from "react-router-dom";
 import { Formik, Form, Field, ErrorMessage, FieldArray } from "formik";
+import PhoneInput from "react-phone-input-2";
+import "react-phone-input-2/lib/style.css";
 
 export default function HomePage({ setToken }) {
   const token = localStorage.getItem("token");
+  const [phone, setPhone] = useState("");
   const navigate = useNavigate();
   const logOut = () => {
     console.log(token);
@@ -32,6 +35,9 @@ export default function HomePage({ setToken }) {
           <NavLink to="/resumes" className="p-4 m-1 bg-slate-100">
             Resumes
           </NavLink>
+          <NavLink to="/profile" className="p-4 m-1 bg-slate-100">
+            My Profile
+          </NavLink>
         </div>
         <div className="w-full md:w-auto mt-2 md:mt-0">
           <input
@@ -45,6 +51,21 @@ export default function HomePage({ setToken }) {
           >
             Log out
           </button>
+        </div>
+        <div>
+          <PhoneInput
+            country={"bh"}
+            value={phone}
+            onChange={(phone) => setPhone(phone)}
+            placeholder="select country"
+            inputStyle={{
+              // backgroundColor:"red",
+
+            }}
+            buttonStyle={{
+              // backgroundColor:"yellow"
+            }}
+          />
         </div>
       </div>
       <div>

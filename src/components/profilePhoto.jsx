@@ -30,7 +30,7 @@ const ProfilePhoto = ({ handleSectionSave, isSaving }) => {
   };
 
   return (
-    <>
+    <div>
       <div className="flex gap-3 items-center mt-3 sm:gap-5 md:gap-10">
         <div className="w-[100px] h-[100px] min-h-[100px] min-w-[100px] rounded-lg overflow-hidden">
           <img
@@ -80,7 +80,7 @@ const ProfilePhoto = ({ handleSectionSave, isSaving }) => {
           {!isSaving ? "Save" : "Saving..."}
         </button>
       </div>
-    </>
+    </div>
   );
 };
 

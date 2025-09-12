@@ -10,6 +10,7 @@ import { useEffect, useState } from "react";
 import axios from "axios";
 import AlertDrawer from "./components/alertDrawer";
 import ErrorPage from "./pages/errorPage";
+import MyProfile from "./myProfile";
 
 function App() {
   const [token, setToken] = useState(localStorage.getItem("token"));
@@ -47,6 +48,7 @@ function App() {
             <Route path="/verify" element={<EmailVerification />} />
             <Route path="/resumes" element={<Resumes />} />
             <Route path="/some" element={<ResumeSideDrawer />} />
+            <Route path="/profile" element={<MyProfile />} />
           </>
         ) : (
           <Route path="/" element={<Navigate to="/login" />} />

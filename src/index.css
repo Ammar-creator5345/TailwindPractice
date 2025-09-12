@@ -3,7 +3,7 @@
 @tailwind utilities;
 
 * {
-    box-sizing: border-box
+    box-sizing: border-box;
 }
 
 .hide-scrollbar::-webkit-scrollbar {
@@ -37,6 +37,23 @@
     font-size: 15px;
 }
 
-.shadowColor{
+.shadowColor {
     box-shadow: 1px 1px 10px rgb(192, 184, 184);
+}
+
+.shadowColor2 {
+    box-shadow: 0 1px 4px #0000001a;
+
+}
+
+.country-selector-style {
+    border: 1px solid #e2e8f0;
+    padding: 3px 10px;
+    border-radius: 15px;
+    width: 100%;
+    margin: 8px 0
+}
+
+.no-scrollbar::-webkit-scrollbar {
+    scrollbar-width: none;
 }

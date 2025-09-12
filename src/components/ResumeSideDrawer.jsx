@@ -456,7 +456,7 @@ export default function ResumeSideDrawer({ open, setOpen, uploadedResume }) {
       />
     </div>
   );
-  const textField_style = {
+   const textField_style = {
     "& .MuiOutlinedInput-root": {
       borderRadius: "15px",
       "& fieldset": {
@@ -584,6 +584,7 @@ export default function ResumeSideDrawer({ open, setOpen, uploadedResume }) {
       ? workHistory
       : [
           {
+            id:"",
             jobTitle: "",
             companyName: "",
             startDate: "",

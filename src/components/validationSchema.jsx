@@ -187,19 +187,18 @@ export const workValidation = Yup.object({
         .required("start Date is required"),
       endDate: Yup.date()
         .nullable()
-        .when("present", {
-          is: true,
-          then: (result) => result.notRequired(),
-          otherwise: (result) =>
-            result
-              .required("End Date is required")
-              .min(Yup.ref("startDate"), "end Date cannot be before Start date")
-              .max(new Date(), "end Date cannot be in future"),
+        .when("present", (present, schema) => {  // ← Use function syntax
+          return present
+            ? schema.nullable()
+            : schema
+                .required("End Date is required")
+                .min(Yup.ref("startDate"), "end Date cannot be before Start date")
+                .max(new Date(), "end Date cannot be in future");
         }),
+      present: Yup.boolean(),
     })
   ),
 });
-
 export const skillsValidation = Yup.object({
   skills: Yup.array().of(
     Yup.object().shape({
@@ -273,6 +272,18 @@ export const coursesValidation = Yup.object({
       courseName: Yup.string().required("Course name is required"),
       dateAwarded: Yup.date().required("date awarded is required"),
       organizationName: Yup.string().required("Organization name is required"),
+    })
+  ),
+});
+
+export const publicationsValidation = Yup.object({
+  publications: Yup.array().of(
+    Yup.object().shape({
+      title: Yup.string().required("Publication Title is required"),
+      journal: Yup.string().required("Journal is required"),
+      date: Yup.date()
+        .max(new Date(), "Date cannot be in future")
+        .required("Date is required"),
     })
   ),
 });

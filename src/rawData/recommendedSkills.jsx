@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import axios from "axios";
 
-const useRecommendedSkills = (uploadedResume) => {
+const useRecommendedSkills = (uploadedResume,profileSection) => {
   const [skills, setSkills] = useState([]);
   const token = localStorage.getItem("token");
   const [loading, setLoading] = useState(false);
@@ -9,7 +9,7 @@ const useRecommendedSkills = (uploadedResume) => {
  
   useEffect(() => {
     const fetchSkills = async () => {
-      if (!uploadedResume?.id) {
+      if (!uploadedResume?.id || !profileSection) {
         return;
       }
       setLoading(true);
