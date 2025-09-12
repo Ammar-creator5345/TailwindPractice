@@ -134,7 +134,7 @@ const PersonalInfo = ({ profileDataApi }) => {
               />
 
               <div className="flex gap-4 items-center">
-                <div className="flex flex-col w-full">
+                <div className="flex flex-col w-1/2">
                   <Field
                     as="select"
                     name="city"
