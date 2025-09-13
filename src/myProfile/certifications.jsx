@@ -205,7 +205,7 @@ const Certificates = ({ setAccordions, comingCertificates }) => {
                       <span className="bg-green-400 px-3 pb-[7px] rounded-xl text-3xl">
                         +
                       </span>
-                      <span>Add One More Certificate</span>
+                      <span>Add Certificate</span>
                     </button>
                   </div>
                   <SaveButton isSaving={isSaving} />

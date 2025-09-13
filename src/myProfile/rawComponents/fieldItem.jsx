@@ -2,7 +2,6 @@ import { useFormikContext } from "formik";
 import { Field, ErrorMessage } from "formik";
 
 const FieldItem = ({ placeholder, type, name }) => {
-  const { values } = useFormikContext();
   return (
     <div className="flex flex-col w-full">
       <Field

@@ -221,7 +221,7 @@ const Projects = ({ setAccordions, comingProjects }) => {
                       <span className="bg-green-400 px-3 pb-[7px] rounded-xl text-3xl">
                         +
                       </span>
-                      <span>Add One More Project</span>
+                      <span>Add Project</span>
                     </button>
                   </div>
                   <SaveButton isSaving={isSaving}/>

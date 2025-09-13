@@ -164,7 +164,7 @@ const Education = ({ education }) => {
                             color="grey"
                           />
                         </div>
-                        <div className="w-full flex gap-2 md:gap-4">
+                        <div className="w-full flex flex-col md:flex-row md:gap-4">
                           <FieldItem
                             name={`education[${index}].schoolName`}
                             type="text"
@@ -176,7 +176,7 @@ const Education = ({ education }) => {
                             placeholder="Degree Name"
                           />
                         </div>
-                        <div className="w-full flex gap-1 items-center sm:gap-2 md:gap-4">
+                        <div className="w-full flex gap-1 mt-2 flex-col justify-center items-center sm:gap-2 md:gap-4 md:flex-row md:mt-0">
                           <TextField
                             select
                             name={`education[${index}].degreeType`}
@@ -199,7 +199,7 @@ const Education = ({ education }) => {
                               errors.education?.[index]?.degreeType
                             }
                             sx={{
-                              width: "1000px",
+                              width: "100%",
                               ...textField_style,
                             }}
                           >
@@ -214,52 +214,54 @@ const Education = ({ education }) => {
                               </MenuItem>
                             ))}
                           </TextField>
-                          <FieldItem
-                            name={`education[${index}].score`}
-                            type="text"
-                            placeholder="Score"
-                          />
-                          <TextField
-                            select
-                            name={`education[${index}].scoreType`}
-                            label="Score Type*"
-                            value={values.education[index].scoreType}
-                            onBlur={() =>
-                              setFieldTouched(
-                                `education[${index}].scoreType`,
-                                true
-                              )
-                            }
-                            onChange={(e) =>
-                              setFieldValue(
-                                `education[${index}].scoreType`,
-                                e.target.value
-                              )
-                            }
-                            error={
-                              touched.education?.[index]?.scoreType &&
-                              Boolean(errors.education?.[index]?.scoreType)
-                            }
-                            helperText={
-                              touched.education?.[index]?.scoreType &&
-                              errors.education?.[index]?.scoreType
-                            }
-                            sx={{
-                              width: "750px",
-                              ...textField_style,
-                            }}
-                          >
-                            {[
-                              "CGPA(out of 4)",
-                              "CGPA(out of 5)",
-                              "CGPA(out of 10)",
-                              "Percentage",
-                            ].map((option) => (
-                              <MenuItem key={option} value={option}>
-                                {option}
-                              </MenuItem>
-                            ))}
-                          </TextField>
+                          <div className="flex w-full gap-3 mt-2 md:mt-0">
+                            <FieldItem
+                              name={`education[${index}].score`}
+                              type="text"
+                              placeholder="Score"
+                            />
+                            <TextField
+                              select
+                              name={`education[${index}].scoreType`}
+                              label="Score Type*"
+                              value={values.education[index].scoreType}
+                              onBlur={() =>
+                                setFieldTouched(
+                                  `education[${index}].scoreType`,
+                                  true
+                                )
+                              }
+                              onChange={(e) =>
+                                setFieldValue(
+                                  `education[${index}].scoreType`,
+                                  e.target.value
+                                )
+                              }
+                              error={
+                                touched.education?.[index]?.scoreType &&
+                                Boolean(errors.education?.[index]?.scoreType)
+                              }
+                              helperText={
+                                touched.education?.[index]?.scoreType &&
+                                errors.education?.[index]?.scoreType
+                              }
+                              sx={{
+                                width: "100%",
+                                ...textField_style,
+                              }}
+                            >
+                              {[
+                                "CGPA(out of 4)",
+                                "CGPA(out of 5)",
+                                "CGPA(out of 10)",
+                                "Percentage",
+                              ].map((option) => (
+                                <MenuItem key={option} value={option}>
+                                  {option}
+                                </MenuItem>
+                              ))}
+                            </TextField>
+                          </div>
                         </div>
                         <div className="w-full flex gap-2 items-center mb-6 md:gap-4">
                           <FieldItem
@@ -318,7 +320,7 @@ const Education = ({ education }) => {
                       <span className="bg-green-400 px-3 pb-[7px] rounded-xl text-3xl">
                         +
                       </span>
-                      <span>Add One More Education</span>
+                      <span>Add Education</span>
                     </button>
                   </>
                 )}

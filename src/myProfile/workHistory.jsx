@@ -125,13 +125,19 @@ const WorkHistory = ({ work }) => {
                           placeholder="Company Name"
                         />
                       </div>
-                      <div className="w-full flex gap-1 items-center flex-1 sm:gap-2 md:gap-4">
+                      <div className="w-full flex flex-col justify-start items-start gap-1 flex-1 sm:gap-2 md:gap-4 sm:items-center sm:flex-row">
                         <TextField
                           type="date"
                           placeholder="Start Date"
                           label=""
                           slotProps={{ shrink: false }}
-                          sx={textField_style}
+                          sx={{
+                            width: {
+                              xs: "80%",
+                              sm: "fit-content",
+                            },
+                            ...textField_style,
+                          }}
                           value={values.work[index].startDate}
                           onBlur={() =>
                             setFieldTouched(`work[${index}].startDate`, true)
@@ -153,7 +159,13 @@ const WorkHistory = ({ work }) => {
                           disabled={values.work[index].present}
                           label=""
                           slotProps={{ shrink: false }}
-                          sx={textField_style}
+                          sx={{
+                            width: {
+                              xs: "80%",
+                              sm: "fit-content",
+                            },
+                            ...textField_style,
+                          }}
                           value={values.work[index].endDate}
                           onBlur={() =>
                             setFieldTouched(`work[${index}].endDate`, true)
@@ -234,7 +246,7 @@ const WorkHistory = ({ work }) => {
                     <span className="bg-green-400 px-3 pb-[7px] rounded-xl text-3xl">
                       +
                     </span>
-                    <span>Add One More Employment</span>
+                    <span>Add more Employment</span>
                   </button>
                   <SaveButton isSaving={isSaving} />
                 </>

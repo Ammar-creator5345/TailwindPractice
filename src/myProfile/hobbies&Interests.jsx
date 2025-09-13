@@ -132,7 +132,7 @@ const Hobbies = ({ setAccordions, comingHobbies }) => {
                       <span className="bg-green-400 px-3 pb-[7px] rounded-xl text-3xl">
                         +
                       </span>
-                      <span>Add One More Hobby & Interest</span>
+                      <span>Add Hobby & Interest</span>
                     </button>
                   </div>
                   <SaveButton isSaving={isSaving} />

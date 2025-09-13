@@ -71,7 +71,7 @@ const Skills = ({
             <FieldArray name="skills">
               {({ push, remove }) => (
                 <>
-                  <div className="flex items-center gap-y-4 flex-wrap">
+                  <div className="flex items-center gap-x-2 gap-y-4 flex-wrap">
                     {values?.skills?.map((value, index) => (
                       <div key={index} className="w-[48%] flex items-center">
                         <TextField
@@ -137,7 +137,7 @@ const Skills = ({
                     <span className="bg-green-400 px-3 pb-[7px] rounded-xl text-3xl">
                       +
                     </span>
-                    <span>Add One More Skill</span>
+                    <span>Add Skill</span>
                   </button>
                   <h1 className="mb-3">Recommended Skills</h1>
                   <div className="flex gap-2 items-center flex-wrap w-full justify-start">

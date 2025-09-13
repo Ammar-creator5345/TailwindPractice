@@ -4,6 +4,8 @@ import AccordionSummary from "@mui/material/AccordionSummary";
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 import CheckCircleOutlineIcon from "@mui/icons-material/CheckCircleOutline";
 import { MdDeleteForever } from "react-icons/md";
+import CheckCircleIcon from "../svgs/successSvg";
+import DeleteBinIcon from "../svgs/deleteIcon";
 
 export const CustomAccordion = ({
   children,
@@ -28,13 +30,13 @@ export const CustomAccordion = ({
       sx={{ border: "1px solid #e2e8f0", borderRadius: "10px" }}
     >
       <div className="flex w-full justify-between items-center">
-        <div>
-          <CheckCircleOutlineIcon className="bg-yellow-200 rounded-full mr-1" />
+        <div className="flex items-center gap-1">
+          <CheckCircleIcon />
           <span component="span">{title}*</span>
         </div>
         {deleteFeature && (
           <button type="button" onClick={() => handleDeleteAccordion()}>
-            <MdDeleteForever size={22} color="gray" />
+            <DeleteBinIcon />
           </button>
         )}
       </div>

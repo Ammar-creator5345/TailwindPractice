@@ -1,7 +1,8 @@
 import Drawer from "@mui/material/Drawer";
-import CheckCircleOutlineIcon from '@mui/icons-material/CheckCircleOutline';
+import CheckCircleOutlineIcon from "@mui/icons-material/CheckCircleOutline";
 import CloseIcon from "@mui/icons-material/Close";
 import { useEffect, useState } from "react";
+import CheckCircleIcon from "../svgs/successSvg";
 
 const ShowAlert = ({ section, onClose }) => {
   const [savedOpenDrawer, setSavedOpenDrawer] = useState(true);
@@ -63,18 +64,7 @@ const ShowAlert = ({ section, onClose }) => {
         <div className="w-[10px] h-full bg-green-500"></div>
         <div className="flex gap-2 mt-5">
           <div className="mt-2">
-            <CheckCircleOutlineIcon
-              sx={{
-                background: "green",
-                color: "white",
-                borderRadius: "50px",
-                width: 40,
-                height: 40,
-                display: "flex",
-                alignItems: "center",
-                justifyContent: "center",
-              }}
-            />
+            <CheckCircleIcon width={40} height={40} color />
           </div>
           <div className="flex flex-col">
             <h1 className="text-lg font-semibold">Successful!</h1>{" "}

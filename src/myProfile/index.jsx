@@ -30,6 +30,7 @@ import {
   getAllLanguages,
   getAboutMe,
 } from "../apis/mainApi";
+import { useNavigate } from "react-router-dom";
 
 const MyProfile = () => {
   const [open, setOpen] = useState(false);
@@ -49,6 +50,7 @@ const MyProfile = () => {
   const [countries, SetCountries] = useState([]);
   const [showRightBtn, setShowRightBtn] = useState(false);
   const [showLeftBtn, setShowLeftBtn] = useState(false);
+  const navigate = useNavigate()
 
   // for the fields of Form
   const [profileDataApi, setProfileDataApi] = useState({});
@@ -529,7 +531,7 @@ const MyProfile = () => {
               <ArticleOutlinedIcon sx={{ color: "#725858" }} />
               <span>Manage Resume</span>
             </div>
-            <div className="flex justify-center items-center bg-[#7CFCA6] p-2 rounded-xl cursor-pointer">
+            <div onClick={() => navigate("/resumes")} className="flex justify-center items-center bg-[#7CFCA6] p-2 rounded-xl cursor-pointer">
               <ArrowForwardIosOutlinedIcon
                 sx={{
                   fontSize: "16px",

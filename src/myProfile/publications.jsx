@@ -130,7 +130,7 @@ const Publications = ({ setAccordions, comingPublications }) => {
                           color="gray"
                         />
                       </div>
-                      <div className="flex items-center gap-4">
+                      <div className="flex flex-col items-center gap-0 md:flex-row md:gap-4">
                         <FieldItem
                           type="text"
                           name={`publications[${index}].title`}
@@ -142,13 +142,13 @@ const Publications = ({ setAccordions, comingPublications }) => {
                           placeholder="Journal"
                         />
                       </div>
-                      <div className="flex items-center gap-4">
+                      <div className="flex flex-col items-center gap-0 md:flex-row md:gap-4">
                         <TextField
                           type="date"
                           placeholder="Publication Date"
                           label=""
                           slotProps={{ shrink: false }}
-                          sx={{ width: "90%", ...textField_style }}
+                          sx={{ width: "100%", ...textField_style }}
                           value={values.publications[index].date}
                           onBlur={() =>
                             setFieldTouched(`publications[${index}].date`, true)
@@ -205,7 +205,7 @@ const Publications = ({ setAccordions, comingPublications }) => {
                     </span>
                     <span>Add Publication</span>
                   </button>
-                  <SaveButton isSaving={isSaving}/>
+                  <SaveButton isSaving={isSaving} />
                 </>
               )}
             </FieldArray>

@@ -37,12 +37,6 @@ const AboutMe = ({ profileData }) => {
   const validationSchema = Yup.object({
     description: Yup.string().required("Description is required"),
   });
-  const styleCheckbox = {
-    color: "black",
-    "&.Mui-checked": {
-      color: "red",
-    },
-  };
   const updateAboutMe = (values) => {
     setIsSaving(true);
     const dataForSubmit = {
@@ -92,7 +86,7 @@ const AboutMe = ({ profileData }) => {
                 />
               </div>
               <h3 className="text-[15px] font-bold mt-4">Work Mode</h3>
-              <div className="flex items-center gap-2 mt-3">
+              <div className="flex items-center whitespace-nowrap flex-wrap gap-2 mt-3">
                 {workModesOptions.map((option) => (
                   <label
                     key={option.id}
@@ -109,7 +103,7 @@ const AboutMe = ({ profileData }) => {
               </div>
 
               <h3 className="text-[15px] font-bold mt-4">Preferred Job Type</h3>
-              <div className="flex items-center gap-2 mt-3 mb-7">
+              <div className="flex items-center whitespace-nowrap flex-wrap gap-2 mt-3 mb-7">
                 {jobTypesOptions.map((option) => (
                   <label
                     key={option.id}
