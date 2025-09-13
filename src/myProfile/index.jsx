@@ -546,8 +546,8 @@ const MyProfile = () => {
               {profileData?.about}
             </span>
             <div className="flex mt-3">
-              <h5 className="text-[15px] font-bold mr-3">Work Preference:</h5>
-              <div className="flex items-center gap-2">
+              <h5 className="text-[15px] whitespace-nowrap font-bold mr-3">Work Preference:</h5>
+              <div className="flex items-center flex-wrap gap-2">
                 {(profileData?.preferred_job_type || []).map((value, index) => (
                   <span
                     key={index}
@@ -559,8 +559,8 @@ const MyProfile = () => {
               </div>
             </div>
             <div className="flex mt-2">
-              <h5 className="text-[15px] font-bold mr-3">Work Mode:</h5>
-              <div className="flex items-center gap-2">
+              <h5 className="text-[15px] whitespace-nowrap font-bold mr-3">Work Mode:</h5>
+              <div className="flex items-center flex-wrap gap-2">
                 {(profileData?.work_mode || []).map((value, index) => (
                   <span
                     key={index}
