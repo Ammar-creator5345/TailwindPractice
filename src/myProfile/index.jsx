@@ -74,7 +74,7 @@ const MyProfile = () => {
       }
       const { scrollLeft, scrollWidth, clientWidth } = ref.current;
       setShowLeftBtn(scrollLeft > 0);
-      setShowRightBtn(scrollLeft + clientWidth < scrollWidth);
+      setShowRightBtn(scrollLeft + clientWidth < scrollWidth -1);
     };
     checkScroll();
 
