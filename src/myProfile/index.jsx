@@ -50,7 +50,7 @@ const MyProfile = () => {
   const [countries, SetCountries] = useState([]);
   const [showRightBtn, setShowRightBtn] = useState(false);
   const [showLeftBtn, setShowLeftBtn] = useState(false);
-  const navigate = useNavigate()
+  const navigate = useNavigate();
 
   // for the fields of Form
   const [profileDataApi, setProfileDataApi] = useState({});
@@ -450,11 +450,10 @@ const MyProfile = () => {
               />
             </div>
             <div className="mt-3">
-              <h1 className="text-[23px] font-semibold">
-                {profileData?.user?.first_name +
-                  " " +
-                  profileData?.user?.last_name}
-              </h1>
+              <div className="text-[23px] flex items-center gap-2 pr-9 flex-wrap whitespace-nowrap font-semibold">
+                <span>{profileData?.user?.first_name} </span>
+                <span>{profileData?.user?.last_name}</span>
+              </div>
               <div className="flex gap-2 pr-5 flex-col sm:flex-row flex-wrap">
                 <div className="flex items-center justify-center gap-1 bg-[#FAFAFA] w-fit rounded-2xl py-[3px] px-2 ">
                   <FmdGoodIcon sx={{ color: "#9587C0", fontSize: "20px" }} />
@@ -497,7 +496,7 @@ const MyProfile = () => {
             </div>
             <div
               onClick={() => setOpen(true)}
-              className="cursor-pointer absolute right-0 top-10"
+              className="cursor-pointer absolute right-0 top-0"
             >
               <ModeEditOutlinedIcon />
             </div>
@@ -531,7 +530,10 @@ const MyProfile = () => {
               <ArticleOutlinedIcon sx={{ color: "#725858" }} />
               <span>Manage Resume</span>
             </div>
-            <div onClick={() => navigate("/resumes")} className="flex justify-center items-center bg-[#7CFCA6] p-2 rounded-xl cursor-pointer">
+            <div
+              onClick={() => navigate("/resumes")}
+              className="flex justify-center items-center bg-[#7CFCA6] p-2 rounded-xl cursor-pointer"
+            >
               <ArrowForwardIosOutlinedIcon
                 sx={{
                   fontSize: "16px",
@@ -546,7 +548,9 @@ const MyProfile = () => {
               {profileData?.about}
             </span>
             <div className="flex mt-3">
-              <h5 className="text-[15px] whitespace-nowrap font-bold mr-3">Work Preference:</h5>
+              <h5 className="text-[15px] whitespace-nowrap font-bold mr-3">
+                Work Preference:
+              </h5>
               <div className="flex items-center flex-wrap gap-2">
                 {(profileData?.preferred_job_type || []).map((value, index) => (
                   <span
@@ -559,7 +563,9 @@ const MyProfile = () => {
               </div>
             </div>
             <div className="flex mt-2">
-              <h5 className="text-[15px] whitespace-nowrap font-bold mr-3">Work Mode:</h5>
+              <h5 className="text-[15px] whitespace-nowrap font-bold mr-3">
+                Work Mode:
+              </h5>
               <div className="flex items-center flex-wrap gap-2">
                 {(profileData?.work_mode || []).map((value, index) => (
                   <span
