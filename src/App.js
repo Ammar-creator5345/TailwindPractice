@@ -11,6 +11,7 @@ import axios from "axios";
 import AlertDrawer from "./components/alertDrawer";
 import ErrorPage from "./pages/errorPage";
 import MyProfile from "./myProfile";
+import FindJobs from "./findJobs";
 
 function App() {
   const [token, setToken] = useState(localStorage.getItem("token"));
@@ -49,6 +50,7 @@ function App() {
             <Route path="/resumes" element={<Resumes />} />
             <Route path="/some" element={<ResumeSideDrawer />} />
             <Route path="/profile" element={<MyProfile />} />
+            <Route path="/find-jobs" element={<FindJobs />} />
           </>
         ) : (
           <Route path="/" element={<Navigate to="/login" />} />

@@ -57,3 +57,32 @@
 .no-scrollbar::-webkit-scrollbar {
     scrollbar-width: none;
 }
+
+.btn-style {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    white-space: nowrap;
+    font-size: medium;
+    font-weight: 500;
+    border-radius: 16px;
+    padding: 8px 12px;
+    box-shadow: 0 1px 4px #0000001a;
+    transition: border-color 0.3s, background-color 0.3s;
+}
+
+.input-style2 {
+    padding: 8px;
+    width: 100%;
+    border: none;
+    outline: none;
+}
+
+.input-style2:focus {
+    border: none;
+    outline: none;
+}
+
+.input-style2::placeholder {
+    font-weight: 500;
+}

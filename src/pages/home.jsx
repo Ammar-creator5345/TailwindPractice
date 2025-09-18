@@ -38,6 +38,9 @@ export default function HomePage({ setToken }) {
           <NavLink to="/profile" className="p-4 m-1 bg-slate-100">
             My Profile
           </NavLink>
+          <NavLink to="/find-jobs" className="p-4 m-1 bg-slate-100">
+            Find Jobs
+          </NavLink>
         </div>
         <div className="w-full md:w-auto mt-2 md:mt-0">
           <input

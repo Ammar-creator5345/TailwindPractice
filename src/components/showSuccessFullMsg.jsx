@@ -4,7 +4,7 @@ import CloseIcon from "@mui/icons-material/Close";
 import { useEffect, useState } from "react";
 import CheckCircleIcon from "../svgs/successSvg";
 
-const ShowAlert = ({ section, onClose }) => {
+const ShowAlert = ({ section, onClose, time = 5000 }) => {
   const [savedOpenDrawer, setSavedOpenDrawer] = useState(true);
   const [message, setMessage] = useState("");
 
@@ -16,7 +16,7 @@ const ShowAlert = ({ section, onClose }) => {
     const timer = setTimeout(() => {
       setSavedOpenDrawer(false);
       onClose();
-    }, 5000);
+    }, time);
 
     return () => clearTimeout(timer);
   }, []);
@@ -25,8 +25,8 @@ const ShowAlert = ({ section, onClose }) => {
     const sectionMessage = {
       personalInfo: "Personal Info has been updated!",
       education: "Education has been updated!",
-      projects: "Projects has been updated!", // Fixed typo
-      certificates: "Certificates has been updated!", // Fixed typo
+      projects: "Projects has been updated!",
+      certificates: "Certificates has been updated!",
       works: "Work History has been updated!",
       publications: "Publications has been updated!",
       profilePhoto: "Profile Photo has been updated!",
@@ -35,7 +35,7 @@ const ShowAlert = ({ section, onClose }) => {
       languages: "Languages has been updated!",
       hobbies: "Hobbies has been updated!",
     };
-    setMessage(sectionMessage[section]);
+    setMessage(sectionMessage[section] || section);
   }, [section]);
 
   return (
