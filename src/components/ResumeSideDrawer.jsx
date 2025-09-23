@@ -93,6 +93,7 @@ export default function ResumeSideDrawer({ open, setOpen, uploadedResume }) {
   const toggleSavedOpenDrawer = (newOpen) => () => {
     setSavedOpenDrawer(newOpen);
   };
+  console.log(uploadedResume);
   const showAlertDrawer = (section) => {
     const message = {
       personalInfo: "personal info updated",
@@ -456,7 +457,7 @@ export default function ResumeSideDrawer({ open, setOpen, uploadedResume }) {
       />
     </div>
   );
-   const textField_style = {
+  const textField_style = {
     "& .MuiOutlinedInput-root": {
       borderRadius: "15px",
       "& fieldset": {
@@ -584,7 +585,7 @@ export default function ResumeSideDrawer({ open, setOpen, uploadedResume }) {
       ? workHistory
       : [
           {
-            id:"",
+            id: "",
             jobTitle: "",
             companyName: "",
             startDate: "",

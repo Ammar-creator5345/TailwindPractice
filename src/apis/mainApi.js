@@ -114,7 +114,7 @@ export const getAllLanguages = () =>
   api.get("https://api.ziphire.hr/v2/languages");
 export const getAllCountries = () =>
   api.get("https://api.ziphire.hr/v2/countries?ordering=label");
-export const getAllSkills = () => 
+export const getAllSkills = () =>
   api.get("https://api.ziphire.hr/v2/technologies?ordering=label");
 export const getAllCities = (code) =>
   api.get(`https://api.countrystatecity.in/v1/countries/${code}/cities`, {
@@ -132,3 +132,42 @@ export const getRecommendedSkills = (ids) =>
 
 export const getCompletionPercentage = () => api.get("/profile-completion");
 
+export const getResumes = async () => {
+  try {
+    const res = await api.get("/resumes");
+    return res;
+  } catch (err) {
+    throw err;
+  }
+};
+
+export const postResume = async (data) => {
+  try {
+    const res = await api.post("/resumes", data, {
+      headers: { "content-type": "multipart/form-data" },
+    });
+    return res;
+  } catch (err) {
+    throw err;
+  }
+};
+
+export const postTailordResume = async (data) => {
+  try {
+    const res = await api.post("/generate-tailored-resume/", data);
+    return res;
+  } catch (err) {
+    throw err;
+  }
+};
+export const postCoverLetter = async (data) => {
+  try {
+    const response = await api.post(
+      "https://api.ziphire.hr/v2/openai/generate/cover-letter/",
+      data
+    );
+    return response;
+  } catch (err) {
+    throw err;
+  }
+};

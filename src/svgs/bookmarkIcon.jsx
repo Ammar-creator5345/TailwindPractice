@@ -14,6 +14,6 @@ const BookmarkIcon = ({ color = "transparent" }) => (
       fill={color}
     />
   </svg>
-)
+);
 
 export default BookmarkIcon;

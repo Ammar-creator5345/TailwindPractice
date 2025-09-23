@@ -30,6 +30,7 @@ const JobsItems = ({
   page,
   setPage,
   onSave,
+  buttonIndex,
 }) => {
   const totalPages = Math.ceil(totalJobs / 4);
   const [showAlert, setShowAlert] = useState(false);
@@ -79,7 +80,11 @@ const JobsItems = ({
       <div className="mt-7">
         {!loading ? (
           jobs?.map((job) => (
-            <NavLink to="/find-jobs/details">
+            <NavLink
+              to={`/find-jobs/details/${
+                buttonIndex === 3 ? job?.job : job?.id
+              }`}
+            >
               <div className="p-3 rounded-2xl bg-white shadowColor2 mt-4">
                 <div className="flex justify-between">
                   <div className="flex items-center gap-5">
@@ -197,7 +202,7 @@ const JobsItems = ({
                       }}
                       className="bg-[#7CFCA3] p-3 px-4 rounded-2xl font-[500] transition-all hover:p-[14px] hover:px-5"
                     >
-                      Unlock Job
+                      {job?.is_unlocked ? "Apply Job" : "Unlock Job"}
                     </button>
                   </div>
                 </div>

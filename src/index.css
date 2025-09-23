@@ -6,6 +6,10 @@
     box-sizing: border-box;
 }
 
+body {
+    background-color: #fafafa;
+}
+
 .hide-scrollbar::-webkit-scrollbar {
     display: none;
 }
@@ -83,6 +87,17 @@
     outline: none;
 }
 
+.input-style::placeholder {
+    font-weight: 500;
+}
 .input-style2::placeholder {
     font-weight: 500;
+}
+@keyframes someAnimation{
+    from{background-color: red}
+    to{background-color: yellow}
+}
+.some{
+    /* transform: rotate3d(180); */
+    animation-name: someAnimation;
 }

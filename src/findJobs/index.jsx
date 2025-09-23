@@ -31,7 +31,6 @@ const FindJobs = () => {
   const [onSave, setOnSave] = useState(false);
   const [title, setTitle] = useState("");
   const [location, setLocation] = useState("");
-  // const [dummyCounter, setDummyCounter] = useState(0);
   const [filters, setFilters] = useState({
     location: "",
     title: "",
@@ -247,41 +246,9 @@ const FindJobs = () => {
   };
   const handleSearch = () => {
     setPage(1);
-    // const getJobs = async () => {
-    //   setLoading(true);
-    //   let res;
-    //   if (buttonIndex === 0) {
-    //     res = await getRecommendedJobs(1, 4, title, location);
-    //   }
-    //   if (buttonIndex === 1) {
-    //     res = await getTopMatchedJobs(1, 4, title, location);
-    //   }
-    //   if (buttonIndex === 2) {
-    //     res = await getRecentJobs(1, 4, title, location);
-    //   }
-    //   if (buttonIndex === 3) {
-    //     res = await getSavedJobs(1, 4, title, location);
-    //   }
-    //   if (buttonIndex === 3) {
-    //     setOnSave(true);
-    //     setJobs(res);
-    //     setTotalJobs(res.length);
-    //     console.log(res);
-    //   } else {
-    //     setOnSave(false);
-    //     setJobs(res.data.results);
-    //     setTotalJobs(res.data.count);
-    //     setLoading(false);
-    //     console.log(res.data.results);
-    //   }
-    // };
-    // getJobs();
-    // fetchJobs()
-    // setDummyCounter((prev) => ++prev);
     setFilters({ location: location, title: title });
   };
 
-  // console.log(selectedWorkPreference);
   let workPreferences = Object.keys(selectedWorkPreference)
     .filter((f) => selectedWorkPreference[f])
     .join(",");
@@ -587,6 +554,7 @@ const FindJobs = () => {
             page={page}
             setPage={setPage}
             onSave={onSave}
+            buttonIndex={buttonIndex}
           />
         </div>
       </div>

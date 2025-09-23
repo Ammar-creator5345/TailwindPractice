@@ -124,3 +124,12 @@ export const postUnSavedJob = async (data) => {
     alert(err);
   }
 };
+
+export const getDetailsOfJob = async (id) => {
+  try {
+    const res = await api.get(`https://api.ziphire.hr/v2/client/jobs?id=${id}`);
+    return res.data;
+  } catch (err) {
+    alert(err);
+  }
+};
