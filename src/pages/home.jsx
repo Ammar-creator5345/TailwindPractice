@@ -2,6 +2,7 @@ import axios from "axios";
 import React from "react";
 import { useNavigate, NavLink } from "react-router-dom";
 
+
 export default function HomePage({ setToken }) {
   const token = localStorage.getItem("token");
   const navigate = useNavigate();

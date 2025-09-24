@@ -11,7 +11,7 @@ import { getResumes, postResume, postTailordResume } from "../apis/mainApi";
 import CircularProgress from "@mui/material/CircularProgress";
 import ResumeSideDrawer from "../components/ResumeSideDrawer";
 
-const GenerateTailordModal = ({ open, setOpen, jobId }) => {
+const GenerateTailordModal = ({ open, setOpen, jobId, data }) => {
   const style = {
     position: "absolute",
     top: "48%",
@@ -48,7 +48,7 @@ const GenerateTailordModal = ({ open, setOpen, jobId }) => {
   const [socialLink, setSocialLink] = useState("");
 
   useEffect(() => {
-    if (!open) return;
+    if (!open || !data.is_unlocked) return;
     const fetchResumes = async () => {
       try {
         const res = await getResumes();
@@ -130,7 +130,7 @@ const GenerateTailordModal = ({ open, setOpen, jobId }) => {
       </Modal>
 
       <Modal
-        open={open}
+        open={open && data?.is_unlocked}
         onClose={() => {
           setOpen(false);
           setSelectedResume("");

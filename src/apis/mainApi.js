@@ -171,3 +171,14 @@ export const postCoverLetter = async (data) => {
     throw err;
   }
 };
+
+export const getConnectionLetters = async (id) => {
+  try {
+    const res = await api.get(
+      `https://api.ziphire.hr/v2/client/job/${id}/connections/`
+    );
+    return res;
+  } catch (err) {
+    throw err;
+  }
+};

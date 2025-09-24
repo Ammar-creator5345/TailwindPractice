@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { getDetailsOfJob, postSavedJob } from "../apis/findJobs";
+import { getDetailsOfJob, postSavedJob, unlockJob } from "../apis/findJobs";
 import { useNavigate, useParams } from "react-router-dom";
 import ArrowBackIosNewIcon from "@mui/icons-material/ArrowBackIosNew";
 import FiberManualRecordIcon from "@mui/icons-material/FiberManualRecord";
@@ -26,6 +26,7 @@ import Tooltip from "@mui/material/Tooltip";
 import GenerateTailordModal from "./generateTailord";
 import TailordLetterModal from "./tailordLetter";
 import CompanyConnectionModal from "./companyConnections";
+import JobAppliedModal from "./jobAppliedModal";
 
 const DetailsPage = () => {
   const { id } = useParams();
@@ -37,6 +38,7 @@ const DetailsPage = () => {
   const [TailordResumeModal, setTailordResumeModal] = useState(false);
   const [TailordLetterModalOpen, setTailordLetterModalOpen] = useState(false);
   const [companyConnModal, setCompanyConnModal] = useState(false);
+  const [appliedJobModal, setAppliedJobModal] = useState(false);
 
   const circleStyle = {
     pathColor: "#A38AF1",
@@ -49,7 +51,7 @@ const DetailsPage = () => {
       setLoading(true);
       try {
         const res = await getDetailsOfJob(id);
-        // console.log(res.data);
+        console.log(res.data);
         setData(res.data);
       } catch (err) {
         console.log(err);
@@ -72,21 +74,60 @@ const DetailsPage = () => {
     setData((prev) => ({ ...prev, is_saved: !prev.is_saved }));
   };
 
+  const handleApplyJob = () => {
+    const unlockingJob = async () => {
+      try {
+        const res = await unlockJob({ job_id: id });
+        console.log(res);
+        setData((prev) => ({
+          ...prev,
+          is_unlocked: !data.is_unlocked,
+        }));
+      } catch (err) {
+        console.log(err);
+      }
+    };
+    if (data?.is_unlocked) {
+      window.open(data?.job_url, "_blank");
+      localStorage.setItem("onPage", "true");
+    } else {
+      unlockingJob();
+    }
+  };
+
+  useEffect(() => {
+    const visibilityHandle = () => {
+      const ShouldOpen = localStorage.getItem("onPage");
+      if (document.visibilityState === "visible" && ShouldOpen === "true") {
+        setAppliedJobModal(true);
+        localStorage.removeItem("onPage");
+      }
+    };
+    document.addEventListener("visibilitychange", visibilityHandle);
+    return () => {
+      document.removeEventListener("visibilitychange", visibilityHandle);
+    };
+  }, []);
+
   return (
     <>
       <GenerateTailordModal
         open={TailordResumeModal}
         setOpen={setTailordResumeModal}
         jobId={id}
+        data={data}
       />
       <TailordLetterModal
         open={TailordLetterModalOpen}
         setOpen={setTailordLetterModalOpen}
         jobId={id}
+        data={data}
       />
       <CompanyConnectionModal
         open={companyConnModal}
         setOpen={setCompanyConnModal}
+        jobId={id}
+        resumeData={data}
       />
       {showAlert && (
         <ShowAlert
@@ -95,6 +136,14 @@ const DetailsPage = () => {
           time={2000}
         />
       )}
+
+      <JobAppliedModal
+        open={appliedJobModal}
+        setOpen={setAppliedJobModal}
+        jobId={id}
+        setData={setData}
+      />
+
       <div className="p-4 px-5">
         <h1 className="text-[28px] font-bold">Job Details</h1>
         <div className="flex items-center gap-3 mt-5">
@@ -156,41 +205,57 @@ const DetailsPage = () => {
                   )}
                 </div>
               </div>
-              <div className="flex items-center gap-3">
-                {loading ? (
-                  <Skeleton
-                    variant="rounded"
-                    sx={{ borderRadius: "15px" }}
-                    width={50}
-                    height={40}
-                  />
-                ) : (
-                  <button
-                    type="button"
-                    onClick={handleSavedJob}
-                    className="bg-[#fafafa] p-2 px-3 rounded-2xl transition-all hover:bg-[#e7e3e3]"
-                  >
-                    <BookmarkIcon
-                      color={data?.is_saved ? "#1FFFA5" : "transparent"}
+              {data?.has_applied ? (
+                <div className="bg-[#8BFCC1] py-1 px-2 rounded-2xl text-[12px] font-[500]">
+                  Applied!
+                </div>
+              ) : (
+                <div className="flex items-center gap-3">
+                  {loading ? (
+                    <Skeleton
+                      variant="rounded"
+                      sx={{ borderRadius: "15px" }}
+                      width={50}
+                      height={40}
                     />
-                  </button>
-                )}
-                {loading ? (
-                  <Skeleton
-                    variant="rounded"
-                    sx={{ borderRadius: "15px" }}
-                    width={100}
-                    height={40}
-                  />
-                ) : (
-                  <button
-                    type="button"
-                    className="bg-[#7CFCA3] p-3 px-4 rounded-2xl font-[500] transition-all hover:p-[14px] hover:px-5"
-                  >
-                    {data?.is_unlocked ? "Apply Job" : "Unlock Job"}
-                  </button>
-                )}
-              </div>
+                  ) : (
+                    <button
+                      type="button"
+                      onClick={handleSavedJob}
+                      className="bg-[#fafafa] p-2 px-3 rounded-2xl transition-all hover:bg-[#e7e3e3]"
+                    >
+                      <BookmarkIcon
+                        color={data?.is_saved ? "#1FFFA5" : "transparent"}
+                      />
+                    </button>
+                  )}
+                  {loading ? (
+                    <Skeleton
+                      variant="rounded"
+                      sx={{ borderRadius: "15px" }}
+                      width={100}
+                      height={40}
+                    />
+                  ) : (
+                    <Tooltip
+                      title={`${
+                        !data?.is_unlocked
+                          ? "Customize your resume, get discovered faster, craft cover letters, and access company contacts."
+                          : ""
+                      }`}
+                      placement="top"
+                    >
+                      <button
+                        onClick={handleApplyJob}
+                        type="button"
+                        className="bg-[#7CFCA3] p-3 px-4 rounded-2xl font-[500] transition-all hover:p-[14px] hover:px-5"
+                      >
+                        {data?.is_unlocked ? "Apply Job" : "Unlock Job"}
+                      </button>
+                    </Tooltip>
+                  )}
+                </div>
+              )}
             </div>
             <div className="mt-2 flex items-center gap-2">
               {loading ? (
@@ -349,7 +414,11 @@ const DetailsPage = () => {
                 placement="top"
               >
                 <div
-                  onClick={() => setTailordResumeModal(true)}
+                  onClick={() => {
+                    if (data?.is_unlocked) {
+                      setTailordResumeModal(true);
+                    }
+                  }}
                   className="flex gap-3 font-[500] text-sm items-center justify-center p-3 rounded-2xl cursor-pointer shadowColor2 border w-fit"
                 >
                   <DocumentIcon />
@@ -364,7 +433,11 @@ const DetailsPage = () => {
                 placement="top"
               >
                 <div
-                  onClick={() => setTailordLetterModalOpen(true)}
+                  onClick={() => {
+                    if (data?.is_unlocked) {
+                      setTailordLetterModalOpen(true);
+                    }
+                  }}
                   className="flex gap-3 font-[500] text-sm items-center justify-center p-3 rounded-2xl cursor-pointer shadowColor2 border w-fit"
                 >
                   <FolderDocumentIcon />
@@ -379,7 +452,11 @@ const DetailsPage = () => {
                 placement="top"
               >
                 <div
-                  onClick={() => setCompanyConnModal(true)}
+                  onClick={() => {
+                    if (data?.is_unlocked) {
+                      setCompanyConnModal(true);
+                    }
+                  }}
                   className="flex gap-3 font-[500] text-sm items-center justify-center p-3 rounded-2xl cursor-pointer shadowColor2 border w-fit"
                 >
                   <div className="w-8 h-[30px]">

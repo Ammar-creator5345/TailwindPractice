@@ -4,10 +4,11 @@ import LoopRoundedIcon from "@mui/icons-material/LoopRounded";
 import ContentCopyIcon from "@mui/icons-material/ContentCopy";
 import WarningIcon from "../myProfile/warningIcon";
 import Tooltip from "@mui/material/Tooltip";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { postCoverLetter } from "../apis/mainApi";
+import ReactMarkdown from "react-markdown";
 
-const TailordLetterModal = ({ open, setOpen, jobId }) => {
+const TailordLetterModal = ({ open, setOpen, jobId, data }) => {
   const style = {
     position: "absolute",
     top: "48%",
@@ -22,19 +23,50 @@ const TailordLetterModal = ({ open, setOpen, jobId }) => {
   };
   const [animate, setAnimate] = useState(false);
   const [coverLetter, setCoverLetter] = useState("");
+  const [isCopied, setIsCopied] = useState(false);
   const createCoverLetter = async () => {
     try {
       setAnimate(true);
       const res = await postCoverLetter({ job_id: jobId });
       setCoverLetter(res.data.cover_letter);
       console.log(res);
+      setAnimate(false);
     } catch (err) {
       console.log(err);
     }
   };
+  const handleCopy = async () => {
+    setIsCopied(true);
+    if (!coverLetter) return;
+    await navigator.clipboard.writeText(coverLetter);
+    setTimeout(() => {
+      setIsCopied(false);
+    }, 1500);
+  };
+  useEffect(() => {
+    if (!open || !data?.is_unlocked) return;
+    const fetchCoverLetter = async () => {
+      try {
+        setAnimate(true);
+        const res = await postCoverLetter({ job_id: jobId });
+        setCoverLetter(res.data.cover_letter);
+        console.log(res);
+        setAnimate(false);
+      } catch (err) {
+        console.log(err);
+      }
+    };
+    fetchCoverLetter();
+  }, [open]);
 
   return (
-    <Modal open={open} onClose={() => setOpen(false)}>
+    <Modal
+      open={open && data?.is_unlocked}
+      onClose={() => {
+        setOpen(false);
+        setCoverLetter("");
+      }}
+    >
       <Box sx={style}>
         <div className="px-5">
           <h1 className="text-2xl font-semibold">
@@ -44,28 +76,36 @@ const TailordLetterModal = ({ open, setOpen, jobId }) => {
             Based on your profile and this job description, here's a draft you
             can use. Feel free to edit before applying!
           </p>
-          <div className="border rounded-2xl px-4 py-3 mt-3 text-[#302f2f] relative min-h-[80px] bg-[#fafafa] font-[500]">
-            <p>
-              {coverLetter
-                ? coverLetter
-                : "Loading your tailored cover letter..."}
-            </p>
-            <div className="absolute bottom-3 right-3 flex items-center gap-2">
+          <div
+            className="whitespace-pre-line border rounded-2xl px-4 py-3 mt-3 text-[#302f2f] bg-[#fafafa] font-[400] 
+             min-h-[80px] max-h-[300px] overflow-y-auto space-y-3"
+          >
+            {coverLetter ? (
+              coverLetter
+            ) : (
+              <p>Loading your tailored cover letter...</p>
+            )}
+
+            <div className="flex justify-end gap-2 pt-3">
               <Tooltip title="Regenerate" placement="top">
-                <button
-                  onClick={createCoverLetter}
-                  className={`${animate ? "some" : ""}`}
-                >
-                  <LoopRoundedIcon sx={{ fontSize: "22px" }} />
+                <button onClick={createCoverLetter}>
+                  <LoopRoundedIcon
+                    className={`${animate ? "some" : ""}`}
+                    sx={{ fontSize: "22px" }}
+                  />
                 </button>
               </Tooltip>
-              <Tooltip title="Copy to clipboard" placement="top">
-                <button>
+              <Tooltip
+                title={`${isCopied ? "Copied" : "Copy to clipboard"}`}
+                placement="top"
+              >
+                <button onClick={handleCopy}>
                   <ContentCopyIcon sx={{ fontSize: "20px" }} />
                 </button>
               </Tooltip>
             </div>
           </div>
+
           <div className="flex items-center gap-2 mt-3">
             <WarningIcon />
             <span className="text-[12px] text-[#414040]">

@@ -93,7 +93,7 @@ export default function ResumeSideDrawer({ open, setOpen, uploadedResume }) {
   const toggleSavedOpenDrawer = (newOpen) => () => {
     setSavedOpenDrawer(newOpen);
   };
-  console.log(uploadedResume);
+  // console.log(uploadedResume);
   const showAlertDrawer = (section) => {
     const message = {
       personalInfo: "personal info updated",

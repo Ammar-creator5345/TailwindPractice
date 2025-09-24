@@ -133,3 +133,23 @@ export const getDetailsOfJob = async (id) => {
     alert(err);
   }
 };
+
+export const postAppliedJob = async (data) => {
+  try {
+    const res = await api.post("/applications/", data);
+    return res;
+  } catch (err) {
+    throw err;
+  }
+};
+
+
+
+export const unlockJob = async (data) => {
+  try {
+    const res = await api.post("/user-job-unlock/", data);
+    return res;
+  } catch (err) {
+    throw err;
+  }
+};
