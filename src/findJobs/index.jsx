@@ -425,7 +425,7 @@ const FindJobs = () => {
           <ListItemText primary="Hybrid" />
         </MenuItem>
       </Menu>
-      <div className="p-10 bg-[#FAFAFA]">
+      <div className="p-10 px-2 bg-[#FAFAFA] md:px-10">
         <h1 className="text-3xl font-bold">Find Jobs</h1>
         <div>
           <div className="relative mt-4">
@@ -489,7 +489,7 @@ const FindJobs = () => {
               </div>
               <div
                 onClick={() => handleSearch()}
-                className="bg-black p-2 px-3 rounded-[18px] flex justify-center items-center cursor-pointer transition-transform hover:scale-[1.04] hover:shadowColor2"
+                className="bg-black p-[4px] px-[10px] rounded-[18px] flex justify-center items-center cursor-pointer transition-transform hover:scale-[1.04] hover:shadowColor2 sm:p-2 sm:px-3 "
               >
                 <SearchIcon />
               </div>

@@ -7,15 +7,20 @@ import CircularProgress from "@mui/material/CircularProgress";
 const JobAppliedModal = ({ open, setOpen, jobId, setData }) => {
   const style = {
     position: "absolute",
-    top: "48%",
-    left: "50%",
-    transform: "translate(-50%, -50%)",
-    width: "45%",
+    width: "100%",
+    height: "100%",
     bgcolor: "white",
     boxShadow: 24,
     p: "20px",
     borderRadius: "16px",
     outline: "none",
+    "@media (min-width:770px)": {
+      top: "48%",
+      left: "50%",
+      transform: "translate(-50%, -50%)",
+      width: "650px",
+      height: "auto",
+    },
   };
 
   const [loading, setLoading] = useState(false);
@@ -54,7 +59,7 @@ const JobAppliedModal = ({ open, setOpen, jobId, setData }) => {
               <p className="text-[15px] mt-1">
                 Help Us Keep Your Job Tracking Accurate.
               </p>
-              <div className="flex items-center gap-3 mt-4 justify-center">
+              <div className="flex whitespace-nowrap flex-wrap items-center gap-3 mt-4 justify-center">
                 <button
                   onClick={handleAppliedJob}
                   className="bg-[#6ff5b0] px-4 py-3 rounded-2xl font-[500] transition-all duration-200 hover:px-5 hover:py-[13px]"

@@ -86,9 +86,10 @@ const JobsItems = ({
               }`}
             >
               <div className="p-3 rounded-2xl bg-white shadowColor2 mt-4">
-                <div className="flex justify-between">
-                  <div className="flex items-center gap-5">
-                    <div className="w-[90px] h-[90px] rounded-xl shadowColor2">
+                <div className="flex flex-col items-center justify-between sm:flex-row">
+                  <div className="flex text-center flex-col justify-center items-center gap-5 sm:flex-row sm:text-start">
+                    {/* <div className="w-[90px] h-[90px] min-w-[90px] min-h-[90px] rounded-xl shadowColor2"> */}
+                    <div className="w-[60px] h-[60px] min-w-[60px] min-h-[60px] rounded-xl shadowColor2 sm:w-[90px] sm:h-[90px] sm:min-w-[90px] sm:min-h-[90px]">
                       <img
                         src="https://app.ziphire.hr/assets/img/job-icon.png"
                         alt="some"
@@ -102,7 +103,7 @@ const JobsItems = ({
                       <p className="text-sm mt-1">
                         {job?.company_name || job?.job_detail?.company_name}
                       </p>
-                      <div className="flex items-center gap-2 mt-2">
+                      <div className="flex items-center justify-center gap-2 mt-2 whitespace-nowrap flex-wrap sm:justify-start">
                         <div className="flex items-center gap-1 text-sm bg-[#FAFAFA] py-1 px-2 rounded-xl w-fit">
                           <MapIcon />
                           <span>{`${job?.city || job?.job_detail?.city}, ${
@@ -141,7 +142,7 @@ const JobsItems = ({
                     </div>
                   </div>
                   <div>
-                    <div className="w-[115px] h-[115px] min-w-[115px] min-h-[115px]">
+                    <div className="w-[80px] h-[80px] min-w-[80px] min-h-[80px] mt-3 sm:mt-0 sm:w-[115px] sm:h-[115px] sm:min-w-[115px] sm:min-h-[115px]">
                       <CircularProgressbarWithChildren
                         value={
                           job?.match_percentage ||
@@ -153,19 +154,21 @@ const JobsItems = ({
                         })}
                       >
                         <div className="flex flex-col items-center justify-center">
-                          <h1 className="text-lg font-bold">{`${Math.floor(
+                          <h1 className="text-sm font-bold sm:text-lg">{`${Math.floor(
                             job?.match_percentage ||
                               job?.job_detail?.match_percentage
                           )}%`}</h1>
-                          <p className="text-[13px] text-gray-800">Job Match</p>
+                          <p className="text-[11px] text-gray-800 sm:text-[13px]">
+                            Job Match
+                          </p>
                         </div>
                       </CircularProgressbarWithChildren>
                     </div>
                   </div>
                 </div>
                 <hr className="my-4 border-t border-t-[#EDEDED]" />
-                <div className="flex items-center justify-between">
-                  <div className="flex items-center gap-[3px] text-[13px] text-gray-700">
+                <div className="flex flex-col gap-2 justify-between sm:gap-0 sm:flex-row">
+                  <div className="flex items-center justify-start gap-[3px] text-[13px] text-gray-700">
                     <span>{`${
                       job?.days_since_posted
                         ? job?.days_since_posted
@@ -180,7 +183,7 @@ const JobsItems = ({
                         : ""
                     }`}</span>
                   </div>
-                  <div className="flex items-center gap-3">
+                  <div className="flex justify-center items-center gap-3">
                     <button
                       type="button"
                       onClick={(e) => {

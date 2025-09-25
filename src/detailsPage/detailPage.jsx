@@ -144,9 +144,9 @@ const DetailsPage = () => {
         setData={setData}
       />
 
-      <div className="p-4 px-5">
-        <h1 className="text-[28px] font-bold">Job Details</h1>
-        <div className="flex items-center gap-3 mt-5">
+      <div className="p-4 px-1 sm:px-5">
+        <h1 className="text-[28px] font-bold ml-2 sm:ml-0">Job Details</h1>
+        <div className="flex items-center gap-3 ml-1 mt-5 sm:ml-0">
           <button
             type="button"
             onClick={() => navigate(-1)}
@@ -158,9 +158,9 @@ const DetailsPage = () => {
         </div>
         <div>
           <div className="bg-white mt-5 pb-14 rounded-xl shadowColor2 p-4">
-            <div className="flex items-center justify-between">
-              <div className="flex items-center gap-3">
-                <div className="w-[46px] h-[46px] shadowColor2 flex justify-center items-center rounded-lg">
+            <div className="flex flex-col items-center justify-between md:flex-row">
+              <div className="flex flex-col items-center gap-3 md:flex-row">
+                <div className="w-[46px] h-[46px] min-w-[46px] min-h-[46px] shadowColor2 flex justify-center items-center rounded-lg">
                   <img
                     src="https://app.ziphire.hr/assets/img/job-icon.png"
                     alt="some"
@@ -171,8 +171,8 @@ const DetailsPage = () => {
                   {loading ? (
                     <Skeleton variant="rounded" width={310} height={20} />
                   ) : (
-                    <div className="flex gap-2 items-end">
-                      <h1 className="text-[22px] font-[500]">
+                    <div className="flex flex-col gap-2 md:flex-row">
+                      <h1 className="text-[22px] text-center font-[500] md:text-start">
                         {data?.job_title}
                       </h1>
                       <div className="flex gap-1 items-center py-1">
@@ -210,7 +210,7 @@ const DetailsPage = () => {
                   Applied!
                 </div>
               ) : (
-                <div className="flex items-center gap-3">
+                <div className="flex mt-2 w-full flex-col items-center gap-3 md:flex-row md:w-fit md:mt-0">
                   {loading ? (
                     <Skeleton
                       variant="rounded"
@@ -222,7 +222,7 @@ const DetailsPage = () => {
                     <button
                       type="button"
                       onClick={handleSavedJob}
-                      className="bg-[#fafafa] p-2 px-3 rounded-2xl transition-all hover:bg-[#e7e3e3]"
+                      className="bg-[#fafafa] flex justify-center items-center w-full p-2 px-3 rounded-2xl transition-all hover:bg-[#e7e3e3] md:w-fit"
                     >
                       <BookmarkIcon
                         color={data?.is_saved ? "#1FFFA5" : "transparent"}
@@ -248,7 +248,7 @@ const DetailsPage = () => {
                       <button
                         onClick={handleApplyJob}
                         type="button"
-                        className="bg-[#7CFCA3] p-3 px-4 rounded-2xl font-[500] transition-all hover:p-[14px] hover:px-5"
+                        className="bg-[#7CFCA3] w-full whitespace-nowrap p-3 px-4 rounded-2xl font-[500] transition-all hover:p-[14px] hover:px-5 md:w-fit"
                       >
                         {data?.is_unlocked ? "Apply Job" : "Unlock Job"}
                       </button>
@@ -257,7 +257,7 @@ const DetailsPage = () => {
                 </div>
               )}
             </div>
-            <div className="mt-2 flex items-center gap-2">
+            <div className="mt-2 whitespace-nowrap justify-center flex-wrap flex items-center gap-2 md:justify-start">
               {loading ? (
                 <Skeleton
                   variant="rounded"
@@ -336,8 +336,8 @@ const DetailsPage = () => {
                 </div>
               )}
             </div>
-            <div className="mt-4 flex gap-4">
-              <div className="flex w-[85%]">
+            <div className="mt-4 flex flex-col items-center gap-4 md:flex-row">
+              <div className="flex w-[85%] flex-col gap-4 items-center sm:flex-row sm:gap-0">
                 <div className="w-1/3 flex justify-center items-center p-2">
                   <div className="flex flex-col justify-center items-center gap-1">
                     {loading ? (
@@ -354,7 +354,7 @@ const DetailsPage = () => {
                     <p className="text-[13px]">Exp. Level</p>
                   </div>
                 </div>
-                <div className="w-1/3 flex justify-center items-center border-l p-2">
+                <div className="w-1/3 flex justify-center items-center p-2 md:border-l">
                   <div className="flex flex-col justify-center items-center gap-1">
                     {loading ? (
                       <Skeleton variant="circular" width={50} height={50} />
@@ -370,7 +370,7 @@ const DetailsPage = () => {
                     <p className="text-[13px]">Skills</p>
                   </div>
                 </div>
-                <div className="w-1/3 flex justify-center items-center border-l p-2">
+                <div className="w-1/3 flex justify-center items-center p-2 md:border-l">
                   <div className="flex flex-col justify-center items-center gap-1">
                     {loading ? (
                       <Skeleton variant="circular" width={50} height={50} />
@@ -388,8 +388,8 @@ const DetailsPage = () => {
                 </div>
               </div>
               <div className="w-[15%] flex items-center justify-center">
-                <div className="">
-                  <div className="bg-[#FAFAFA] rounded-lg p-1 px-9 flex flex-col justify-center items-center">
+                <div className="whitespace-nowrap">
+                  <div className="bg-[#FAFAFA] rounded-lg p-1 px-9 flex flex-col justify-center items-center ">
                     <h2 className="text-[22px] font-[500]">
                       {loading ? "0" : data?.base_score}%
                     </h2>
@@ -406,7 +406,7 @@ const DetailsPage = () => {
               Boost your chances with Ziphire's AI-generated documents tailored
               for this job
             </p>
-            <div className="mt-4 flex items-center gap-3">
+            <div className="mt-4 whitespace-nowrap flex-wrap flex flex-col items-center gap-3 sm:flex-row sm:w-fit">
               <Tooltip
                 title={
                   data?.is_unlocked ? "" : "Unlock Job to use this Feature"
@@ -419,7 +419,7 @@ const DetailsPage = () => {
                       setTailordResumeModal(true);
                     }
                   }}
-                  className="flex gap-3 font-[500] text-sm items-center justify-center p-3 rounded-2xl cursor-pointer shadowColor2 border w-fit"
+                  className="flex gap-3 font-[500] text-sm items-center justify-center p-3 rounded-2xl cursor-pointer shadowColor2 border w-full sm:w-fit"
                 >
                   <DocumentIcon />
                   <span>Generate Tailord Resume</span>
@@ -438,7 +438,7 @@ const DetailsPage = () => {
                       setTailordLetterModalOpen(true);
                     }
                   }}
-                  className="flex gap-3 font-[500] text-sm items-center justify-center p-3 rounded-2xl cursor-pointer shadowColor2 border w-fit"
+                  className="flex gap-3 font-[500] text-sm items-center justify-center p-3 rounded-2xl cursor-pointer shadowColor2 border w-full sm:w-fit"
                 >
                   <FolderDocumentIcon />
                   <span>Generate Tailord Cover Letter</span>
@@ -457,7 +457,7 @@ const DetailsPage = () => {
                       setCompanyConnModal(true);
                     }
                   }}
-                  className="flex gap-3 font-[500] text-sm items-center justify-center p-3 rounded-2xl cursor-pointer shadowColor2 border w-fit"
+                  className="flex gap-3 font-[500] text-sm items-center justify-center p-3 rounded-2xl cursor-pointer shadowColor2 border w-full sm:w-fit"
                 >
                   <div className="w-8 h-[30px]">
                     <img src="/folder.svg" className="w-full h-full" />
@@ -497,7 +497,7 @@ const DetailsPage = () => {
                 <div className="p-2 px-3 rounded-lg font-semibold bg-[#fafafa]">
                   Job Summary
                 </div>
-                <div className="text-gray-800 px-8 leading-7 py-4 font-[500] text-[15px] pr-10">
+                <div className="text-gray-800 px-2 leading-7 py-4 font-[500] text-[14px] pr-10 md:px-8 md:text-[15px]">
                   <ReactMarkdown
                     components={{
                       ul: (props) => (
@@ -511,7 +511,7 @@ const DetailsPage = () => {
                 <div className="p-2 px-3 rounded-lg font-semibold bg-[#fafafa]">
                   Required Skills and Qualifications
                 </div>
-                <div className="text-gray-800 font-[500] px-8 py-4 text-[14px]">
+                <div className="text-gray-800 font-[500] px-2 py-4 text-[14px] md:px-8">
                   <ReactMarkdown
                     components={{
                       ul: (props) => (
@@ -524,9 +524,9 @@ const DetailsPage = () => {
                 </div>
                 <hr className="mt-6 mb-3" />
                 <h1 className="text-[22px] font-semibold">About The Company</h1>
-                <div className="mt-4 flex gap-4">
+                <div className="mt-4 flex items-center flex-col gap-4 md:flex-row">
                   <div className="flex items-center gap-3">
-                    <div className="w-[100px] h-[100px] shadowColor2 flex justify-center items-center rounded-lg">
+                    <div className="w-[80px] h-[80px] min-w-[80px] min-h-[80px] shadowColor2 flex justify-center items-center rounded-lg md:w-[100px] md:h-[100px] md:min-w-[100px] md:min-h-[100px]">
                       <img
                         src="https://app.ziphire.hr/assets/img/job-icon.png"
                         alt="some"
@@ -534,10 +534,10 @@ const DetailsPage = () => {
                       />
                     </div>
                   </div>
-                  <div className="flex flex-col gap-2">
+                  <div className="flex flex-col items-center gap-2 md:items-start">
                     <h6 className="text-sm font-bold">{data?.company_name}</h6>
-                    <div className="flex items-center gap-3 flex-wrap w-[90%]">
-                      <div className="flex items-center gap-1 bg-[#fafafa] p-1 px-2 rounded-lg w-fit">
+                    <div className="flex items-center gap-3 flex-wrap justify-center md:justify-start md:w-[90%]">
+                      <div className="flex items-center gap-1 bg-[#fafafa] p-1 px-2 rounded-lg">
                         <MapIcon />
                         <span className="text-[13px] font-[500] text-[#2c2b2b]">
                           {data?.scraped_job_json?.jobLocation}
@@ -547,7 +547,7 @@ const DetailsPage = () => {
                         href={data?.scraped_job_json?.companyUrl}
                         target="_blank"
                         rel="noopener noreferrer"
-                        className="flex items-center gap-1 bg-[#fafafa] p-1 px-2 rounded-lg w-fit cursor-pointer"
+                        className="flex items-center gap-1 bg-[#fafafa] p-1 px-2 rounded-lg cursor-pointer"
                       >
                         <LanguageIcon
                           sx={{ fontSize: "20px", color: "#9587C0" }}
@@ -564,7 +564,7 @@ const DetailsPage = () => {
                         href={data?.scraped_job_json?.companyUrl}
                         target="_blank"
                         rel="noopener noreferrer"
-                        className="flex items-center gap-1 bg-[#fafafa] p-1 px-2 rounded-lg w-fit cursor-pointer"
+                        className="flex items-center gap-1 bg-[#fafafa] p-1 px-2 rounded-lg cursor-pointer"
                       >
                         <LinkedInIcon sx={{ color: "#9587C0" }} />
                         <span className="text-[13px] font-[500] text-[#2c2b2b]">

@@ -14,22 +14,32 @@ import ResumeSideDrawer from "../components/ResumeSideDrawer";
 const GenerateTailordModal = ({ open, setOpen, jobId, data }) => {
   const style = {
     position: "absolute",
-    top: "48%",
-    left: "50%",
-    transform: "translate(-50%, -50%)",
-    width: "40%",
+    height: { xs: "100%" },
+    width: { xs: "100%" },
     bgcolor: "white",
     boxShadow: 24,
-    p: "15px 0",
+    p: { xs: "15px 0" },
     borderRadius: "16px",
     outline: "none",
+    "@media (min-width:770px)": {
+      width: "550px",
+      height: "auto",
+      top: "48%",
+      left: "50%",
+      transform: "translate(-50%, -50%)",
+    },
   };
+
   const style1 = {
     position: "absolute",
     top: "48%",
     left: "50%",
     transform: "translate(-50%, -50%)",
-    width: "35%",
+    width: {
+      xs: "70%",
+      sm: "60%",
+      md: "35%",
+    },
     bgcolor: "white",
     boxShadow: 24,
     p: "8px 0",
@@ -147,7 +157,7 @@ const GenerateTailordModal = ({ open, setOpen, jobId, data }) => {
             </p>
           </div>
 
-          <div className="flex items-center gap-6 mt-1 px-2">
+          <div className="flex flex-col items-start gap-0 mt-1 px-2 sm:flex-row sm:items-center sm:gap-6">
             <label className="flex items-center cursor-pointer">
               <Radio
                 checked={selected === "MyResume"}
@@ -275,10 +285,10 @@ const GenerateTailordModal = ({ open, setOpen, jobId, data }) => {
                   </div>
                 )}
 
-                <div className="flex items-center gap-3 mt-4 justify-center">
+                <div className="flex flex-col items-center gap-3 mt-4 justify-center sm:flex-row">
                   <button
                     onClick={handleSubmitResume}
-                    className="bg-[#6ff5b0] px-4 py-3 rounded-2xl font-[500] transition-all duration-200 hover:px-5 hover:py-[13px]"
+                    className="bg-[#6ff5b0] w-full px-4 py-3 rounded-2xl font-[500] transition-all duration-200 hover:px-5 hover:py-[13px] sm:w-fit"
                   >
                     Continue
                   </button>
@@ -287,7 +297,7 @@ const GenerateTailordModal = ({ open, setOpen, jobId, data }) => {
                       setOpen(false);
                       setSelectedResume("");
                     }}
-                    className="px-[13px] py-[9px] transition-all border-2 border-transparent rounded-2xl font-[500] hover:border-black"
+                    className="px-[13px] w-full py-[9px] transition-all border-2 border-transparent rounded-2xl font-[500] hover:border-black sm:w-fit"
                   >
                     Cancel
                   </button>
@@ -304,13 +314,13 @@ const GenerateTailordModal = ({ open, setOpen, jobId, data }) => {
                   onChange={(e) => setSocialLink(e.target.value)}
                   className="input-style bg-[#fafafa]"
                 />
-                <div className="flex items-center gap-3 mt-4 justify-center">
-                  <button className="bg-[#6ff5b0] px-4 py-3 rounded-2xl font-[500] transition-all duration-200 hover:px-5 hover:py-[13px]">
+                <div className="flex flex-col items-center gap-3 mt-4 justify-center sm:flex-row">
+                  <button className="bg-[#6ff5b0] w-full px-4 py-3 rounded-2xl font-[500] transition-all duration-200 hover:px-5 hover:py-[13px] sm:w-fit">
                     Continue
                   </button>
                   <button
                     onClick={() => setOpen(false)}
-                    className="px-[13px] py-[9px] transition-all border-2 border-transparent rounded-2xl font-[500] hover:border-black"
+                    className="px-[13px] w-full py-[9px] transition-all border-2 border-transparent rounded-2xl font-[500] hover:border-black sm:w-fit"
                   >
                     Cancel
                   </button>
