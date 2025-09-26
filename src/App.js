@@ -13,6 +13,8 @@ import ErrorPage from "./pages/errorPage";
 import MyProfile from "./myProfile";
 import FindJobs from "./findJobs";
 import DetailsPage from "./detailsPage/detailPage";
+import TrackJobs from "./trackJobs";
+import DetailPage from "./trackJobs/detailsPage/detailPage";
 
 function App() {
   const [token, setToken] = useState(localStorage.getItem("token"));
@@ -53,6 +55,8 @@ function App() {
             <Route path="/profile" element={<MyProfile />} />
             <Route path="/find-jobs" element={<FindJobs />} />
             <Route path="/find-jobs/details/:id" element={<DetailsPage />} />
+            <Route path="/track-my-jobs" element={<TrackJobs />} />
+            <Route path="/track-my-jobs/:id" element={<DetailPage />} />
           </>
         ) : (
           <Route path="/" element={<Navigate to="/login" />} />

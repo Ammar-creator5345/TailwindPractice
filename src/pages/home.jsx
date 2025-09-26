@@ -2,7 +2,6 @@ import axios from "axios";
 import React from "react";
 import { useNavigate, NavLink } from "react-router-dom";
 
-
 export default function HomePage({ setToken }) {
   const token = localStorage.getItem("token");
   const navigate = useNavigate();
@@ -25,7 +24,6 @@ export default function HomePage({ setToken }) {
 
   return (
     <div className="min-h-screen flex flex-col bg-gray-50">
-      {/* Navbar */}
       <header className="bg-white shadow-md">
         <div className="max-w-7xl mx-auto flex justify-between items-center py-4 px-6">
           <h1 className="text-2xl font-bold text-gray-800">personalProject</h1>
@@ -42,6 +40,12 @@ export default function HomePage({ setToken }) {
             <NavLink to="/find-jobs" className="text-gray-600 hover:text-black">
               Find Jobs
             </NavLink>
+            <NavLink
+              to="/track-my-jobs"
+              className="text-gray-600 hover:text-black"
+            >
+              Track Jobs
+            </NavLink>
           </nav>
           <button
             onClick={logOut}
@@ -52,10 +56,9 @@ export default function HomePage({ setToken }) {
         </div>
       </header>
 
-      {/* Hero Section */}
       <main className="flex flex-1 flex-col items-center justify-center text-center px-6">
         <h2 className="text-4xl font-bold text-gray-800 mb-4">
-          Welcome to personalProject 🚀
+          Welcome to personalProject
         </h2>
         <p className="text-lg text-gray-600 max-w-2xl mb-6">
           Build resumes, tailor cover letters, and find jobs with ease. Your
