@@ -60,7 +60,11 @@ const SortPage2 = ({ data }) => {
                   className={`rounded-2xl px-2 py-[3px] text-sm ${
                     job?.status === "in_process"
                       ? "bg-[#B8ACF3]"
-                      : "bg-[#F2BF4D]"
+                      : job?.status === "interview_scheduled"
+                      ? "bg-[#F0DE97]"
+                      : job?.status === "offer_received"
+                      ? "bg-[#F2BF4D]"
+                      : "bg-[#EFA950]"
                   }`}
                 >
                   {wordFormatter(job?.status)}

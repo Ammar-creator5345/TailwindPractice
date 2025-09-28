@@ -33,7 +33,7 @@ const TrackJobs = () => {
       return 0;
     }
   });
-  const [sortButton, setSortButton] = useState(1);
+  const [sortButton, setSortButton] = useState(2);
   const sortPage = {
     1: <SortPage1 data={data} />,
     2: <SortPage2 data={data} />,

@@ -135,6 +135,20 @@ body {
     padding: 10px;
     font-size: 15px;
 }
-.trackJobsTable tr:hover{
+
+.trackJobsTable tr:hover {
     background-color: #f3f1f1;
+}
+
+
+::-webkit-scrollbar {
+    width: 5px;
+}
+
+::-webkit-scrollbar-track {
+    background: #CECECE;
+}
+
+::-webkit-scrollbar-thumb {
+    background-color: #2C6341;
 }
