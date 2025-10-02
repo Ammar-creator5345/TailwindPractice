@@ -24,12 +24,12 @@ const SortPage2 = ({ data }) => {
           <table className="min-w-full">
             <thead>
               <tr>
-                <th className="min-w-[390px]">Job Title</th>
-                <th className="min-w-[200px]">Location</th>
-                <th className="min-w-[150px]">Work Type</th>
-                <th className="min-w-[150px]">Status</th>
-                <th className="min-w-[150px]">Job Match</th>
-                <th className="min-w-[200px]">Date Applied</th>
+                <th className="min-w-[390px] md:min-w-fit">Job Title</th>
+                <th className="min-w-[200px] md:min-w-fit">Location</th>
+                <th className="min-w-[150px] md:min-w-fit">Work Type</th>
+                <th className="min-w-[150px] md:min-w-fit">Status</th>
+                <th className="min-w-[150px] md:min-w-fit">Job Match</th>
+                <th className="min-w-[200px] md:min-w-fit">Date Applied</th>
               </tr>
             </thead>
             <tbody>
