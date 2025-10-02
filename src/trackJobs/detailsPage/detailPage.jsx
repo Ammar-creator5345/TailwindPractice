@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import {
   getCoverLetterById,
   getJobConnectionsById,
@@ -6,6 +6,7 @@ import {
   getRecentResume,
   getReminders,
   getSkillTrackerById,
+  postStatusJob,
 } from "../../apis/trackJobs";
 import { useNavigate, useParams } from "react-router-dom";
 import ArrowBackIosNewIcon from "@mui/icons-material/ArrowBackIosNew";
@@ -26,6 +27,7 @@ import Resumes from "./Resume";
 import CoverLetter from "./coverLetter";
 import EmailTemplates from "./emailTemplates";
 import Reminder from "./reminders";
+import ArrowForwardIosIcon from "@mui/icons-material/ArrowForwardIos";
 
 const DetailPage = () => {
   const { id } = useParams();
@@ -39,6 +41,9 @@ const DetailPage = () => {
   const [resume, setResume] = useState({});
   const [coverLetters, setCoverLetters] = useState([]);
   const [reminders, setReminders] = useState([]);
+  const buttonRef = useRef();
+  const [showLeftButton, setShowLeftButton] = useState(false);
+  const [showRightButton, setShowRightButton] = useState(false);
 
   const buttonPage = {
     0: <Connections connections={connections} />,
@@ -46,7 +51,7 @@ const DetailPage = () => {
     2: <Resumes resume={resume} />,
     3: <CoverLetter coverLetters={coverLetters} />,
     4: <EmailTemplates id={id} />,
-    5: <Reminder reminders={reminders} />,
+    5: <Reminder reminders={reminders} id={id} setReminders={setReminders} />,
   };
   useEffect(() => {
     const fetchJobDetails = async () => {
@@ -165,6 +170,51 @@ const DetailPage = () => {
     "Reminders",
   ];
 
+  useEffect(() => {
+    const post_jobStatus = async () => {
+      try {
+        const jobStatusTabs = {
+          "In Process": "in_process",
+          "Interview Scheduled": "interview_scheduled",
+          "Offer Received": "offer_received",
+          Rejected: "rejected",
+        };
+        const res = await postStatusJob(id, {
+          status: jobStatusTabs[optionValue],
+        });
+      } catch (err) {
+        console.log(err);
+      }
+    };
+    post_jobStatus();
+  }, [optionValue]);
+
+  useEffect(() => {
+    const checkScroll = () => {
+      if (!buttonRef.current) return;
+      const { scrollLeft, scrollWidth, clientWidth } = buttonRef.current;
+      setShowLeftButton(scrollLeft > 0);
+      setShowRightButton(scrollLeft + clientWidth < scrollWidth - 1);
+    };
+    checkScroll();
+    buttonRef.current.addEventListener("scroll", checkScroll);
+    window.addEventListener("resize", checkScroll);
+    return () => {
+      if (buttonRef.current) {
+        buttonRef.current.removeEventListener("scroll", checkScroll);
+        window.removeEventListener("resize", checkScroll);
+      }
+    };
+  }, []);
+  const scroll = (direction) => {
+    if (buttonRef.current) {
+      buttonRef.current.scrollBy({
+        left: direction === "left" ? -200 : 200,
+        behavior: "smooth",
+      });
+    }
+  };
+
   return (
     <div className="p-4 px-1 sm:px-5">
       <h1 className="text-[28px] font-bold ml-2 sm:ml-0">
@@ -214,7 +264,7 @@ const DetailPage = () => {
                 )}
               </div>
             </div>
-            <div className="flex items-center gap-3">
+            <div className="flex my-4 items-center gap-3 md:my-0">
               <span className="text-[13px] text-[#292929] whitespace-nowrap">
                 Job Status:
               </span>
@@ -392,21 +442,6 @@ const DetailPage = () => {
                 height={80}
                 sx={{ marginTop: "10px" }}
               />
-              <Skeleton
-                variant="rounded"
-                height={80}
-                sx={{ marginTop: "10px" }}
-              />
-              <Skeleton
-                variant="rounded"
-                height={80}
-                sx={{ marginTop: "10px" }}
-              />
-              <Skeleton
-                variant="rounded"
-                height={80}
-                sx={{ marginTop: "10px" }}
-              />
             </>
           ) : (
             <div>
@@ -425,21 +460,46 @@ const DetailPage = () => {
               <hr className="mt-6 mb-3" />
             </div>
           )}
-          <div className="mt-4 flex items-center gap-3">
-            {buttons.map((button, index) => (
+          <div className="flex items-center mt-4">
+            {showLeftButton && (
               <button
-                key={index}
-                onClick={() => setButtonIndex(index)}
-                type="button"
-                className={`font-[500] whitespace-nowrap transition-all duration-300 shadowColor2 px-3 py-2 rounded-2xl border-2  ${
-                  index === buttonIndex
-                    ? "bg-[#7CFCA6] border-black"
-                    : "border-transparent bg-white"
-                }`}
+                className="bg-[#fafafa] p-2"
+                onClick={() => scroll("left")}
               >
-                {button}
+                <div className="bg-white shadowColor2 rounded-xl p-1 px-2">
+                  <ArrowBackIosNewIcon sx={{ fontSize: "15px" }} />
+                </div>
               </button>
-            ))}
+            )}
+            <div
+              className="p-1 flex gap-3 overflow-x-auto overflow-y-visible no-scrollbar whitespace-nowrap"
+              ref={buttonRef}
+            >
+              {buttons.map((button, index) => (
+                <button
+                  key={index}
+                  onClick={() => setButtonIndex(index)}
+                  type="button"
+                  className={`font-[500] whitespace-nowrap transition-all duration-300 shadowColor2 px-3 py-2 rounded-2xl border-2  ${
+                    index === buttonIndex
+                      ? "bg-[#7CFCA6] border-black"
+                      : "border-transparent bg-white"
+                  }`}
+                >
+                  {button}
+                </button>
+              ))}
+            </div>
+            {showRightButton && (
+              <button
+                className="bg-[#fafafa] p-2"
+                onClick={() => scroll("right")}
+              >
+                <div className="bg-white shadowColor2 rounded-xl p-1 px-2">
+                  <ArrowForwardIosIcon sx={{ fontSize: "15px" }} />
+                </div>
+              </button>
+            )}
           </div>
           <div className="mt-8">{buttonPage[buttonIndex]}</div>
         </div>

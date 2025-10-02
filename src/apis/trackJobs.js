@@ -77,6 +77,41 @@ export const getReminders = async (id) => {
   }
 };
 
+export const postReminder = async (data) => {
+  try {
+    const res = await api.post(`/application-reminders/`, data);
+    return res;
+  } catch (err) {
+    throw err;
+  }
+};
+
+export const deleteReminder = async (id) => {
+  try {
+    const res = await api.delete(`/application-reminders/${id}/`);
+    return res;
+  } catch (err) {
+    throw err;
+  }
+};
+
+export const getReminderTypes = async () => {
+  try {
+    const res = await api.get(`/application-reminder-types/`);
+    return res;
+  } catch (err) {
+    throw err;
+  }
+};
+export const postReminderType = async (data) => {
+  try {
+    const res = await api.post(`/application-reminder-types/`, data);
+    return res;
+  } catch (err) {
+    throw err;
+  }
+};
+
 export const downloadPdf = async (id) => {
   try {
     const res = await api.get(`resumes/${id}/download_pdf?template=1`, {
@@ -91,6 +126,15 @@ export const downloadPdf = async (id) => {
 export const postEmailTemplates = async (data) => {
   try {
     const res = await api.post(`/application-email-templates/`, data);
+    return res;
+  } catch (err) {
+    throw err;
+  }
+};
+
+export const postStatusJob = async (id, data) => {
+  try {
+    const res = await api.post(`/applications/${id}/update_status/`, data);
     return res;
   } catch (err) {
     throw err;

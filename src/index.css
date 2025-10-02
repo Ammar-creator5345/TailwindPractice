@@ -113,16 +113,16 @@ body {
 .trackJobsTable {
     border: 1px solid rgb(233, 230, 230);
     border-radius: 15px;
-    overflow: hidden;
     box-shadow: 0 1px 4px #0000001a;
+    background-color: white;
+    overflow: hidden;
 }
+
 
 .trackJobsTable table {
-    width: 100%;
     border-collapse: collapse;
-    background-color: white;
+    width: 100%;
 }
-
 
 .trackJobsTable td {
     border-top: 1px solid rgb(233, 230, 230);
@@ -131,24 +131,12 @@ body {
 
 .trackJobsTable th {
     text-align: start;
-    background-color: #FAFAFA;
+    background-color: #fafafa;
     padding: 10px;
     font-size: 15px;
+    font-weight: 600;
 }
 
 .trackJobsTable tr:hover {
     background-color: #f3f1f1;
-}
-
-
-::-webkit-scrollbar {
-    width: 5px;
-}
-
-::-webkit-scrollbar-track {
-    background: #CECECE;
-}
-
-::-webkit-scrollbar-thumb {
-    background-color: #2C6341;
 }

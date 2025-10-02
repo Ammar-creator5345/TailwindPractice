@@ -11,19 +11,24 @@ import Tooltip from "@mui/material/Tooltip";
 const EmailTemplates = ({ id }) => {
   const style = {
     position: "absolute",
-    top: "50%",
-    left: "50%",
-    transform: "translate(-50%, -50%)",
-    width: 630,
-    maxHeight: "85vh",
+
+    width: "100%",
+    height: "100%",
     overflowY: "auto",
     bgcolor: "background.paper",
-    border: "2px solid #000",
     boxShadow: 24,
     borderRadius: "16px",
     border: "none",
     p: "22px",
     overflowX: "hidden",
+    "@media (min-width:770px)": {
+      height: "auto",
+      maxHeight: "85vh",
+      top: "50%",
+      left: "50%",
+      transform: "translate(-50%, -50%)",
+      width: 630,
+    },
   };
   const buttons1 = [
     "Follow Up Application",
@@ -143,8 +148,8 @@ const EmailTemplates = ({ id }) => {
                 </div>
               )}
             </div>
-            <div className="mt-3 flex justify-center items-center gap-3">
-              <button className="text-sm font-semibold flex justify-center items-center rounded-2xl px-4 py-3 bg-gradient-to-l from-[#3BFFC6] to-[#3BFF9E] transition-all duration-200 hover:py-[14px] hover:px-5">
+            <div className="mt-3 flex flex-col justify-center items-center gap-3 md770:flex-row">
+              <button className="text-sm w-full font-semibold flex justify-center items-center rounded-2xl px-4 py-3 bg-gradient-to-l  from-[#3BFFC6] to-[#3BFF9E] transition-all duration-200 hover:py-[14px] hover:px-5 md770:w-fit">
                 Send Email
               </button>
               <button
@@ -152,7 +157,7 @@ const EmailTemplates = ({ id }) => {
                   setOpen(false);
                   setData({});
                 }}
-                className="text-sm font-[500] border-2 border-transparent transition-all flex justify-center items-center rounded-2xl px-3 py-2 hover:border-black"
+                className="text-sm w-full font-[500] border-2 border-transparent transition-all flex justify-center items-center rounded-2xl px-3 py-2 hover:border-black md770:w-fit"
               >
                 Cancel
               </button>
@@ -161,7 +166,7 @@ const EmailTemplates = ({ id }) => {
         </Box>
       </Modal>
       <div className="bg-[#fafafa] rounded-2xl px-3 pb-4">
-        <div className="flex gap-6">
+        <div className="flex flex-col-reverse gap-0 md:gap-6 md:flex-row">
           <div className="">
             {buttons1.map((button, index) => (
               <button
