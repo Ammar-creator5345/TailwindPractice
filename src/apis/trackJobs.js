@@ -140,3 +140,14 @@ export const postStatusJob = async (id, data) => {
     throw err;
   }
 };
+
+export const notificationJobAlerts = async () => {
+  try {
+    const res = await api.get(
+      "https://api.ziphire.hr/v2/notifications/candidate-notificatino-job-alerts/"
+    );
+    return res;
+  } catch (err) {
+    throw err;
+  }
+};

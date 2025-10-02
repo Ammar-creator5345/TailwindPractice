@@ -15,6 +15,7 @@ import FindJobs from "./findJobs";
 import DetailsPage from "./detailsPage/detailPage";
 import TrackJobs from "./trackJobs";
 import DetailPage from "./trackJobs/detailsPage/detailPage";
+import NotificationCenter from "./notificationCenter";
 
 function App() {
   const [token, setToken] = useState(localStorage.getItem("token"));
@@ -57,6 +58,10 @@ function App() {
             <Route path="/find-jobs/details/:id" element={<DetailsPage />} />
             <Route path="/track-my-jobs" element={<TrackJobs />} />
             <Route path="/track-my-jobs/:id" element={<DetailPage />} />
+            <Route
+              path="/notifications-center"
+              element={<NotificationCenter />}
+            />
           </>
         ) : (
           <Route path="/" element={<Navigate to="/login" />} />

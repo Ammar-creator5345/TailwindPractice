@@ -46,6 +46,12 @@ export default function HomePage({ setToken }) {
             >
               Track Jobs
             </NavLink>
+            <NavLink
+              to="/notifications-center"
+              className="text-gray-600 hover:text-black"
+            >
+              Notifications
+            </NavLink>
           </nav>
           <button
             onClick={logOut}

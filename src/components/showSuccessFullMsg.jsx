@@ -64,18 +64,17 @@ const ShowAlert = ({ section, onClose, time = 5000 }) => {
         <div className="w-[10px] h-full bg-green-500"></div>
         <div className="flex gap-2 mt-5">
           <div className="mt-2">
-            <CheckCircleIcon width={40} height={40} color />
+            <CheckCircleIcon color={"#1FFFA5"} width={40} height={40} />
           </div>
           <div className="flex flex-col">
             <h1 className="text-lg font-semibold">Successful!</h1>{" "}
-            {/* Fixed spelling */}
             <h3 className="text-[16px]">{message}</h3>
           </div>
         </div>
         <button
           type="button"
           onClick={toggleSavedOpenDrawer(false)}
-          className="absolute top-4 right-4" // Changed from fixed to absolute
+          className="absolute top-4 right-4"
         >
           <CloseIcon />
         </button>

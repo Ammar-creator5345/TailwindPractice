@@ -88,7 +88,6 @@ const JobsItems = ({
               <div className="p-3 rounded-2xl bg-white shadowColor2 mt-4">
                 <div className="flex flex-col items-center justify-between sm:flex-row">
                   <div className="flex text-center flex-col justify-center items-center gap-5 sm:flex-row sm:text-start">
-                    {/* <div className="w-[90px] h-[90px] min-w-[90px] min-h-[90px] rounded-xl shadowColor2"> */}
                     <div className="w-[60px] h-[60px] min-w-[60px] min-h-[60px] rounded-xl shadowColor2 sm:w-[90px] sm:h-[90px] sm:min-w-[90px] sm:min-h-[90px]">
                       <img
                         src="https://app.ziphire.hr/assets/img/job-icon.png"
