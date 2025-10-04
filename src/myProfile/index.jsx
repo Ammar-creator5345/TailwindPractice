@@ -31,8 +31,10 @@ import {
   getAboutMe,
 } from "../apis/mainApi";
 import { useNavigate } from "react-router-dom";
+import ZakiAi from "../components/zakiAi";
 
 const MyProfile = () => {
+  const [zakiOpen, setZakiOpen] = useState(false);
   const [open, setOpen] = useState(false);
   const ref = useRef();
   const [selectedBtn, setSeletedBtn] = useState(null);
@@ -74,7 +76,7 @@ const MyProfile = () => {
       }
       const { scrollLeft, scrollWidth, clientWidth } = ref.current;
       setShowLeftBtn(scrollLeft > 0);
-      setShowRightBtn(scrollLeft + clientWidth < scrollWidth -1);
+      setShowRightBtn(scrollLeft + clientWidth < scrollWidth - 1);
     };
     checkScroll();
 
@@ -343,6 +345,7 @@ const MyProfile = () => {
   };
   return (
     <>
+      <ZakiAi open={zakiOpen} setOpen={setZakiOpen} />
       <SideDrawer
         profileDataApi={profileDataApi}
         open={open}
@@ -366,7 +369,19 @@ const MyProfile = () => {
         resumeQualityLoading={resumeQualityLoading}
         refetchApis={refetchApis}
       />
-      <div className="p-2 bg-[#FAFAFA] sm:p-4 md:p-10 ">
+      <div className={`p-2 bg-[#FAFAFA] sm:p-4 md:p-10 `}>
+        {!zakiOpen && (
+          <div
+            onClick={() => setZakiOpen(true)}
+            className="shadow-[0_4px_14px_#0003] w-[55px] h-[55px] z-[50000] rounded-full p-[9px] bg-white text-white flex justify-center items-center fixed bottom-6 right-5 cursor-pointer transition-all hover:p-1"
+          >
+            <img
+              src="https://app.ziphire.hr/assets/img/zaki_ai_image.jpeg"
+              alt=""
+              className="w-[90%] h-[90%] rounded-full"
+            />
+          </div>
+        )}
         <h1 className="text-[25px] font-bold">My Profile</h1>
         <div className="relative">
           {showLeftBtn && (

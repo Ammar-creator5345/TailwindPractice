@@ -52,6 +52,9 @@ export default function HomePage({ setToken }) {
             >
               Notifications
             </NavLink>
+            <NavLink to="/ai" className="text-gray-600 hover:text-black">
+              Zaki AI
+            </NavLink>
           </nav>
           <button
             onClick={logOut}

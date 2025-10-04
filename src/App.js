@@ -16,6 +16,7 @@ import DetailsPage from "./detailsPage/detailPage";
 import TrackJobs from "./trackJobs";
 import DetailPage from "./trackJobs/detailsPage/detailPage";
 import NotificationCenter from "./notificationCenter";
+import ZakiAi from "./components/zakiAi";
 
 function App() {
   const [token, setToken] = useState(localStorage.getItem("token"));
@@ -62,6 +63,7 @@ function App() {
               path="/notifications-center"
               element={<NotificationCenter />}
             />
+            <Route path="/ai" element={<ZakiAi />} />
           </>
         ) : (
           <Route path="/" element={<Navigate to="/login" />} />

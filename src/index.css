@@ -140,3 +140,85 @@ body {
 .trackJobsTable tr:hover {
     background-color: #f3f1f1;
 }
+
+.chat-bubble-left {
+    position: relative;
+    background: #F2F2F2;
+    border-radius: 8px 8px 8px 0px;
+    padding: 10px 14px;
+    line-height: 18px;
+    font-size: 14px;
+    color: #292929;
+}
+
+.chat-bubble-left::before {
+    content: '';
+    position: absolute;
+    left: -13px;
+    bottom: 0px;
+    width: 5px;
+    height: 0;
+    border-top: 10px solid transparent;
+    border-right: 13px solid #f2f2f2;
+}
+
+
+.chat-bubble-right {
+    position: relative;
+    background: #C2FDE7;
+    max-width: 80%;
+    border-radius: 8px 8px 0px 8px;
+    padding: 10px 14px;
+    line-height: 18px;
+    font-size: 14px;
+    color: #292929;
+}
+
+.chat-bubble-right::before {
+    content: '';
+    position: absolute;
+    right: -13px;
+    bottom: 0px;
+    width: 5px;
+    height: 0;
+    border-top: 10px solid transparent;
+    border-left: 13px solid #f2f2f2;
+}
+
+::-webkit-scrollbar {
+    width: 6px;
+}
+
+::-webkit-scrollbar-track {
+    background-color: #d3d1d1;
+}
+
+::-webkit-scrollbar-thumb {
+    background: red;
+}
+
+.loader {
+    width: 40px;
+    aspect-ratio: 4;
+    --_g: no-repeat radial-gradient(circle closest-side, #000 90%, #0000);
+    background:
+        var(--_g) 0% 50%,
+        var(--_g) 50% 50%,
+        var(--_g) 100% 50%;
+    background-size: calc(100%/3) 100%;
+    animation: l7 1s infinite linear;
+}
+
+@keyframes l7 {
+    33% {
+        background-size: calc(100%/3) 0%, calc(100%/3) 100%, calc(100%/3) 100%
+    }
+
+    50% {
+        background-size: calc(100%/3) 100%, calc(100%/3) 0%, calc(100%/3) 100%
+    }
+
+    66% {
+        background-size: calc(100%/3) 100%, calc(100%/3) 100%, calc(100%/3) 0%
+    }
+}
