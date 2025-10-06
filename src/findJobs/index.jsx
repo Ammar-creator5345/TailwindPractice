@@ -8,6 +8,7 @@ import { useSearchParams } from "react-router-dom";
 import SubmenuArrowIcon from "../svgs/arrowIcon";
 import { Checkbox, ListItemText, Menu, MenuItem } from "@mui/material";
 import ClearIcon from "@mui/icons-material/Clear";
+import MenuIcon from "@mui/icons-material/Menu";
 import {
   getRecentJobs,
   getRecommendedJobs,
@@ -15,6 +16,8 @@ import {
   getTopMatchedJobs,
 } from "../apis/findJobs";
 import JobsItems from "./jobsItem";
+import SideBarDrawer from "../components/sideBarDrawer";
+import ZakiAi from "../components/zakiAi";
 
 const FindJobs = () => {
   const jobsButtons = ["Recommended", "Top Matched", "Most Recent", "Saved"];
@@ -31,6 +34,9 @@ const FindJobs = () => {
   const [onSave, setOnSave] = useState(false);
   const [title, setTitle] = useState("");
   const [location, setLocation] = useState("");
+  const [openSideBar, setOpenSideBar] = useState(false);
+  const [token, setToken] = useState(localStorage.getItem("token"));
+  const [zakiOpen, setZakiOpen] = useState(false);
   const [filters, setFilters] = useState({
     location: "",
     title: "",
@@ -425,10 +431,36 @@ const FindJobs = () => {
           <ListItemText primary="Hybrid" />
         </MenuItem>
       </Menu>
-      <div className="p-10 px-2 bg-[#FAFAFA] md:px-10">
-        <h1 className="text-3xl font-bold">Find Jobs</h1>
-        <div>
-          <div className="relative mt-4">
+      <SideBarDrawer
+        open={openSideBar}
+        setOpen={setOpenSideBar}
+        setToken={setToken}
+      />
+      <ZakiAi open={zakiOpen} setOpen={setZakiOpen} />
+      {!zakiOpen && (
+        <div
+          onClick={() => setZakiOpen(true)}
+          className="shadow-[0_4px_14px_#0003] w-[55px] h-[55px] z-[50000] rounded-full p-[9px] bg-white text-white flex justify-center items-center fixed bottom-6 right-5 cursor-pointer transition-all hover:p-1"
+        >
+          <img
+            src="https://app.ziphire.hr/assets/img/zaki_ai_image.jpeg"
+            alt=""
+            className="w-[90%] h-[90%] rounded-full"
+          />
+        </div>
+      )}
+      <div className="pt-10 px-2 bg-[#FAFAFA] md:px-10">
+        <div className="flex gap-3 items-center pb-5">
+          <button
+            onClick={() => setOpenSideBar(true)}
+            className="flex items-center justify-center lg960:hidden"
+          >
+            <MenuIcon />
+          </button>
+          <h1 className="text-3xl font-bold">Find Jobs</h1>
+        </div>
+        <div className="overflow-y-auto px-1 h-[calc(100vh-104px)]">
+          <div className="relative">
             {leftButton && (
               <button
                 onClick={() => scroll("left")}

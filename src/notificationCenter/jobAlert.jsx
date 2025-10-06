@@ -53,7 +53,7 @@ const JobAlert = ({ jobAlert, setJobAlert, loading }) => {
       )}
       <div className="mt-6">
         {!loading ? (
-          <div>
+          <div className="pb-4 px-1">
             <div className="mx-1">
               <h3 className="text-sm font-bold ">New Job Matches for You!</h3>
               <p className="text-[12px] text-[#666666] ">

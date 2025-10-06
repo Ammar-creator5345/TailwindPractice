@@ -20,7 +20,7 @@ const SortPage2 = ({ data }) => {
   return (
     <div>
       <div className="trackJobsTable">
-        <div className="overflow-x-auto">
+        <div className="overflow-x-auto tbScrollbar">
           <table className="min-w-full">
             <thead>
               <tr>

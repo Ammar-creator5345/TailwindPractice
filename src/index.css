@@ -197,6 +197,20 @@ body {
     background: red;
 }
 
+.tbScrollbar::-webkit-scrollbar {
+    width: 1px;
+    height: 1px;
+}
+
+.tbScrollbar::-webkit-scrollbar-track {
+    background-color: #d3d1d1;
+}
+
+.tbScrollbar::-webkit-scrollbar-thumb {
+    background: red;
+}
+
+
 .loader {
     width: 40px;
     aspect-ratio: 4;
@@ -221,4 +235,8 @@ body {
     66% {
         background-size: calc(100%/3) 100%, calc(100%/3) 100%, calc(100%/3) 0%
     }
+}
+
+.opposite {
+    transform: rotate(180deg);
 }

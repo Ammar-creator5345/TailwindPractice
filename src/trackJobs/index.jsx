@@ -8,6 +8,9 @@ import SortPage2 from "./sortPage2";
 import CircularProgress from "@mui/material/CircularProgress";
 import ArrowForwardIosIcon from "@mui/icons-material/ArrowForwardIos";
 import ArrowBackIosNewIcon from "@mui/icons-material/ArrowBackIosNew";
+import MenuIcon from "@mui/icons-material/Menu";
+import SideBarDrawer from "../components/sideBarDrawer";
+import ZakiAi from "../components/zakiAi";
 
 const TrackJobs = () => {
   const [searchParams, setSearchParams] = useSearchParams();
@@ -16,6 +19,9 @@ const TrackJobs = () => {
   const buttonRef = useRef();
   const [showLeftButton, setShowLeftButton] = useState(false);
   const [showRightButton, setShowRightButton] = useState(false);
+  const [openSideBar, setOpenSideBar] = useState(false);
+  const [token, setToken] = useState(localStorage.getItem("token"));
+  const [zakiOpen, setZakiOpen] = useState();
 
   const buttons = [
     "All Jobs",
@@ -105,73 +111,107 @@ const TrackJobs = () => {
   }, []);
 
   return (
-    <div className="p-2 bg-[#fafafa] md:p-8">
-      <h1 className="text-3xl font-bold">Track My Jobs</h1>
-      <div>
-        {/* ------------------header--------------------- */}
-        <div className="flex items-center mt-4">
-          {showLeftButton && (
-            <button className="bg-[#fafafa] p-2" onClick={() => scroll("left")}>
-              <div className="bg-white shadowColor2 rounded-xl p-1 px-2">
-                <ArrowBackIosNewIcon sx={{ fontSize: "15px" }} />
-              </div>
-            </button>
-          )}
-          <div
-            ref={buttonRef}
-            className="flex p-1 items-center overflow-x-auto no-scrollbar gap-3"
+    <>
+      <SideBarDrawer
+        open={openSideBar}
+        setOpen={setOpenSideBar}
+        setToken={setToken}
+      />
+      <ZakiAi open={zakiOpen} setOpen={setZakiOpen} />
+      {!zakiOpen && (
+        <div
+          onClick={() => setZakiOpen(true)}
+          className="shadow-[0_4px_14px_#0003] w-[55px] h-[55px] z-[50000] rounded-full p-[9px] bg-white text-white flex justify-center items-center fixed bottom-6 right-5 cursor-pointer transition-all hover:p-1"
+        >
+          <img
+            src="https://app.ziphire.hr/assets/img/zaki_ai_image.jpeg"
+            alt=""
+            className="w-[90%] h-[90%] rounded-full"
+          />
+        </div>
+      )}
+      <div className="p-2 bg-[#fafafa] md:px-8">
+        <div className="flex items-center gap-3 py-5">
+          <button
+            onClick={() => setOpenSideBar(true)}
+            className="flex justify-center items-center lg960:hidden"
           >
-            {buttons.map((button, index) => (
+            <MenuIcon />
+          </button>
+          <h1 className="text-3xl font-bold">Track My Jobs</h1>
+        </div>
+        <div className="overflow-y-auto px-1 h-[calc(100vh-92px)]">
+          {/* ------------------header--------------------- */}
+          <div className="flex items-center mt-4">
+            {showLeftButton && (
               <button
-                key={index}
-                onClick={() => setButtonIndex(index)}
-                type="button"
-                className={`font-[500] whitespace-nowrap transition-all duration-300 shadowColor2 px-3 py-2 rounded-2xl border-2  ${
-                  index === buttonIndex
-                    ? "bg-[#7CFCA6] border-black"
-                    : "border-transparent bg-white"
-                }`}
+                className="bg-[#fafafa] p-2"
+                onClick={() => scroll("left")}
               >
-                {button}
+                <div className="bg-white shadowColor2 rounded-xl p-1 px-2">
+                  <ArrowBackIosNewIcon sx={{ fontSize: "15px" }} />
+                </div>
               </button>
-            ))}
+            )}
+            <div
+              ref={buttonRef}
+              className="flex p-1 items-center overflow-x-auto no-scrollbar gap-3"
+            >
+              {buttons.map((button, index) => (
+                <button
+                  key={index}
+                  onClick={() => setButtonIndex(index)}
+                  type="button"
+                  className={`font-[500] whitespace-nowrap transition-all duration-300 shadowColor2 px-3 py-2 rounded-2xl border-2  ${
+                    index === buttonIndex
+                      ? "bg-[#7CFCA6] border-black"
+                      : "border-transparent bg-white"
+                  }`}
+                >
+                  {button}
+                </button>
+              ))}
+            </div>
+            {showRightButton && (
+              <button
+                className="bg-[#fafafa] p-2"
+                onClick={() => scroll("right")}
+              >
+                <div className="bg-white shadowColor2 rounded-xl p-1 px-2">
+                  <ArrowForwardIosIcon sx={{ fontSize: "15px" }} />
+                </div>
+              </button>
+            )}
           </div>
-          {showRightButton && (
-            <button className="bg-[#fafafa] p-2" onClick={() => scroll("right")}>
-              <div className="bg-white shadowColor2 rounded-xl p-1 px-2">
-                <ArrowForwardIosIcon sx={{ fontSize: "15px" }} />
-              </div>
+
+          {/* -----------------------sort buttons------------------------- */}
+          <div className="flex items-center gap-3 mt-9">
+            <button
+              onClick={() => setSortButton(1)}
+              type="button"
+              className="bg-white rounded-2xl shadowColor2 p-2"
+            >
+              <SortIcon1 bgColor={sortButton === 1 ? " #A38AF1" : ""} />
             </button>
+            <button
+              onClick={() => setSortButton(2)}
+              type="button"
+              className="bg-white rounded-2xl shadowColor2 p-2"
+            >
+              <SortIcon2 bgColor={sortButton === 2 ? " #A38AF1" : ""} />
+            </button>
+          </div>
+          {/* --------------Content---------------------- */}
+          {loading ? (
+            <div className="flex items-center justify-center mt-8">
+              <CircularProgress color="success" />
+            </div>
+          ) : (
+            <div className="mt-4">{sortPage[sortButton]}</div>
           )}
         </div>
-
-        {/* -----------------------sort buttons------------------------- */}
-        <div className="flex items-center gap-3 mt-9">
-          <button
-            onClick={() => setSortButton(1)}
-            type="button"
-            className="bg-white rounded-2xl shadowColor2 p-2"
-          >
-            <SortIcon1 bgColor={sortButton === 1 ? " #A38AF1" : ""} />
-          </button>
-          <button
-            onClick={() => setSortButton(2)}
-            type="button"
-            className="bg-white rounded-2xl shadowColor2 p-2"
-          >
-            <SortIcon2 bgColor={sortButton === 2 ? " #A38AF1" : ""} />
-          </button>
-        </div>
-        {/* --------------Content---------------------- */}
-        {loading ? (
-          <div className="flex items-center justify-center mt-8">
-            <CircularProgress color="success" />
-          </div>
-        ) : (
-          <div className="mt-4">{sortPage[sortButton]}</div>
-        )}
       </div>
-    </div>
+    </>
   );
 };
 

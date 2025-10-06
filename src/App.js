@@ -1,10 +1,9 @@
 import HomePage from "./pages/home";
 import LogIn from "./pages/logInPage";
-import { Route, Routes, useNavigate } from "react-router-dom";
+import { Route, Routes, useLocation, useNavigate } from "react-router-dom";
 import SignUp from "./pages/signUp";
 import EmailVerification from "./pages/email_verification";
 import Resumes from "./pages/resumes";
-import ResumeSideDrawer from "./components/ResumeSideDrawer";
 import { Navigate } from "react-router-dom";
 import { useEffect, useState } from "react";
 import axios from "axios";
@@ -17,6 +16,8 @@ import TrackJobs from "./trackJobs";
 import DetailPage from "./trackJobs/detailsPage/detailPage";
 import NotificationCenter from "./notificationCenter";
 import ZakiAi from "./components/zakiAi";
+import PageLayout from "./layout/pageLayout";
+import AuthLayout from "./layout/authLayout";
 
 function App() {
   const [token, setToken] = useState(localStorage.getItem("token"));
@@ -40,21 +41,24 @@ function App() {
     <div className="App">
       {showAlert && <AlertDrawer />}
       <Routes>
-        <Route
-          path="/login"
-          element={token ? <Navigate to="/" /> : <LogIn setToken={setToken} />}
-        />
-        <Route
-          path="/signUp"
-          element={token ? <Navigate to="/" /> : <SignUp />}
-        />
+        <Route element={<AuthLayout />}>
+          <Route
+            path="/login"
+            element={
+              token ? <Navigate to="/" /> : <LogIn setToken={setToken} />
+            }
+          />
+          <Route
+            path="/signUp"
+            element={token ? <Navigate to="/" /> : <SignUp />}
+          />
+        </Route>
         {token ? (
-          <>
+          <Route element={<PageLayout setToken={setToken} />}>
             <Route path="/" element={<HomePage setToken={setToken} />} />
             <Route path="/verify" element={<EmailVerification />} />
-            <Route path="/resumes" element={<Resumes />} />
-            <Route path="/some" element={<ResumeSideDrawer />} />
-            <Route path="/profile" element={<MyProfile />} />
+            <Route path="/my-resumes" element={<Resumes />} />
+            <Route path="/home" element={<MyProfile />} />
             <Route path="/find-jobs" element={<FindJobs />} />
             <Route path="/find-jobs/details/:id" element={<DetailsPage />} />
             <Route path="/track-my-jobs" element={<TrackJobs />} />
@@ -64,11 +68,11 @@ function App() {
               element={<NotificationCenter />}
             />
             <Route path="/ai" element={<ZakiAi />} />
-          </>
+          </Route>
         ) : (
-          <Route path="/" element={<Navigate to="/login" />} />
+          <Route path="*" element={<Navigate to="/login" />}></Route>
         )}
-        <Route path="*" element={<ErrorPage />} />
+        <Route path="*" element={<ErrorPage />}></Route>
       </Routes>
     </div>
   );

@@ -1402,6 +1402,7 @@ export default function ResumeSideDrawer({ open, setOpen, uploadedResume }) {
               top: 20,
               right: 10,
               borderRadius: "10px",
+              zIndex: "999999",
             },
           },
         }}

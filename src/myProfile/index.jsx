@@ -12,6 +12,7 @@ import WarningIcon from "./warningIcon";
 import SideDrawer from "./sideDrawer";
 import ArrowBackIosNewIcon from "@mui/icons-material/ArrowBackIosNew";
 import ArrowForwardIosIcon from "@mui/icons-material/ArrowForwardIos";
+import MenuIcon from "@mui/icons-material/Menu";
 import {
   getProfile,
   getCompletionPercentage,
@@ -32,6 +33,7 @@ import {
 } from "../apis/mainApi";
 import { useNavigate } from "react-router-dom";
 import ZakiAi from "../components/zakiAi";
+import SideBarDrawer from "../components/sideBarDrawer";
 
 const MyProfile = () => {
   const [zakiOpen, setZakiOpen] = useState(false);
@@ -53,6 +55,8 @@ const MyProfile = () => {
   const [showRightBtn, setShowRightBtn] = useState(false);
   const [showLeftBtn, setShowLeftBtn] = useState(false);
   const navigate = useNavigate();
+  const [openSideBar, setOpenSideBar] = useState(false);
+  const [token, setToken] = useState(localStorage.getItem("token"));
 
   // for the fields of Form
   const [profileDataApi, setProfileDataApi] = useState({});
@@ -345,6 +349,13 @@ const MyProfile = () => {
   };
   return (
     <>
+      {
+        <SideBarDrawer
+          open={openSideBar}
+          setOpen={setOpenSideBar}
+          setToken={setToken}
+        />
+      }
       <ZakiAi open={zakiOpen} setOpen={setZakiOpen} />
       <SideDrawer
         profileDataApi={profileDataApi}
@@ -369,7 +380,7 @@ const MyProfile = () => {
         resumeQualityLoading={resumeQualityLoading}
         refetchApis={refetchApis}
       />
-      <div className={`p-2 bg-[#FAFAFA] sm:p-4 md:p-10 `}>
+      <div className={`p-2 bg-[#FAFAFA] sm:p-4 md:pl-10 md:py-2`}>
         {!zakiOpen && (
           <div
             onClick={() => setZakiOpen(true)}
@@ -382,36 +393,45 @@ const MyProfile = () => {
             />
           </div>
         )}
-        <h1 className="text-[25px] font-bold">My Profile</h1>
-        <div className="relative">
-          {showLeftBtn && (
-            <div
-              onClick={() => scroll("left")}
-              className="p-2 px-3 cursor-pointer border bg-white rounded-2xl absolute left-0 top-[16%]"
-            >
-              <ArrowBackIosNewIcon sx={{ fontSize: "10px" }} />
-            </div>
-          )}
-          <div
-            ref={ref}
-            className="flex overflow-x-auto no-scrollbar gap-3 py-2 mt-5 mx-4"
+        <div className="flex items-center gap-2 pb-5">
+          <button
+            className="flex items-center justify-center lg960:hidden"
+            onClick={() => setOpenSideBar(true)}
           >
-            {formSections.map((value, index) => (
-              <button
-                key={index}
-                type="button"
-                onClick={() => {
-                  setSeletedBtn(index);
-                  const sectionId = value.toLowerCase().replace(/\s+/g, "-");
-                  const section = document.getElementById(sectionId);
-                  if (section) {
-                    section.scrollIntoView({
-                      behavior: "smooth",
-                      block: "center",
-                    });
-                  }
-                }}
-                className={`px-[10px] whitespace-nowrap text-[15px] border-2 transition-all duration-300 py-2 rounded-2xl shadowColor2 font-semibold
+            <MenuIcon />
+          </button>
+          <h1 className="text-[25px] mt-6 font-bold">My Profile</h1>
+        </div>
+        <div className="overflow-y-auto h-[calc(100vh-98px)]">
+          <div className="relative">
+            {showLeftBtn && (
+              <div
+                onClick={() => scroll("left")}
+                className="p-2 px-3 cursor-pointer border bg-white rounded-2xl absolute left-0 top-[16%]"
+              >
+                <ArrowBackIosNewIcon sx={{ fontSize: "10px" }} />
+              </div>
+            )}
+            <div
+              ref={ref}
+              className="flex overflow-x-auto no-scrollbar gap-3 py-2 mx-4"
+            >
+              {formSections.map((value, index) => (
+                <button
+                  key={index}
+                  type="button"
+                  onClick={() => {
+                    setSeletedBtn(index);
+                    const sectionId = value.toLowerCase().replace(/\s+/g, "-");
+                    const section = document.getElementById(sectionId);
+                    if (section) {
+                      section.scrollIntoView({
+                        behavior: "smooth",
+                        block: "center",
+                      });
+                    }
+                  }}
+                  className={`px-[10px] whitespace-nowrap text-[15px] border-2 transition-all duration-300 py-2 rounded-2xl shadowColor2 font-semibold
               ${
                 index === 0
                   ? "bg-[#7CFCA6] border-black"
@@ -419,353 +439,294 @@ const MyProfile = () => {
                   ? "border-black bg-white"
                   : "border-transparent bg-white"
               }`}
+                >
+                  {value}
+                </button>
+              ))}
+            </div>
+            {showRightBtn && (
+              <div
+                onClick={() => scroll("right")}
+                className="p-2 px-3 cursor-pointer border bg-white rounded-2xl absolute right-0 top-[16%]"
               >
-                {value}
+                <ArrowForwardIosIcon sx={{ fontSize: "10px" }} />
+              </div>
+            )}
+          </div>
+          <div className="shadowColor2  bg-white mt-8 rounded-2xl px-3 py-2 flex flex-col sm:flex-row justify-between">
+            <div className="flex items-center gap-2 text-[15px]">
+              <WarningIcon />
+              <span>
+                Your profile is{" "}
+                <span className="font-semibold">{`${ProfileCompletion?.profile_completion_percentage}%`}</span>{" "}
+                complete. A strong profile increases your chances.
+              </span>
+            </div>
+            <div className="flex mt-4 sm:mt-0 justify-center items-center">
+              <button
+                type="button"
+                className="bg-black whitespace-nowrap w-fit font-semibold rounded-2xl p-2 px-3 text-white"
+                onClick={() => setOpen(true)}
+              >
+                Complete Profile
               </button>
-            ))}
-          </div>
-          {showRightBtn && (
-            <div
-              onClick={() => scroll("right")}
-              className="p-2 px-3 cursor-pointer border bg-white rounded-2xl absolute right-0 top-[16%]"
-            >
-              <ArrowForwardIosIcon sx={{ fontSize: "10px" }} />
             </div>
-          )}
-        </div>
-        <div className="shadowColor2  bg-white mt-8 rounded-2xl px-3 py-2 flex flex-col sm:flex-row justify-between">
-          <div className="flex items-center gap-2 text-[15px]">
-            <WarningIcon />
-            <span>
-              Your profile is{" "}
-              <span className="font-semibold">{`${ProfileCompletion?.profile_completion_percentage}%`}</span>{" "}
-              complete. A strong profile increases your chances.
-            </span>
           </div>
-          <div className="flex mt-4 sm:mt-0 justify-center items-center">
-            <button
-              type="button"
-              className="bg-black whitespace-nowrap w-fit font-semibold rounded-2xl p-2 px-3 text-white"
-              onClick={() => setOpen(true)}
-            >
-              Complete Profile
-            </button>
-          </div>
-        </div>
-        <div className="shadowColor2 bg-white mt-5 rounded-2xl p-5 pl-8">
-          <div className="flex gap-4 relative">
-            <div className="w-[100px] min-w-[100px] min-h-[100px] h-[100px] rounded-3xl overflow-hidden">
-              <img
-                src={
-                  profileData?.user?.profile_img
-                    ? profileData?.user?.profile_img
-                    : `https://app.ziphire.hr/assets/img/avatar-male.png`
-                }
-                alt=""
-              />
-            </div>
-            <div className="mt-3">
-              <div className="text-[23px] flex items-center gap-2 pr-9 flex-wrap whitespace-nowrap font-semibold">
-                <span>{profileData?.user?.first_name} </span>
-                <span>{profileData?.user?.last_name}</span>
-              </div>
-              <div className="flex gap-2 pr-5 flex-col sm:flex-row flex-wrap">
-                <div className="flex items-center justify-center gap-1 bg-[#FAFAFA] w-fit rounded-2xl py-[3px] px-2 ">
-                  <FmdGoodIcon sx={{ color: "#9587C0", fontSize: "20px" }} />
-                  <span className="text-[12px]">
-                    {profileData?.city_residence},{" "}
-                    {profileData?.country_residence?.label}
-                  </span>
+          <div className="pb-4">
+            <div className="shadowColor2 bg-white mt-5 rounded-2xl p-5 pl-8">
+              <div className="flex gap-4 relative">
+                <div className="w-[100px] min-w-[100px] flex justify-center items-center min-h-[100px] h-[100px] rounded-3xl overflow-hidden">
+                  <img
+                    src={
+                      profileData?.user?.profile_img
+                        ? profileData?.user?.profile_img
+                        : `https://app.ziphire.hr/assets/img/avatar-male.png`
+                    }
+                    alt=""
+                    className="w-full h-full object-cover"
+                  />
                 </div>
-                <div className="flex items-center justify-center gap-1 bg-[#FAFAFA] w-fit rounded-2xl py-[3px] px-2 ">
-                  <MailIcon sx={{ color: "#9587C0", fontSize: "20px" }} />
-                  <span className="text-[12px]">
-                    {profileData?.user?.email}
-                  </span>
-                </div>
-                <div className="flex items-center justify-center gap-1 bg-[#FAFAFA] w-fit rounded-2xl py-[3px] px-2 ">
-                  <LocalPhoneIcon sx={{ color: "#9587C0", fontSize: "20px" }} />
-                  <span className="text-[12px]">
-                    {profileData?.user?.mobile}
-                  </span>
-                </div>
-                <a href={profileData?.linkedin_url} target="_blank">
-                  <div className="flex items-center justify-center gap-1 bg-[#FAFAFA] w-fit rounded-2xl py-[3px] px-2 ">
-                    <LinkedInIcon sx={{ color: "#9587C0", fontSize: "20px" }} />
-                    <span className="text-[12px]">LinkedIn</span>
-                    <OpenInNewIcon
-                      sx={{ color: "#514343", fontSize: "15px" }}
-                    />
+                <div className="mt-3">
+                  <div className="text-[23px] flex items-center gap-2 pr-9 flex-wrap whitespace-nowrap font-semibold">
+                    <span>{profileData?.user?.first_name} </span>
+                    <span>{profileData?.user?.last_name}</span>
                   </div>
-                </a>
-                <a href={profileData?.github_url} target="_blank">
-                  <div className="flex items-center justify-center gap-1 bg-[#FAFAFA] w-fit rounded-2xl py-[3px] px-2 ">
-                    <GitHubIcon sx={{ color: "#9587C0", fontSize: "20px" }} />
-                    <span className="text-[12px]">GitHub</span>
-                    <OpenInNewIcon
-                      sx={{ color: "#514343", fontSize: "15px" }}
-                    />
-                  </div>
-                </a>
-              </div>
-            </div>
-            <div
-              onClick={() => setOpen(true)}
-              className="cursor-pointer absolute right-0 top-0"
-            >
-              <ModeEditOutlinedIcon />
-            </div>
-          </div>
-          <div className="flex flex-wrap justify-evenly mt-3">
-            <div className="flex flex-col gap-2 items-center justify-center border-b p-4 border-gray-400 w-1/2 md:w-1/4 md:border-b-transparent">
-              <span className="font-[500]">Job Applied</span>
-              <span className="text-xl font-bold">
-                {stats?.total_applications}
-              </span>
-            </div>
-            <div className="flex flex-col gap-2 items-center justify-center border-b p-4 border-gray-400 w-1/2 md:w-1/4 md:border-l md:border-b-transparent">
-              <span className="font-[500]">Hired</span>
-              <span className="text-xl font-bold">{stats?.hired}</span>
-            </div>
-            <div className="flex flex-col gap-2 items-center justify-center border-b p-4 border-gray-400 w-1/2 md:w-1/4 md:border-l md:border-b-transparent">
-              <span className="font-[500]">In Process</span>
-              <span className="text-xl font-bold">
-                {stats?.in_process_applications}
-              </span>
-            </div>
-            <div className="flex flex-col gap-2 items-center justify-center border-b p-4 border-gray-400 w-1/2 md:w-1/4 md:border-l md:border-b-transparent">
-              <span className="font-[500]">Rejected</span>
-              <span className="text-xl font-bold">
-                {stats?.rejected_applications}
-              </span>
-            </div>
-          </div>
-          <div className="flex items-center justify-between p-3 mr-3 rounded-2xl bg-[#FAFAFA] mt-4">
-            <div className="flex items-center gap-2">
-              <ArticleOutlinedIcon sx={{ color: "#725858" }} />
-              <span>Manage Resume</span>
-            </div>
-            <div
-              onClick={() => navigate("/resumes")}
-              className="flex justify-center items-center bg-[#7CFCA6] p-2 rounded-xl cursor-pointer"
-            >
-              <ArrowForwardIosOutlinedIcon
-                sx={{
-                  fontSize: "16px",
-                }}
-              />
-            </div>
-          </div>
-          <hr className="border-t-2 mt-5" />
-          <div className="relative pr-0 md:pr-4">
-            <h1 className="text-2xl font-semibold my-5">About Me</h1>
-            <span className="text-[15px]" id="personal-info">
-              {profileData?.about}
-            </span>
-            <div className="flex mt-3">
-              <h5 className="text-[15px] whitespace-nowrap font-bold mr-3">
-                Work Preference:
-              </h5>
-              <div className="flex items-center flex-wrap gap-2">
-                {(profileData?.preferred_job_type || []).map((value, index) => (
-                  <span
-                    key={index}
-                    className="bg-[#FAFAFA] whitespace-nowrap text-[12px] rounded-full px-2 py-1 font-[500]"
-                  >
-                    {value.type}
-                  </span>
-                ))}
-              </div>
-            </div>
-            <div className="flex mt-2">
-              <h5 className="text-[15px] whitespace-nowrap font-bold mr-3">
-                Work Mode:
-              </h5>
-              <div className="flex items-center flex-wrap gap-2">
-                {(profileData?.work_mode || []).map((value, index) => (
-                  <span
-                    key={index}
-                    className="bg-[#FAFAFA] whitespace-nowrap text-[12px] rounded-full px-2 py-1 font-[500]"
-                  >
-                    {value.mode}
-                  </span>
-                ))}
-              </div>
-            </div>
-            <div
-              onClick={() => setOpen(true)}
-              className="cursor-pointer absolute right-0 top-1"
-            >
-              <ModeEditOutlinedIcon />
-            </div>
-          </div>
-          <hr className="border-t-2 mt-5" />
-          <div className="relative pr-4 md:pr-10">
-            <h1 className="text-2xl font-semibold my-5" id="education">
-              Education
-            </h1>
-            {education?.map((value) => (
-              <div key={value.id}>
-                <div className="bg-[#FAFAFA] rounded-xl p-2 px-4 text-[15px] font-[500]">
-                  <div className="flex items-center gap-1">
-                    <span>{value?.startYear}</span>
-                    <span>-</span>
-                    <span>{value?.completionYear}</span>
-                  </div>
-                </div>
-                <div className="mt-3 px-4">
-                  <h4 className="text-[16px] font-semibold">
-                    {value?.schoolName}
-                  </h4>
-                  <div className="flex gap-1 whitespace-nowrap flex-wrap items-center text-[13px] font-[500] my-1">
-                    <span>{value?.degreeType}</span>
-                    <span>.</span>
-                    <span>{value?.degreeName}</span>
-                  </div>
-                  <div className="flex gap-1 items-center text-[13px] font-[500] my-1">
-                    <span>{value?.score}</span>
-                    <span>.</span>
-                    <span>{value?.scoreType}</span>
-                  </div>
-                  <div className="text-[13px] font-[500] my-1">
-                    {value?.location}
-                  </div>
-                  <div className="text-[13px] font-[500] my-1">
-                    {value?.description}
+                  <div className="flex gap-2 pr-5 flex-col sm:flex-row flex-wrap">
+                    <div className="flex items-center justify-center gap-1 bg-[#FAFAFA] w-fit rounded-2xl py-[3px] px-2 ">
+                      <FmdGoodIcon
+                        sx={{ color: "#9587C0", fontSize: "20px" }}
+                      />
+                      <span className="text-[12px]">
+                        {profileData?.city_residence},{" "}
+                        {profileData?.country_residence?.label}
+                      </span>
+                    </div>
+                    <div className="flex items-center justify-center gap-1 bg-[#FAFAFA] w-fit rounded-2xl py-[3px] px-2 ">
+                      <MailIcon sx={{ color: "#9587C0", fontSize: "20px" }} />
+                      <span className="text-[12px]">
+                        {profileData?.user?.email}
+                      </span>
+                    </div>
+                    <div className="flex items-center justify-center gap-1 bg-[#FAFAFA] w-fit rounded-2xl py-[3px] px-2 ">
+                      <LocalPhoneIcon
+                        sx={{ color: "#9587C0", fontSize: "20px" }}
+                      />
+                      <span className="text-[12px]">
+                        {profileData?.user?.mobile}
+                      </span>
+                    </div>
+                    <a href={profileData?.linkedin_url} target="_blank">
+                      <div className="flex items-center justify-center gap-1 bg-[#FAFAFA] w-fit rounded-2xl py-[3px] px-2 ">
+                        <LinkedInIcon
+                          sx={{ color: "#9587C0", fontSize: "20px" }}
+                        />
+                        <span className="text-[12px]">LinkedIn</span>
+                        <OpenInNewIcon
+                          sx={{ color: "#514343", fontSize: "15px" }}
+                        />
+                      </div>
+                    </a>
+                    <a href={profileData?.github_url} target="_blank">
+                      <div className="flex items-center justify-center gap-1 bg-[#FAFAFA] w-fit rounded-2xl py-[3px] px-2 ">
+                        <GitHubIcon
+                          sx={{ color: "#9587C0", fontSize: "20px" }}
+                        />
+                        <span className="text-[12px]">GitHub</span>
+                        <OpenInNewIcon
+                          sx={{ color: "#514343", fontSize: "15px" }}
+                        />
+                      </div>
+                    </a>
                   </div>
                 </div>
                 <div
                   onClick={() => setOpen(true)}
-                  className="cursor-pointer absolute right-0 top-1"
+                  className="cursor-pointer absolute right-0 top-0"
                 >
                   <ModeEditOutlinedIcon />
                 </div>
               </div>
-            ))}
-          </div>
-          <hr className="border-t-2 mt-5" />
-          <div className="relative pr-4 md:pr-10">
-            <h1 className="text-2xl font-semibold my-5" id="work-history">
-              Work History
-            </h1>
-            {work?.map((value) => (
-              <div key={value.id}>
-                <div className="bg-[#FAFAFA] rounded-xl p-2 px-4 text-[15px] font-[500]">
-                  <div className="flex items-center gap-1">
-                    <span>{dateFormatter(value?.startDate)}</span>
-                    <span>-</span>
-                    <span>
-                      {value?.present
-                        ? value?.endDate
-                        : dateFormatter(value?.endDate)}
-                    </span>
-                  </div>
+              <div className="flex flex-wrap justify-evenly mt-3">
+                <div className="flex flex-col gap-2 items-center justify-center border-b p-4 border-gray-400 w-1/2 md:w-1/4 md:border-b-transparent">
+                  <span className="font-[500]">Job Applied</span>
+                  <span className="text-xl font-bold">
+                    {stats?.total_applications}
+                  </span>
                 </div>
-                <div className="mt-3 px-4">
-                  <h4 className="text-[16px] font-semibold">
-                    {value?.companyName}
-                  </h4>
-                  <div className="text-[13px] font-[500] my-1">
-                    {value?.jobTitle}
-                  </div>
-                  <div className="text-[13px] font-[500] my-1">
-                    {value?.description}
-                  </div>
+                <div className="flex flex-col gap-2 items-center justify-center border-b p-4 border-gray-400 w-1/2 md:w-1/4 md:border-l md:border-b-transparent">
+                  <span className="font-[500]">Hired</span>
+                  <span className="text-xl font-bold">{stats?.hired}</span>
+                </div>
+                <div className="flex flex-col gap-2 items-center justify-center border-b p-4 border-gray-400 w-1/2 md:w-1/4 md:border-l md:border-b-transparent">
+                  <span className="font-[500]">In Process</span>
+                  <span className="text-xl font-bold">
+                    {stats?.in_process_applications}
+                  </span>
+                </div>
+                <div className="flex flex-col gap-2 items-center justify-center border-b p-4 border-gray-400 w-1/2 md:w-1/4 md:border-l md:border-b-transparent">
+                  <span className="font-[500]">Rejected</span>
+                  <span className="text-xl font-bold">
+                    {stats?.rejected_applications}
+                  </span>
+                </div>
+              </div>
+              <div className="flex items-center justify-between p-3 mr-3 rounded-2xl bg-[#FAFAFA] mt-4">
+                <div className="flex items-center gap-2">
+                  <ArticleOutlinedIcon sx={{ color: "#725858" }} />
+                  <span>Manage Resume</span>
                 </div>
                 <div
-                  onClick={() => setOpen(true)}
-                  className="cursor-pointer absolute right-0 top-1"
+                  onClick={() => navigate("/resumes")}
+                  className="flex justify-center items-center bg-[#7CFCA6] p-2 rounded-xl cursor-pointer"
                 >
-                  <ModeEditOutlinedIcon />
+                  <ArrowForwardIosOutlinedIcon
+                    sx={{
+                      fontSize: "16px",
+                    }}
+                  />
                 </div>
               </div>
-            ))}
-          </div>
-          <hr className="border-t-2 mt-5" />
-          <div className="relative pr-10">
-            <h1 className="text-2xl font-semibold mt-5 mb-3" id="skills">
-              Skills
-            </h1>
-            <div className="flex gap-2 flex-wrap">
-              {skills?.map((value) => (
-                <span
-                  key={value.id}
-                  className="text-[12px] bg-[#F4D06F] rounded-full font-[500] py-[3px] px-2 whitespace-nowrap"
-                >
-                  {value?.skill}
+              <hr className="border-t-2 mt-5" />
+              <div className="relative pr-0 md:pr-4">
+                <h1 className="text-2xl font-semibold my-5">About Me</h1>
+                <span className="text-[15px]" id="personal-info">
+                  {profileData?.about}
                 </span>
-              ))}
-            </div>
-            <div
-              onClick={() => setOpen(true)}
-              className="cursor-pointer absolute right-0 top-1"
-            >
-              <ModeEditOutlinedIcon />
-            </div>
-          </div>
-          <hr className="border-t-2 mt-5" />
-          <div className="relative pr-10">
-            <h1 className="text-2xl font-semibold mt-5 mb-3" id="languages">
-              Languages
-            </h1>
-            <div className="flex justify-between gap-4 flex-wrap">
-              {languages?.map((value) => (
-                <div
-                  key={value.id}
-                  className="flex flex-col gap-2 w-full md:w-[49%]"
-                >
-                  <div className="flex justify-between items-center">
-                    <span className="text-[14px]">
-                      {value?.language_details?.name}
-                    </span>
-                    <span className="text-[14px]">{value?.proficiency}</span>
+                <div className="flex mt-3">
+                  <h5 className="text-[15px] whitespace-nowrap font-bold mr-3">
+                    Work Preference:
+                  </h5>
+                  <div className="flex items-center flex-wrap gap-2">
+                    {(profileData?.preferred_job_type || []).map(
+                      (value, index) => (
+                        <span
+                          key={index}
+                          className="bg-[#FAFAFA] whitespace-nowrap text-[12px] rounded-full px-2 py-1 font-[500]"
+                        >
+                          {value.type}
+                        </span>
+                      )
+                    )}
                   </div>
-                  <div className="h-[20px] bg-[#E2E8F0] rounded-full overflow-hidden">
+                </div>
+                <div className="flex mt-2">
+                  <h5 className="text-[15px] whitespace-nowrap font-bold mr-3">
+                    Work Mode:
+                  </h5>
+                  <div className="flex items-center flex-wrap gap-2">
+                    {(profileData?.work_mode || []).map((value, index) => (
+                      <span
+                        key={index}
+                        className="bg-[#FAFAFA] whitespace-nowrap text-[12px] rounded-full px-2 py-1 font-[500]"
+                      >
+                        {value.mode}
+                      </span>
+                    ))}
+                  </div>
+                </div>
+                <div
+                  onClick={() => setOpen(true)}
+                  className="cursor-pointer absolute right-0 top-1"
+                >
+                  <ModeEditOutlinedIcon />
+                </div>
+              </div>
+              <hr className="border-t-2 mt-5" />
+              <div className="relative pr-4 md:pr-10">
+                <h1 className="text-2xl font-semibold my-5" id="education">
+                  Education
+                </h1>
+                {education?.map((value) => (
+                  <div key={value.id}>
+                    <div className="bg-[#FAFAFA] rounded-xl p-2 px-4 text-[15px] font-[500]">
+                      <div className="flex items-center gap-1">
+                        <span>{value?.startYear}</span>
+                        <span>-</span>
+                        <span>{value?.completionYear}</span>
+                      </div>
+                    </div>
+                    <div className="mt-3 px-4">
+                      <h4 className="text-[16px] font-semibold">
+                        {value?.schoolName}
+                      </h4>
+                      <div className="flex gap-1 whitespace-nowrap flex-wrap items-center text-[13px] font-[500] my-1">
+                        <span>{value?.degreeType}</span>
+                        <span>.</span>
+                        <span>{value?.degreeName}</span>
+                      </div>
+                      <div className="flex gap-1 items-center text-[13px] font-[500] my-1">
+                        <span>{value?.score}</span>
+                        <span>.</span>
+                        <span>{value?.scoreType}</span>
+                      </div>
+                      <div className="text-[13px] font-[500] my-1">
+                        {value?.location}
+                      </div>
+                      <div className="text-[13px] font-[500] my-1">
+                        {value?.description}
+                      </div>
+                    </div>
                     <div
-                      className={`h-full bg-[#7CFCBE] ${
-                        value?.proficiency === "beginner"
-                          ? "w-[33%]"
-                          : value?.proficiency === "intermediate"
-                          ? "w-[66%]"
-                          : value?.proficiency === "fluent/native"
-                          ? "w-[100%]"
-                          : "w-[10%]"
-                      }`}
-                    ></div>
+                      onClick={() => setOpen(true)}
+                      className="cursor-pointer absolute right-0 top-1"
+                    >
+                      <ModeEditOutlinedIcon />
+                    </div>
                   </div>
-                </div>
-              ))}
-            </div>
-            <div
-              onClick={() => setOpen(true)}
-              className="cursor-pointer absolute right-0 top-1"
-            >
-              <ModeEditOutlinedIcon />
-            </div>
-          </div>
-          <hr className="border-t-2 mt-5" />
-          <div className="relative pr-4 md:pr-10">
-            <h1 className="text-2xl font-semibold my-5" id="projects">
-              Projects
-            </h1>
-            {projects?.map((value) => (
-              <div key={value.id}>
-                <div className="bg-[#FAFAFA] rounded-xl p-2 px-4 text-[15px] font-[500]">
-                  <div className="flex items-center gap-1">
-                    <span>{dateFormatter(value?.start_date)}</span>
-                    <span>-</span>
-                    <span>
-                      {value?.is_running
-                        ? value?.end_date
-                        : dateFormatter(value?.end_date)}
+                ))}
+              </div>
+              <hr className="border-t-2 mt-5" />
+              <div className="relative pr-4 md:pr-10">
+                <h1 className="text-2xl font-semibold my-5" id="work-history">
+                  Work History
+                </h1>
+                {work?.map((value) => (
+                  <div key={value.id}>
+                    <div className="bg-[#FAFAFA] rounded-xl p-2 px-4 text-[15px] font-[500]">
+                      <div className="flex items-center gap-1">
+                        <span>{dateFormatter(value?.startDate)}</span>
+                        <span>-</span>
+                        <span>
+                          {value?.present
+                            ? value?.endDate
+                            : dateFormatter(value?.endDate)}
+                        </span>
+                      </div>
+                    </div>
+                    <div className="mt-3 px-4">
+                      <h4 className="text-[16px] font-semibold">
+                        {value?.companyName}
+                      </h4>
+                      <div className="text-[13px] font-[500] my-1">
+                        {value?.jobTitle}
+                      </div>
+                      <div className="text-[13px] font-[500] my-1">
+                        {value?.description}
+                      </div>
+                    </div>
+                    <div
+                      onClick={() => setOpen(true)}
+                      className="cursor-pointer absolute right-0 top-1"
+                    >
+                      <ModeEditOutlinedIcon />
+                    </div>
+                  </div>
+                ))}
+              </div>
+              <hr className="border-t-2 mt-5" />
+              <div className="relative pr-10">
+                <h1 className="text-2xl font-semibold mt-5 mb-3" id="skills">
+                  Skills
+                </h1>
+                <div className="flex gap-2 flex-wrap">
+                  {skills?.map((value) => (
+                    <span
+                      key={value.id}
+                      className="text-[12px] bg-[#F4D06F] rounded-full font-[500] py-[3px] px-2 whitespace-nowrap"
+                    >
+                      {value?.skill}
                     </span>
-                  </div>
-                </div>
-                <div className="mt-3 px-4">
-                  <h4 className="text-[16px] font-semibold">{value?.label}</h4>
-                  <div className="text-[13px] font-[500] my-1">
-                    {value?.description}
-                  </div>
+                  ))}
                 </div>
                 <div
                   onClick={() => setOpen(true)}
@@ -774,97 +735,184 @@ const MyProfile = () => {
                   <ModeEditOutlinedIcon />
                 </div>
               </div>
-            ))}
-          </div>
-          <hr className="border-t-2 mt-5" />
-          <div className="relative pr-4 md:pr-10">
-            <h1 className="text-2xl font-semibold mt-5 mb-3" id="certificates">
-              Certificates
-            </h1>
-            {certificates?.map((value) => (
-              <div key={value.id}>
-                <div className="bg-[#FAFAFA] rounded-xl p-2 px-4 text-[15px] font-[500]">
-                  <div className="flex items-center gap-1">
-                    {dateFormatter(value?.date_awarded)}
-                  </div>
+              <hr className="border-t-2 mt-5" />
+              <div className="relative pr-10">
+                <h1 className="text-2xl font-semibold mt-5 mb-3" id="languages">
+                  Languages
+                </h1>
+                <div className="flex justify-between gap-4 flex-wrap">
+                  {languages?.map((value) => (
+                    <div
+                      key={value.id}
+                      className="flex flex-col gap-2 w-full md:w-[49%]"
+                    >
+                      <div className="flex justify-between items-center">
+                        <span className="text-[14px]">
+                          {value?.language_details?.name}
+                        </span>
+                        <span className="text-[14px]">
+                          {value?.proficiency}
+                        </span>
+                      </div>
+                      <div className="h-[20px] bg-[#E2E8F0] rounded-full overflow-hidden">
+                        <div
+                          className={`h-full bg-[#7CFCBE] ${
+                            value?.proficiency === "beginner"
+                              ? "w-[33%]"
+                              : value?.proficiency === "intermediate"
+                              ? "w-[66%]"
+                              : value?.proficiency === "fluent/native"
+                              ? "w-[100%]"
+                              : "w-[10%]"
+                          }`}
+                        ></div>
+                      </div>
+                    </div>
+                  ))}
                 </div>
-                <div className="mt-3 px-4">
-                  <h4 className="text-[16px] font-semibold">{value?.title}</h4>
-                  <div className="flex gap-1 items-center text-[13px] font-[500] my-1">
-                    <span>{value?.organization}</span>
-                  </div>
-                  <div className="text-[13px] font-[500] my-1">
-                    {value?.description}
-                  </div>
-                </div>
-              </div>
-            ))}
-            <div
-              onClick={() => setOpen(true)}
-              className="cursor-pointer absolute right-0 top-1"
-            >
-              <ModeEditOutlinedIcon />
-            </div>
-          </div>
-          <hr className="border-t-2 mt-5" />
-          <div className="relative pr-4 md:pr-10">
-            <h1 className="text-2xl font-semibold mt-5 mb-3" id="publications">
-              Publications
-            </h1>
-            {publications?.map((value) => (
-              <div key={value.id}>
-                <div className="bg-[#FAFAFA] rounded-xl p-2 px-4 text-[15px] font-[500]">
-                  <div className="flex items-center gap-1">
-                    {dateFormatter(value?.publication_date)}
-                  </div>
-                </div>
-                <div className="mt-3 px-4">
-                  <h4 className="text-[16px] font-semibold">{value?.title}</h4>
-                  <h4 className="text-[13px] font-[500] my-1">
-                    {value?.journal}
-                  </h4>
-                  <a
-                    href={value?.url}
-                    className="text-[13px] font-[500] my-1 text-[#4141c0] hover:text-black"
-                  >
-                    {value?.url}
-                  </a>
-                  <div className="text-[13px] font-[500] my-1">
-                    {value?.abstract}
-                  </div>
-                </div>
-              </div>
-            ))}
-            <div
-              onClick={() => setOpen(true)}
-              className="cursor-pointer absolute right-0 top-1"
-            >
-              <ModeEditOutlinedIcon />
-            </div>
-          </div>
-          <hr className="border-t-2 mt-5" />
-          <div className="relative pr-10">
-            <h1
-              className="text-2xl font-semibold mt-5 mb-3"
-              id="hobbies-&-interests"
-            >
-              Hobbies & Interests
-            </h1>
-            <div className="flex gap-2 flex-wrap">
-              {hobbies?.map((value) => (
-                <span
-                  key={value.id}
-                  className="text-[12px] bg-[#FAFAFA] rounded-full font-[500] py-[3px] px-2 whitespace-nowrap"
+                <div
+                  onClick={() => setOpen(true)}
+                  className="cursor-pointer absolute right-0 top-1"
                 >
-                  {value?.title}
-                </span>
-              ))}
-            </div>
-            <div
-              onClick={() => setOpen(true)}
-              className="cursor-pointer absolute right-0 top-1"
-            >
-              <ModeEditOutlinedIcon />
+                  <ModeEditOutlinedIcon />
+                </div>
+              </div>
+              <hr className="border-t-2 mt-5" />
+              <div className="relative pr-4 md:pr-10">
+                <h1 className="text-2xl font-semibold my-5" id="projects">
+                  Projects
+                </h1>
+                {projects?.map((value) => (
+                  <div key={value.id}>
+                    <div className="bg-[#FAFAFA] rounded-xl p-2 px-4 text-[15px] font-[500]">
+                      <div className="flex items-center gap-1">
+                        <span>{dateFormatter(value?.start_date)}</span>
+                        <span>-</span>
+                        <span>
+                          {value?.is_running
+                            ? value?.end_date
+                            : dateFormatter(value?.end_date)}
+                        </span>
+                      </div>
+                    </div>
+                    <div className="mt-3 px-4">
+                      <h4 className="text-[16px] font-semibold">
+                        {value?.label}
+                      </h4>
+                      <div className="text-[13px] font-[500] my-1">
+                        {value?.description}
+                      </div>
+                    </div>
+                    <div
+                      onClick={() => setOpen(true)}
+                      className="cursor-pointer absolute right-0 top-1"
+                    >
+                      <ModeEditOutlinedIcon />
+                    </div>
+                  </div>
+                ))}
+              </div>
+              <hr className="border-t-2 mt-5" />
+              <div className="relative pr-4 md:pr-10">
+                <h1
+                  className="text-2xl font-semibold mt-5 mb-3"
+                  id="certificates"
+                >
+                  Certificates
+                </h1>
+                {certificates?.map((value) => (
+                  <div key={value.id}>
+                    <div className="bg-[#FAFAFA] rounded-xl p-2 px-4 text-[15px] font-[500]">
+                      <div className="flex items-center gap-1">
+                        {dateFormatter(value?.date_awarded)}
+                      </div>
+                    </div>
+                    <div className="mt-3 px-4">
+                      <h4 className="text-[16px] font-semibold">
+                        {value?.title}
+                      </h4>
+                      <div className="flex gap-1 items-center text-[13px] font-[500] my-1">
+                        <span>{value?.organization}</span>
+                      </div>
+                      <div className="text-[13px] font-[500] my-1">
+                        {value?.description}
+                      </div>
+                    </div>
+                  </div>
+                ))}
+                <div
+                  onClick={() => setOpen(true)}
+                  className="cursor-pointer absolute right-0 top-1"
+                >
+                  <ModeEditOutlinedIcon />
+                </div>
+              </div>
+              <hr className="border-t-2 mt-5" />
+              <div className="relative pr-4 md:pr-10">
+                <h1
+                  className="text-2xl font-semibold mt-5 mb-3"
+                  id="publications"
+                >
+                  Publications
+                </h1>
+                {publications?.map((value) => (
+                  <div key={value.id}>
+                    <div className="bg-[#FAFAFA] rounded-xl p-2 px-4 text-[15px] font-[500]">
+                      <div className="flex items-center gap-1">
+                        {dateFormatter(value?.publication_date)}
+                      </div>
+                    </div>
+                    <div className="mt-3 px-4">
+                      <h4 className="text-[16px] font-semibold">
+                        {value?.title}
+                      </h4>
+                      <h4 className="text-[13px] font-[500] my-1">
+                        {value?.journal}
+                      </h4>
+                      <a
+                        href={value?.url}
+                        className="text-[13px] font-[500] my-1 text-[#4141c0] hover:text-black"
+                      >
+                        {value?.url}
+                      </a>
+                      <div className="text-[13px] font-[500] my-1">
+                        {value?.abstract}
+                      </div>
+                    </div>
+                  </div>
+                ))}
+                <div
+                  onClick={() => setOpen(true)}
+                  className="cursor-pointer absolute right-0 top-1"
+                >
+                  <ModeEditOutlinedIcon />
+                </div>
+              </div>
+              <hr className="border-t-2 mt-5" />
+              <div className="relative pr-10">
+                <h1
+                  className="text-2xl font-semibold mt-5 mb-3"
+                  id="hobbies-&-interests"
+                >
+                  Hobbies & Interests
+                </h1>
+                <div className="flex gap-2 flex-wrap">
+                  {hobbies?.map((value) => (
+                    <span
+                      key={value.id}
+                      className="text-[12px] bg-[#FAFAFA] rounded-full font-[500] py-[3px] px-2 whitespace-nowrap"
+                    >
+                      {value?.title}
+                    </span>
+                  ))}
+                </div>
+                <div
+                  onClick={() => setOpen(true)}
+                  className="cursor-pointer absolute right-0 top-1"
+                >
+                  <ModeEditOutlinedIcon />
+                </div>
+              </div>
             </div>
           </div>
         </div>
