@@ -3,8 +3,9 @@ import CheckCircleOutlineIcon from "@mui/icons-material/CheckCircleOutline";
 import CloseIcon from "@mui/icons-material/Close";
 import { useEffect, useState } from "react";
 import CheckCircleIcon from "../svgs/successSvg";
+import ErrorIcon from "@mui/icons-material/Error";
 
-const ShowAlert = ({ section, onClose, time = 5000 }) => {
+const ShowAlert = ({ section, onClose, time = 5000, isError = false }) => {
   const [savedOpenDrawer, setSavedOpenDrawer] = useState(true);
   const [message, setMessage] = useState("");
 
@@ -64,10 +65,16 @@ const ShowAlert = ({ section, onClose, time = 5000 }) => {
         <div className="w-[10px] h-full bg-green-500"></div>
         <div className="flex gap-2 mt-5">
           <div className="mt-2">
-            <CheckCircleIcon color={"#1FFFA5"} width={40} height={40} />
+            {isError ? (
+              <ErrorIcon sx={{ color: "red", fontSize: "35px" }} />
+            ) : (
+              <CheckCircleIcon color={"#1FFFA5"} width={40} height={40} />
+            )}
           </div>
           <div className="flex flex-col">
-            <h1 className="text-lg font-semibold">Successful!</h1>{" "}
+            <h1 className="text-lg font-semibold">
+              {isError ? "Error" : "Successful!"}
+            </h1>{" "}
             <h3 className="text-[16px]">{message}</h3>
           </div>
         </div>

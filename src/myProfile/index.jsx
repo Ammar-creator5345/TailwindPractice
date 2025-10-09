@@ -393,14 +393,14 @@ const MyProfile = () => {
             />
           </div>
         )}
-        <div className="flex items-center gap-2 pb-5">
+        <div className="flex items-center gap-2 py-5">
           <button
             className="flex items-center justify-center lg960:hidden"
             onClick={() => setOpenSideBar(true)}
           >
             <MenuIcon />
           </button>
-          <h1 className="text-[25px] mt-6 font-bold">My Profile</h1>
+          <h1 className="text-[25px]  font-bold">My Profile</h1>
         </div>
         <div className="overflow-y-auto h-[calc(100vh-98px)]">
           <div className="relative">
@@ -458,7 +458,11 @@ const MyProfile = () => {
               <WarningIcon />
               <span>
                 Your profile is{" "}
-                <span className="font-semibold">{`${ProfileCompletion?.profile_completion_percentage}%`}</span>{" "}
+                <span className="font-semibold">{`${
+                  ProfileCompletion?.profile_completion_percentage
+                    ? ProfileCompletion?.profile_completion_percentage
+                    : "0"
+                }%`}</span>{" "}
                 complete. A strong profile increases your chances.
               </span>
             </div>
@@ -550,23 +554,31 @@ const MyProfile = () => {
                 <div className="flex flex-col gap-2 items-center justify-center border-b p-4 border-gray-400 w-1/2 md:w-1/4 md:border-b-transparent">
                   <span className="font-[500]">Job Applied</span>
                   <span className="text-xl font-bold">
-                    {stats?.total_applications}
+                    {stats?.total_applications
+                      ? stats?.total_applications
+                      : "0"}
                   </span>
                 </div>
                 <div className="flex flex-col gap-2 items-center justify-center border-b p-4 border-gray-400 w-1/2 md:w-1/4 md:border-l md:border-b-transparent">
                   <span className="font-[500]">Hired</span>
-                  <span className="text-xl font-bold">{stats?.hired}</span>
+                  <span className="text-xl font-bold">
+                    {stats?.hired ? stats?.hired : "0"}
+                  </span>
                 </div>
                 <div className="flex flex-col gap-2 items-center justify-center border-b p-4 border-gray-400 w-1/2 md:w-1/4 md:border-l md:border-b-transparent">
                   <span className="font-[500]">In Process</span>
                   <span className="text-xl font-bold">
-                    {stats?.in_process_applications}
+                    {stats?.in_process_applications
+                      ? stats?.in_process_applications
+                      : "0"}
                   </span>
                 </div>
                 <div className="flex flex-col gap-2 items-center justify-center border-b p-4 border-gray-400 w-1/2 md:w-1/4 md:border-l md:border-b-transparent">
                   <span className="font-[500]">Rejected</span>
                   <span className="text-xl font-bold">
-                    {stats?.rejected_applications}
+                    {stats?.rejected_applications
+                      ? stats?.rejected_applications
+                      : "0"}
                   </span>
                 </div>
               </div>

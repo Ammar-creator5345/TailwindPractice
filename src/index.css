@@ -240,3 +240,19 @@ body {
 .opposite {
     transform: rotate(180deg);
 }
+
+/* bg-[#fafafa] p-3 rounded-2xl w-full border border-[#dbdada] outline-none */
+.input-style3 {
+    background-color: #fafafa;
+    padding: 12px;
+    border-radius: 16px;
+    width: 100%;
+    border: 1px solid #dbdada;
+    outline: none;
+}
+
+.input-style3::placeholder {
+    color: rgb(90, 87, 87);
+    font-size: 14px;
+    font-weight: 500;
+}

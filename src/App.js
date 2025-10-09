@@ -18,6 +18,7 @@ import NotificationCenter from "./notificationCenter";
 import ZakiAi from "./components/zakiAi";
 import PageLayout from "./layout/pageLayout";
 import AuthLayout from "./layout/authLayout";
+import ManageSubscription from "./manageSubscription";
 
 function App() {
   const [token, setToken] = useState(localStorage.getItem("token"));
@@ -53,9 +54,9 @@ function App() {
             element={token ? <Navigate to="/" /> : <SignUp />}
           />
         </Route>
+        <Route path="/" element={<HomePage setToken={setToken} />} />
         {token ? (
           <Route element={<PageLayout setToken={setToken} />}>
-            <Route path="/" element={<HomePage setToken={setToken} />} />
             <Route path="/verify" element={<EmailVerification />} />
             <Route path="/my-resumes" element={<Resumes />} />
             <Route path="/home" element={<MyProfile />} />
@@ -67,7 +68,10 @@ function App() {
               path="/notifications-center"
               element={<NotificationCenter />}
             />
-            <Route path="/ai" element={<ZakiAi />} />
+            <Route
+              path="/manage-your-subscription"
+              element={<ManageSubscription />}
+            />
           </Route>
         ) : (
           <Route path="*" element={<Navigate to="/login" />}></Route>

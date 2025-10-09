@@ -1,13 +1,20 @@
 import { NavLink, useNavigate } from "react-router-dom";
 import axios from "axios";
+import Tooltip from "@mui/material/Tooltip";
 
 const SideBar = ({ setToken }) => {
   const navigate = useNavigate();
   const token = localStorage.getItem("token");
-  const NavLinkItem = ({ src_1, src_2, url }) => {
+  const NavLinkItem = ({ src_1, src_2, url, title }) => {
     return (
       <NavLink to={url}>
-        {({ isActive }) => <img src={isActive ? src_2 : src_1} alt="link" />}
+        {({ isActive }) => {
+          return (
+            <Tooltip title={title} placement="right">
+              <img src={isActive ? src_2 : src_1} alt="link" />
+            </Tooltip>
+          );
+        }}
       </NavLink>
     );
   };
@@ -43,41 +50,49 @@ const SideBar = ({ setToken }) => {
             src_1="https://app.ziphire.hr/assets/img/menu-icons/Profile.svg"
             src_2="	https://app.ziphire.hr/assets/img/menu-icons/Profile-Selected.svg"
             url="/home"
+            title="My Profile"
           />
           <NavLinkItem
             src_1="https://app.ziphire.hr/assets/img/menu-icons/Search.svg"
             src_2="https://app.ziphire.hr/assets/img/menu-icons/Search-Selected.svg"
             url="/find-jobs"
+            title="FInd Jobs"
           />
           <NavLinkItem
             src_1="https://app.ziphire.hr/assets/img/menu-icons/Track-My-Job.svg"
             src_2="https://app.ziphire.hr/assets/img/menu-icons/Track-My-Job-Selected.svg"
             url="/track-my-jobs"
+            title="Track My Jobs"
           />
           <NavLinkItem
             src_1="https://app.ziphire.hr/assets/img/menu-icons/Notification-Center.svg"
             src_2="https://app.ziphire.hr/assets/img/menu-icons/Notification-Center-Selected.svg"
             url="/notifications-center"
+            title="Notification Center"
           />
           <NavLinkItem
             src_1="https://app.ziphire.hr/assets/img/menu-icons/Resume-Builder.svg"
             src_2="https://app.ziphire.hr/assets/img/menu-icons/Resume-Builder-Selected.svg"
             url="/my-resumes"
+            title="Resume Builder"
           />
           <NavLinkItem
             src_1="https://app.ziphire.hr/assets/img/menu-icons/Chat.svg"
             src_2="	https://app.ziphire.hr/assets/img/menu-icons/Chat-Selected.svg"
             url="/messages"
+            title="Messages"
           />
           <NavLinkItem
             src_1="https://app.ziphire.hr/assets/img/menu-icons/Settings.svg"
             src_2="https://app.ziphire.hr/assets/img/menu-icons/Settings-Selected.svg"
             url="/settings"
+            title="Settings"
           />
           <NavLinkItem
             src_1="https://app.ziphire.hr/assets/img/menu-icons/Credit.svg"
             src_2="https://app.ziphire.hr/assets/img/menu-icons/Credit-Selected.svg"
             url="/manage-your-subscription"
+            title="Subscription"
           />
         </div>
         <div className="flex items-center pt-5">
