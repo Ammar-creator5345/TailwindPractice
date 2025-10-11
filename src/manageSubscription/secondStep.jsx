@@ -26,7 +26,7 @@ const SecondStep = ({ setOpen, setCurrentState }) => {
           <input
             type="text"
             placeholder="Cardholder Name"
-            className="input-style3"
+            className="input-style4"
             value={holderName}
             onChange={(e) => setHolderName(e.target.value)}
             required
@@ -36,7 +36,7 @@ const SecondStep = ({ setOpen, setCurrentState }) => {
           <input
             type="text"
             placeholder="1234 1234 1234 1234"
-            className="input-style3"
+            className="input-style4"
             required
             value={cardNumber}
             onChange={(e) => {
@@ -60,7 +60,7 @@ const SecondStep = ({ setOpen, setCurrentState }) => {
               }
               setDate(date);
             }}
-            className="input-style3"
+            className="input-style4"
           />
           <input
             type="text"
@@ -74,7 +74,7 @@ const SecondStep = ({ setOpen, setCurrentState }) => {
               setCvc(word);
             }}
             placeholder="CVC"
-            className="input-style3"
+            className="input-style4"
           />
         </div>
         <div className="mt-3 flex flex-col items-center justify-center gap-3 sm:flex-row">

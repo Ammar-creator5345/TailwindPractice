@@ -11,4 +11,4 @@ const Reminders = () => {
   );
 };
 
-export default Reminders
+export default Reminders;

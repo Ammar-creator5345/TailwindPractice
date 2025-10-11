@@ -19,6 +19,7 @@ import ZakiAi from "./components/zakiAi";
 import PageLayout from "./layout/pageLayout";
 import AuthLayout from "./layout/authLayout";
 import ManageSubscription from "./manageSubscription";
+import Settings from "./settings";
 
 function App() {
   const [token, setToken] = useState(localStorage.getItem("token"));
@@ -72,6 +73,7 @@ function App() {
               path="/manage-your-subscription"
               element={<ManageSubscription />}
             />
+            <Route path="/settings" element={<Settings />} />
           </Route>
         ) : (
           <Route path="*" element={<Navigate to="/login" />}></Route>

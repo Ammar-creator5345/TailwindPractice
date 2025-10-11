@@ -31,3 +31,21 @@ export const createSubscription = async (data) => {
     throw err;
   }
 };
+
+export const getPreferences = async () => {
+  try {
+    const res = api.get("/preferences/");
+    return res;
+  } catch (err) {
+    throw err;
+  }
+};
+
+export const putPreferences = async (payload) => {
+  try {
+    const res = api.put("/preferences/", payload);
+    return res;
+  } catch (err) {
+    throw err;
+  }
+};
