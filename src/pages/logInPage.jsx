@@ -1,17 +1,14 @@
 import { useState } from "react";
 import axios from "axios";
-import { useNavigate } from "react-router-dom";
-import { NavLink } from "react-router-dom";
+import { useNavigate, NavLink } from "react-router-dom";
 
 const LogIn = ({ setToken }) => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const dataForSubmit = { email, password };
   const navigate = useNavigate();
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    console.log("clicked", dataForSubmit);
     axios
       .post(
         "https://api.ziphire.hr/v2/developer/login",
@@ -26,48 +23,55 @@ const LogIn = ({ setToken }) => {
         }
       )
       .then((res) => {
-        console.log("login succefull", res.data);
+        console.log("Login successful", res.data);
         localStorage.setItem("token", res.data.tokens.access);
         setToken(res.data.tokens.access);
         setTimeout(() => navigate("/home"), 100);
       })
       .catch((err) => {
-        console.log("cannot be login", err);
+        console.log("Login failed", err);
       });
   };
+
   return (
-    <div className="flex justify-center mt-10">
-      <div className="bg-rose-50 w-[70%] border-2 border-black rounded-lg py-5 md:w-[40%] md:py-10">
-        <h1 className="text-4xl font-bold my-4 text-center">Login In</h1>
+    <div className="flex justify-center mt-20 px-4">
+      <div className="bg-white w-full max-w-md border border-gray-200 rounded-xl shadow-md py-8 px-6">
+        <h1 className="text-3xl font-bold text-center mb-6">Login</h1>
+
         <form onSubmit={handleSubmit}>
-          <div className="flex flex-wrap justify-center">
+          <div className="flex flex-col gap-4">
             <input
-              className="border-2 text-sm w-full border-black px-2 py-1 rounded-lg mx-2 my-1 md:p-2 md:m-3 md:w-[80%]"
               type="email"
               name="email"
-              placeholder="Email"
+              placeholder="Email address"
               value={email}
               onChange={(e) => setEmail(e.target.value)}
+              className="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-400 focus:border-blue-400 placeholder-gray-400 transition"
+              required
             />
+
             <input
-              className="border-2 text-sm w-full border-black px-2 py-1 rounded-lg mx-2 my-1 md:p-2 md:m-3 md:w-[80%]"
               type="password"
               name="password"
-              placeholder="password"
+              placeholder="Password"
               value={password}
               onChange={(e) => setPassword(e.target.value)}
+              className="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-400 focus:border-blue-400 placeholder-gray-400 transition"
+              required
             />
+
+            <button
+              type="submit"
+              className="w-full bg-blue-600 text-white font-semibold rounded-lg py-2 hover:bg-blue-700 transition"
+            >
+              Log In
+            </button>
           </div>
-          <button
-            type="submit"
-            className="border-2 text-sm border-green-950 block m-auto my-2 py-1 px-1 rounded-lg hover:bg-slate-600 hover:text-white transition md:p-2 md:text-[18px]"
-          >
-            Submit
-          </button>
-          <div className="flex justify-center px-2 mt-3">
-            <span className="text-[13px] text-center md:text-[18px]">
-              Don't have an Account?{" "}
-              <NavLink to="/signUp" className="text-blue-950 hover:underline">
+
+          <div className="text-center mt-5 text-sm">
+            <span className="text-gray-600">
+              Don’t have an account?{" "}
+              <NavLink to="/signUp" className="text-blue-600 hover:underline">
                 Sign Up
               </NavLink>
             </span>
